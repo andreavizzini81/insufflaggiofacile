@@ -1,0 +1,83 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="widget">
+    <div class="content">
+        <form class="form-horizontal linked-fields contact-form" action="javascript:void(0);" method="POST" autocomplete="off">
+            {% if data.faq.getId() is not null %}
+            <input type="hidden" name="id" value="{{ data.faq.getId() }}">
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend>FAQ</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Domanda</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="domanda" value="{{ data.faq.getDomanda() }}" required>
+                            </div>
+                        </div>     
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Risposta</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" name="risposta" rows="8">{{ data.faq.getRisposta() }}</textarea>
+                            </div> 
+                        </div>  
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+
+    ClassicEditor
+		.create( document.querySelector( 'textarea[name="risposta"]' ), {
+            minHeight: '300px',
+            updateSourceElementOnDestroy: true,
+            forcePasteAsPlainText: true,
+            toolbar: {
+                items: [
+                    'undo', 'redo',
+                    '|', 'bold', 'italic',
+                    '|', 'bulletedList', 'numberedList'
+                ]
+            },
+            language: 'it'
+		} )
+		.then( editor => {
+			window.editor = editor;
+		} )
+		.catch( err => {
+			console.error( err );
+		} );
+
+    
+   
+    document.addEventListener('DOMContentLoaded', function() {
+
+        Delegate(document).on('click', '.save-faq', function() {
+            window.editor.updateSourceElement();
+            let _frm = document.querySelector('.contact-form');
+            let validation = (new FormValidator({alerts: false})).checkAll(_frm);
+            if (!validation.valid) {
+                validation.fields.forEach(entry => {
+                    entry.field.closest('.form-group').classList.toggle('has-error', !entry.valid);
+                });
+                return new resAlert('Operazione fallita', 'I campi contrassegnati in rosso sono incompleti o contengono valori non validi.', {type:'error'});
+            }
+            let data = (new FormSerializer(_frm)).serialize();
+            this.classList.add('loading');
+            HttpRequest.post(`${res.absolutePath}api/faq`, data, response => {
+                this.classList.remove('loading');
+                if (response.status != 1) {
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location = `${res.path}faq-list`;
+            }, err => resAlert.error('Operazione fallita', err.toString()));
+        });     
+
+    });
+    /**/  
+
+</script>
+{% endblock content %}

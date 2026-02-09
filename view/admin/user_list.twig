@@ -1,0 +1,65 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<div class="table-responsive mb15">
+    <table class="bordered hover w100">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Nome e cognome</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Stato</th>
+                <th>Scadenza abb.</th>
+                <th>Opzioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in data.list %}
+            {% set status_class = user.getIsActive() ? 'success' : 'muted' %}
+            {% set status_text = user.getIsActive() ? 'ATTIVO' : 'NON ATTIVO' %}
+            <tr>
+                <td>{{ user.getId() }}</td>
+                <td>{{ user.getRoleDescription() }}</td>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.getEmail() }}</td>
+                <td>{{ user.getPhone() }}</td>
+                <td>
+                    <div class="badge {{ status_class}}">{{ status_text }}</div>
+                </td>
+                <td>{{ user.getSubscriptionExpiration()|date('d/m/Y') }}</td>
+                <td>
+                    <a class="action edit-user" href="{{ path }}user-manager/{{ user.getId() }}">
+                        <span class="fas fa-pencil orangeFont"></span>
+                    </a>
+                    <button class="action delete-user" data-id="{{ user.getId() }}">
+                        <span class="fas fa-trash redFont"></span>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.delete-user', function() {
+            if (!confirm('Eliminare l&rsquo;utente selezionato?')) {
+                return false;
+            }
+            this.classList.add('loading');
+            HttpRequest.delete(`${res.path}user/${this.dataset.id}`, null, response => {
+                if (response.status != 1) {
+                    this.classList.remove('loading');
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location.reload();
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+    }); 
+
+</script>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+{% endblock content %}

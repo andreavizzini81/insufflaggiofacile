@@ -1,0 +1,156 @@
+{% extends "index.twig" %}
+{% block content %}
+
+<!-- <pre>{{ data.list | json_encode(constant('JSON_PRETTY_PRINT')) }}</pre> -->
+
+<div class="table-responsive dashboard-stage mb15">
+    <table class="bordered hover w100">
+        <thead>
+			<tr>
+				<th>Start / End</th>
+                <th>Attività</th>
+				<th>Leads</th>
+				<th>Responsabile</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in data.list %}       
+            <tr class="{{ event.getColor() }}">
+				<td><b>{{ event.getStartsAt() | date('d/m/Y') }}</b> [{{ event.getStartsAt() | date('H:i') }} / {{ event.getEndsAt() | date('H:i') }}]</td>
+                <td> {{ event.getActivity() }}</td>
+                <td><a href="/admin/{{ event.getEntity() }}/{{ event.getEntityId() }}">{{ event.getSubject() }}</a></td>
+				<td> {{ event.getEventUserName() }} </td> 
+				{% with {contact: event.getEntityContact()} %}
+				<td>
+                    <div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex">
+							{% with {contact: event.getEntityContact()} %}
+							<a type="button" class="btn btn-primary btn-square mr5" href="tel:{{ contact.getPhone() }}">
+								<span class="fa fa-phone"></span>
+							</a>
+							<a type="button" class="btn btn-primary btn-square mr5" href="https://wa.me/{{ contact.getPhone() }}">
+								<span class="fab fa-whatsapp"></span>
+							</a>
+							{% if event.getEmailAgency() == true %}
+							<a type="button" class="btn btn-primary btn-square mr5 send-email-modal muted" data-email="{{ contact.getEmail() }}" href="javascript:void(0);">
+								<span class="fa fa-envelope"></span>
+							</a>  
+							{% endif %}
+							{% endwith %}
+						</div>
+						<div class="d-flex">
+							<button type="button" class="btn btn-info btn-square ml5 edit-event" data-title="{{ event.getSubject() }}" data-id="{{ event.getId() }}" data-entity="{{ event.getEntity() }}" data-eid="{{ event.getEntityId() }}">
+								<span class="fa fa-eye"></span>
+							</button>
+							<button type="button" class="btn btn-success btn-square ml5 add-note-dashboard" data-entity="{{ event.getEntity() }}" data-eid="{{ event.getEntityId() }}">
+								<span class="fa fa-sticky-note"></span>
+							</button>
+							<button type="button" class="btn btn-danger  btn-square ml5 delete-event" data-id="{{ event.getId() }}">
+								<span class="fa fa-times"></span>
+							</button>
+						</div>	
+					</div>
+                </td>
+				{% endwith %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="kanban kanban-wrapper dashboard-stage">
+	{% for event in data.list %} 
+	<div class="kanban-stage {{ event.getColor() }}">
+		<div class="kanban-card">
+            <p><b>{{ event.getStartsAt() | date('d/m/Y') }}</b> [{{ event.getStartsAt() | date('H:i') }} / {{ event.getEndsAt() | date('H:i') }}]</p>
+			<p class="title">{{ event.getActivity() }}</p>
+			<div class="owner">
+				<label data-prop="ownerLabel">LEADS</label>
+				<a class="subject" href="/admin/{{ event.getEntity() }}/{{ event.getEntityId() }}">{{ event.getSubject() }}</a>
+			</div>
+			<div class="responsible">
+				<label data-prop="ownerLabel">RESPONSABILE</label>
+				<p class="name mb10" data-prop="owner">{{ event.getEventUserName() }}</p>
+			</div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+					{% with {contact: event.getEntityContact()} %}
+					<a type="button" class="btn btn-primary btn-lg btn-square-medium mr5" href="tel:{{ contact.getPhone() }}"> 
+                        <span class="fa fa-phone"></span> 
+                    </a>
+					<a type="button" class="btn btn-primary btn-lg btn-square-medium mr5" href="https://wa.me/{{ contact.getPhone() }}">
+                        <span class="fab fa-whatsapp"></span>
+                    </a>
+					{% if event.getEmailAgency() == true %}
+					<a type="button" class="btn btn-primary btn-lg btn-square-medium mr5 send-email-modal muted" data-email="{{ contact.getEmail() }}" href="javascript:void(0);">
+                        <span class="fa fa-envelope"></span>
+                    </a>  
+					{% endif %}
+					{% endwith %}
+                </div>
+				<div class="d-flex">
+					<button type="button" class="btn btn-info btn btn-square-medium ml5 action edit-event" data-title="{{ event.getSubject() }}" data-id="{{ event.getId() }}" data-entity="{{ event.getEntity() }}" data-eid="{{ event.getEntityId() }}">
+						<span class="fa fa-eye"></span>
+					</button>
+                    <button type="button" class="btn btn-success btn-lg btn-square-medium ml5 action add-note-dashboard" data-entity="{{ event.getEntity() }}" data-eid="{{ event.getEntityId() }}">
+                        <span class="fa fa-sticky-note"></span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-lg btn-square-medium ml5 action delete-event" data-id="{{ event.getId() }}">
+                        <span class="fa fa-times"></span>
+                    </button>
+                </div>	
+            </div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.delete-event', function() {
+            if (!confirm('Imposti l\'attività su eseguita?')) {
+                return false;
+            }
+            this.classList.add('loading');
+            HttpRequest.get(`/api/dashboardevents/${this.dataset.id}/completed`, response => {
+                console.log(response);
+                if (response.status != 1) {
+                    this.classList.remove('loading');
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location.reload();
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'})); 
+              
+        });
+
+        Delegate(document).on('click', '.edit-event', function() {
+            endpoint = `${res.absolutePath}api/${this.dataset.entity}/${this.dataset.eid}/event`;
+            console.log(endpoint);
+            void new CalendarEventModal(this.dataset.id, {
+                endpoint: endpoint,
+				title: this.dataset.title,
+                onSuccess: () => {
+                    window.location.reload();
+                }
+            });
+        });
+		
+		Delegate(document).on('click', '.add-note-dashboard', function() {
+            endpoint = `${res.absolutePath}api/${this.dataset.entity}/${this.dataset.eid}/note`;
+            console.log(endpoint);
+            void new CrmNoteModal(null, {
+				endpoint: endpoint,
+				withUpdatedList: true,
+				onSuccess: (data) => {
+					if (data.status === 1) {
+						void new resAlert('Nota salvata', '', {type: 'success'})
+					}
+				}
+			});
+        });
+
+    }); 
+
+</script>
+{% endblock content %}

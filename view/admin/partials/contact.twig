@@ -1,0 +1,129 @@
+<div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>Tipo</label>
+            <select class="form-control" disabled>
+                <option value="0">Privato</option>
+                <option value="1">Azienda</option>
+            </select>
+        </div>                    
+    </div>
+    {% if contact.getTypeId() == 0 %}
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Nome</label>
+            <input type="text" class="form-control" value="{{ contact.getFirstName() }}" readonly>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Cognome</label>
+            <input type="text" class="form-control" value="{{ contact.getLastName() }}" readonly>
+        </div>                        
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>Data di nascita</label>
+            <input type="text" class="form-control" value="{{ contact.getBirthDate() is not null ? contact.getBirthDate()|date('d/m/Y') : '' }}" readonly>
+        </div> 
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>Luogo di nascita</label>
+            <input type="text" class="form-control" value="{{ contact.getBirthPlace() }}" readonly>
+        </div>                        
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Codice fiscale</label>
+            <input type="text" class="form-control" value="{{ contact.getTaxCode() }}" readonly>
+        </div>                        
+    </div>
+    {% endif %}
+    {% if contact.getTypeId() == 1 %}
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Rag. sociale</label>
+            <input type="text" class="form-control" value="{{ contact.getBusinessName() }}" readonly>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>Partita IVA</label>
+            <input type="text" class="form-control" value="{{ contact.getVatNumber() }}" readonly>
+        </div>                        
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>PEC/SDI</label>
+            <input type="text" class="form-control" value="{{ contact.getPec() }}" readonly>
+        </div>                        
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Referente</label>
+            <input type="text" class="form-control" value="{{ contact.getContactPerson() }}" readonly>
+        </div>                        
+    </div>
+    {% endif %}
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Email</label>
+            <input type="text" class="form-control" value="{{ contact.getEmail() }}" readonly>
+        </div>                        
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Telefono</label>
+            <input type="text" class="form-control" value="{{ contact.getPhone() }}" readonly>
+        </div>
+    </div>        
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="form-group">
+            <label>Indirizzo</label>
+            <input type="text" class="form-control" value="{{ contact.getAddress() }}" readonly>
+        </div>                    
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>Provincia</label>
+            <input type="text" class="form-control" value="{{ contact.getState() }}" readonly>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Città</label>
+            <input type="text" class="form-control" value="{{ contact.getCity() }}" readonly>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>CAP</label>
+            <input type="text" class="form-control" value="{{ contact.getZipcode() }}" readonly>
+        </div>                        
+    </div>        
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Nazione</label>
+            <input type="text" class="form-control" value="{{ getDefinition('COUNTRIES', contact.getCountry()) }}" readonly>
+        </div>                        
+    </div>
+    <div class="col-md-9">
+        <div class="form-group">
+            <label>Consensi privacy</label>
+            <div class="checkbox mt5">
+                <label class="checkbox-inline">
+                    <input type="checkbox" class="field" {{ setCheckbox(true, contact.getPrivacyStandard()) }} readonly>Trattamento dati personali UE2016/679
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" class="field" {{ setCheckbox(true, contact.getPrivacyMarketing()) }} readonly>Finalit&agrave; di marketing
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" class="field" {{ setCheckbox(true, contact.getPrivacyAnalysis()) }} readonly>Analisi del traffico
+                </label>            
+            </div>
+        </div>    
+    </div>    
+</div>

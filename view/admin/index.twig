@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    {% include '/partials/head.twig' %}
+    <body data-page="{{ view }}" class="{{ navStatus }}">
+        {% if hasTopbar %}
+            {% include '/partials/topbar.twig' %}
+        {% endif %}
+        {% if hasNav %} 
+            {% include '/partials/nav.twig' %}
+        {% endif %}
+        {% if hasTopbar %}
+            {% include '/partials/toolbar.twig' %}
+        {% endif %}
+        <main>
+            {% block content %}{% endblock content %}
+        </main>
+        <div class="notifications"></div>
+        {% include '/partials/body_bundle.twig' %}
+    </body>
+</html>

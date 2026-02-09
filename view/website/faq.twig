@@ -1,0 +1,64 @@
+{% extends "index.twig" %}
+{% block content %}
+
+<section class="page_title ds s-pt-115 s-pb-65 s-pb-lg-85 s-pt-lg-145 bg-auto page_title s-parallax s-overlay">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 text-center text-lg-left">
+				<h1 class="color-main">FAQ</h1>
+				<ol class="breadcrumb links-light">
+					<li class="breadcrumb-item">
+						<a href="/home">Home</a>
+					</li>
+					<li class="breadcrumb-item active">
+						<span class="bg-maincolor">FAQ</span>
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="ls py-5 c-gutter-50">
+	<div class="container">
+		<div class="text-center pb-5">
+			<h3 class="special-heading">
+				Quello che devi sapere sull'insufflaggio
+			</h3>
+			<p>
+			Tutte le risposte alle vostre domande più comuni sull’Insufflaggio
+			</p>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="divider-30 d-md-none"></div>
+				<div class="tab-content vertical-tab-content p-0 border-0">
+
+					<div class="tab-pane fade active show" id="tab{{ faq.getFaqCategoriaId() }}_pane" role="tabpanel" aria-labelledby="tab{{ faq.getFaqCategoriaId() }}">
+						<div class="accordion" id="accordion{{ faq.getFaqCategoriaId() }}" role="tablist">
+							{% for faq in data.list %}
+							<div class="card">
+								<div class="card-header" role="tab" id="collapse{{ faq.getId() }}_header">
+									<h6>
+										<a class="collapsed" data-toggle="collapse" href="#collapse{{ faq.getId() }}" aria-expanded="false" aria-controls="collapse{{ faq.getId() }}">
+											{{ faq.getDomanda() }}
+										</a>
+									</h6>
+								</div>
+								<div id="collapse{{ faq.getId() }}" class="collapse" role="tabpanel" aria-labelledby="collapse{{ faq.getId() }}_header" data-parent="#accordion{{ faq.getId() }}">
+									<div class="card-body">
+										{{ faq.getRisposta()|raw }}
+									</div>
+								</div>
+							</div> 
+							{% endfor %}
+						</div><!-- collapse -->
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{# ?Tv1jHA9ay$e9sfv #}
+{% endblock content %}

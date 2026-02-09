@@ -1,0 +1,88 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<!--{{ data | json_encode(constant('JSON_PRETTY_PRINT')) }}  -->
+<div class="table-responsive dashboard-stage mb15">
+    <table class="bordered hover w100">
+        <thead>
+            <tr>
+                <th>Domanda</th>
+                <th>Risposta</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for faq in data.list %}         
+            <tr>
+                <td>{{ faq.domanda }}</td>
+                <td>{{ faq.risposta }}</td>
+                <td>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex">
+							<button type="button" class="btn btn-success btn-square-small ml5 edit-faq" data-id="{{ faq.getId() }}">
+								<span class="fa fa-pencil"></span>
+							</button>
+							<button type="button" class="btn btn-danger  btn-square-small ml5 delete-faq" data-id="{{ faq.getId() }}">
+								<span class="fa fa-times"></span>
+							</button>
+						</div>
+					</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="kanban kanban-wrapper dashboard-stage">
+	{% for faq in data.list %}
+	<div class="kanban-stage">
+		<div class="kanban-card">
+            <p class="mb-1"><b>{{ faq.domanda }}</b></p>
+            <p>{{ faq.risposta }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+				<div class="d-flex">
+                    <button type="button" class="btn btn-success btn-square ml5 edit-faq" data-id="{{ contact.getId() }}">
+						<span class="fa fa-pencil"></span>
+					</button>
+					<button type="button" class="btn btn-danger  btn-square ml5 delete-faq" data-id="{{ contact.getId() }}">
+						<span class="fa fa-times"></span>
+					</button>
+                </div>	
+            </div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+
+
+
+
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.delete-faq', function() {
+            if (!confirm('Eliminare il contatto selezionato?')) {
+                return false;
+            }
+            this.classList.add('loading');
+            HttpRequest.delete(`/api/faq/${this.dataset.id}`, null, response => {
+                if (response.status != 1) {
+                    this.classList.remove('loading');
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location.reload();
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+		Delegate(document).on('click', '.edit-faq', function() {
+                window.location.href = `/admin/faq/${this.dataset.id}`;
+        });
+    }); 
+/**/
+</script>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+{% endblock content %}

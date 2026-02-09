@@ -1,0 +1,13 @@
+<div class="page-toolbar">
+    <div class="page-title">{{ title }}</div>
+    {% if filterPath is not null %}
+        {% include filterPath ignore missing %} 
+    {% endif %}
+    {% if data.actions is defined %}
+    <div class="actions">
+        {% for action in data.actions %}
+            {{ action.render()|raw }}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

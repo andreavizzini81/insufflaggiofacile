@@ -1,0 +1,55 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<div class="table-responsive mb15">
+    <table class="bordered hover w100">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descrizione</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Opzioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agency in data.list %}
+            <tr>
+                <td>{{ agency.getId() }}</td>
+                <td>{{ agency.getDescription() }}</td>
+                <td>{{ agency.getEmail() }}</td>
+                <td>{{ agency.getPhone() }}</td>
+                <td>
+                    <a class="action edit-agency" href="{{ path }}agency-manager/{{ agency.getId() }}">
+                        <span class="fas fa-pencil orangeFont"></span>
+                    </a>
+                    <button class="action delete-agency" data-id="{{ agency.getId() }}">
+                        <span class="fas fa-trash redFont"></span>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.delete-agency', function() {
+            if (!confirm('Eliminare l&rsquo;agenzia selezionata?')) {
+                return false;
+            }
+            this.classList.add('loading');
+            HttpRequest.delete(`${res.path}agency/${this.dataset.id}`, null, response => {
+                if (response.status != 1) {
+                    this.classList.remove('loading');
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location.reload();
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+    }); 
+
+</script>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+{% endblock content %}

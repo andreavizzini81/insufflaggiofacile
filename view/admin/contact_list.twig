@@ -1,0 +1,137 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<!--{{ data | json_encode(constant('JSON_PRETTY_PRINT')) }}  -->
+<div class="table-responsive dashboard-stage mb15">
+    <table class="bordered hover w100">
+        <thead>
+            <tr>
+                <th>Nominativo/Rag.Sociale</th>
+                <th>Provincia</th>
+				<th>Città</th>
+				<th>Leads</th>
+				<th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in data.list %}
+            {% set contactName = contact.getTypeId() == 0 ? contact.getFirstName() ~ ' ' ~ contact.getLastName() : contact.getBusinessName() %}            
+            <tr>
+                <td>{{ contactName }}</td>
+                <td>{{ contact.getState() }}</td>
+				<td>{{ contact.getCity() }}</td>
+				<td>
+				{{ contact.getCountDeals() }}
+				</td>
+				<td class="text-start">
+				{% for deal in contact.getDeals() %}
+					<button type="button" class="btn btn-warning btn-sm mb-1 view-deal" data-id="{{ deal.id }}">
+					{{ deal.label }}<br>
+					</button>
+				{% endfor %}	
+				</td>
+                <td>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex">
+							<a type="button" class="btn btn-primary btn-square-small mr5" href="tel:{{ contact.getPhone() }}">
+								<span class="fa fa-phone"></span>
+							</a>
+							<a type="button" class="btn btn-primary btn-square-small mr5" href="https://wa.me/{{ contact.getPhone() }}">
+								<span class="fab fa-whatsapp"></span>
+							</a>
+							<a type="button" class="btn btn-primary btn-square-small mr5 send-email-modal muted" data-email="{{ contact.getEmail() }}" href="javascript:void(0);">
+								<span class="fa fa-envelope"></span>
+							</a>  
+						</div>
+						<div class="d-flex">
+							<button type="button" class="btn btn-success btn-square-small ml5 edit-contact" data-id="{{ contact.getId() }}">
+								<span class="fa fa-pencil"></span>
+							</button>
+							<button type="button" class="btn btn-danger  btn-square-small ml5 delete-contact" data-id="{{ contact.getId() }}">
+								<span class="fa fa-times"></span>
+							</button>
+						</div>
+					</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="kanban kanban-wrapper dashboard-stage">
+	{% for contact in data.list %}
+	{% set contactName = contact.getTypeId() == 0 ? contact.getFirstName() ~ ' ' ~ contact.getLastName() : contact.getBusinessName() %}  
+	<div class="kanban-stage {{ event.getColor() }}">
+		<div class="kanban-card">
+            <p class="mb-1"><b>{{ contactName }}</b><br>{{ contact.getCity() }} ({{ contact.getState() }})</p>
+			{% if contact.getCountDeals() > 0 %}
+			<div class="owner">
+				<label data-prop="ownerLabel">{{ contact.getCountDeals() }} LEADS</label>
+				{% for deal in contact.getDeals() %}
+				<button type="button" class="btn btn-warning btn-sm my-2 view-deal" data-id="{{ deal.id }}">
+				{{ deal.label }} [ID:{{ deal.id }}]
+				</button>
+				{% endfor %}
+			</div>
+			{% endif %}
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+					<a type="button" class="btn btn-primary btn-lg btn-square mr5" href="tel:{{ contact.getPhone() }}"> 
+                        <span class="fa fa-phone"></span> 
+                    </a>
+					<a type="button" class="btn btn-primary btn-lg btn-square mr5" href="https://wa.me/{{ contact.getPhone() }}">
+                        <span class="fab fa-whatsapp"></span>
+                    </a>
+					<a type="button" class="btn btn-primary btn-lg btn-square mr5 send-email-modal muted" data-email="{{ contact.getEmail() }}" href="javascript:void(0);">
+                        <span class="fa fa-envelope"></span>
+                    </a>  
+                </div>
+				<div class="d-flex">
+                    <button type="button" class="btn btn-success btn-square ml5 edit-contact" data-id="{{ contact.getId() }}">
+						<span class="fa fa-pencil"></span>
+					</button>
+					<button type="button" class="btn btn-danger  btn-square ml5 delete-contact" data-id="{{ contact.getId() }}">
+						<span class="fa fa-times"></span>
+					</button>
+                </div>	
+            </div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.delete-contact', function() {
+            if (!confirm('Eliminare il contatto selezionato?')) {
+                return false;
+            }
+            this.classList.add('loading');
+            HttpRequest.delete(`/api/contact/${this.dataset.id}`, null, response => {
+                if (response.status != 1) {
+                    this.classList.remove('loading');
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location.reload();
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+		Delegate(document).on('click', '.edit-contact', function() {
+                window.location.href = `/admin/contact/${this.dataset.id}`;
+        });
+		Delegate(document).on('click', '.view-deal', function() {
+                window.location.href = `/admin/deal/${this.dataset.id}`;
+        });
+    }); 
+
+</script>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+{% endblock content %}

@@ -1,0 +1,400 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% set users = data.agency.getUsers() %}
+
+<form class="form-horizontal agency-form" action="javascript:void(0);" method="POST" autocomplete="off">
+    {% if data.agency.getId() is not null %}
+    <input type="hidden" name="id" value="{{ data.agency.getId() }}">
+    {% endif %}
+    <div class="tabs">
+        <div class="head">
+            <div class="tab active" title="Informazioni principali"></div>
+            <div class="tab" title="Indirizzi e sedi"></div>
+            <div class="tab" title="Amministrazione"></div>
+        </div>
+        <div class="content">
+            {# Informazioni principali #}
+            <div class="tab active">
+                <fieldset>
+                    <legend>INFORMAZIONI PRINCIPALI</legend>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Tipologia</label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="type">
+                                {% for key, label in constant('Agency::TYPES') %}
+                                <option value="{{ key }}" {{ setOption(key, data.agency.getType()) }}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Descrizione</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="description" value="{{ data.agency.getDescription() }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Titolare</label>
+                        <div class="col-md-4">
+                            <select class="form-control" name="holder_user_id">
+                                <option value="">Nessun titolare</option>
+                                {% for user in users %}
+                                <option value="{{ user.getId() }}" {{ setOption(user.getId(), data.agency.getHolderUserId()) }}>{{ user.getFirstName() }} {{ user.getLastName() }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Responsabile CRM</label>
+                        <div class="col-md-4">
+                            <select class="form-control" name="default_responsible_id">
+                                <option value="">Nessun responsabile di default</option>
+                                {% for user in users %}
+                                <option value="{{ user.getId() }}" {{ setOption(user.getId(), data.agency.getDefaultResponsibleId()) }}>{{ user.getFirstName() }} {{ user.getLastName() }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Sottodominio</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" name="subdomain" value="{{ data.agency.getSubdomain() }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Telefono</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" name="fixed_phone" value="{{ data.agency.getFixedPhone() }}" required>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Mobile</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" name="phone" value="{{ data.agency.getPhone() }}" required>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Indirizzo email</label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <input type="email" class="form-control" name="email" value="{{ data.agency.getEmail() }}" data-uid="{{ data.agency.getId() }}" autocomplete="off" role="presentation" required>
+                                <div class="input-group-addon">
+                                    <span class="fas fa-fw"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Ragione sociale</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="business_name" value="{{ data.agency.getBusinessName() }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Partita IVA</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" name="vat_number" value="{{ data.agency.getVatNumber() }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Orario apertura</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" name="opening_info" value="{{ data.agency.getOpeningInfo() }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">PEC</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="pec" value="{{ data.agency.getPec() }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Codice SDI</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" name="sdi" value="{{ data.agency.getSdi() }}">
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            {# Indirizzi e sedi #}
+            <div class="tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>SEDE OPERATIVA</legend>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Indirizzo</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="address" value="{{ data.agency.getAddress() }}" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Regione</label>
+                                <div class="col-md-5">
+                                    <select name="region" class="form-control agency-region" data-location-explorer-field="region" required>
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for region in data.region %}
+                                        <option value="{{ region }}" {{ setOption(region, data.agency.getRegion()|upper)  }}>{{ region }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Provincia</label>
+                                <div class="col-md-5">
+                                    <select name="state" class="form-control agency-state" data-location-explorer-field="state" required>
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for state in data.state %}
+                                        <option value="{{ state.provincia }}" {{ setOption(state.provincia, data.agency.getState()|upper)  }}>{{ state.nome_provincia }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Citt&agrave;</label>
+                                <div class="col-md-9">
+                                    <select name="city" class="form-control agency-city" data-location-explorer-field="city" required>
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for city in data.city %}
+                                        <option value="{{ city }}" {{ setOption(city, data.agency.getCity()|upper)  }}>{{ city }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">CAP</label>
+                                <div class="col-md-3">
+                                    <select name="zipcode" class="form-control agency-zipcode" data-location-explorer-field="zipcode" required>
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for zipcode in data.zipcode %}
+                                        <option value="{{ zipcode }}" {{ setOption(zipcode, data.agency.getZipcode()) }}>{{ zipcode }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Latitudine</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control latitude" name="latitude" value="{{ data.agency.getLatitude() }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Longitudine</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control longitude" name="longitude" value="{{ data.agency.getLongitude() }}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Mappa</label>
+                                <div class="col-md-9">
+                                    <div id="map-wrapper" class="agency-map"></div>   
+                                </div>
+                            </div>
+                        </fieldset>                    
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>SEDE LEGALE</legend>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Indirizzo</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="business_address" value="{{ data.agency.getBusinessAddress() }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Regione</label>
+                                <div class="col-md-5">
+                                    <select name="business_region" class="form-control agency-business-region" data-location-explorer-field="business_region">
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for region in data.region %}
+                                        <option value="{{ region }}" {{ setOption(region, data.agency.getBusinessRegion()|upper)  }}>{{ region }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Provincia</label>
+                                <div class="col-md-5">
+                                    <select name="business_state" class="form-control agency-business-state" data-location-explorer-field="business_state">
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for state in data.state %}
+                                        <option value="{{ state.provincia }}" {{ setOption(state.provincia, data.agency.getBusinessState()|upper)  }}>{{ state.nome_provincia }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">Citt&agrave;</label>
+                                <div class="col-md-9">
+                                    <select name="business_city" class="form-control agency-business-city" data-location-explorer-field="business_city">
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for city in data.city %}
+                                        <option value="{{ city }}" {{ setOption(city, data.agency.getBusinessCity()|upper)  }}>{{ city }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label field-descriptor col-md-3">CAP</label>
+                                <div class="col-md-3">
+                                    <select name="business_zipcode" class="form-control agency-business-zipcode" data-location-explorer-field="business_zipcode">
+                                        <option value="">Seleziona un'opzione...</option>
+                                        {% for zipcode in data.zipcode %}
+                                        <option value="{{ zipcode }}" {{ setOption(zipcode, data.agency.getBusinessZipcode()) }}>{{ zipcode }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            {# Amministrazione #}
+            <div class="tab">
+                <fieldset>
+                    <legend>PARAMETRI INVIO EMAIL</legend>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Invio abilitata</label>
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="smtp_enabled" value="1" {{ setCheckbox(1, data.agency.smtpIsEnabled()) }}> SI
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="smtp_enabled" value="0" {{ setCheckbox(0, data.agency.smtpIsEnabled()) }}> NO
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Nome utente</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="{{ data.agency.getSmtpUsername() }}" name="smtp_username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Password</label>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <input type="password" class="form-control" value="{{ data.agency.getSmtpPassword() }}" name="smtp_password">
+                                <span class="input-group-addon toggle-password-visibility">
+                                    <i class="fas"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>ALTRO</legend>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Data creazione</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" value="{{ data.agency.getCreatedAt() is not null ? data.agency.getCreatedAt()|date('d/m/Y H:i:s') : '' }}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label field-descriptor col-md-2">Data aggiornamento</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" value="{{ data.agency.getUpdatedAt() is not null ? data.agency.getUpdatedAt()|date('d/m/Y H:i:s') : '' }}" readonly>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+   
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const _frm = document.querySelector('.agency-form');
+        const mapWrapper = document.getElementById('map-wrapper');
+
+        Delegate(document).on('click', '.save-agency', function() {
+            let validation = (new FormValidator({alerts: false})).checkAll(_frm);
+            if (!validation.valid) {
+                let invalidFieldsErrors = [];
+                validation.fields.forEach(entry => {
+                    let _group = entry.field.closest('.form-group');
+                    _group.classList.toggle('has-error', !entry.valid);
+                    if (!entry.valid) {
+                        let label = _group.querySelector('label.field-descriptor');
+                        invalidFieldsErrors.push(`<span class="fw400 blackFont">${label.textContent}: </span>${entry.error}`);
+                    }
+                });
+                return new resAlert('Verificare i campi contrassegnati in rosso:', `${invalidFieldsErrors.join('<br>')}`, {type:'warning'});
+            }
+            let data = (new FormSerializer(_frm)).serialize();
+            this.classList.add('loading');
+            HttpRequest.post(`${res.path}agency`, data, response => {
+                this.classList.remove('loading');
+                if (response.status != 1) {
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location = `${res.path}agency-list`;
+            });
+        });
+
+        Delegate(document).on('change', 'input[type="email"][data-uid]', validateEmailUniqueness);
+
+        function validateEmailUniqueness(skipOnEmpty = false) {
+            let _ctl = document.querySelector('input[type="email"][data-uid]');
+            if (skipOnEmpty && _ctl.value.trim() == '') {
+                return;
+            }
+            let _adn = _ctl.nextElementSibling;
+            _adn.classList.remove('is-valid', 'is-error');
+            _adn.classList.add('loading');
+            HttpRequest.post(`${res.path}agency/validate`, {
+                id: _ctl.dataset.uid,
+                email: _ctl.value
+            }, response => {
+                _adn.classList.remove('loading');
+                if (response.status != 1) {
+                    _adn.classList.add('is-error');
+                    _ctl.closest('.form-group').classList.add('has-error');
+                    throw response.message ?? 'Errore generico';
+                }
+                _adn.classList.add('is-valid');
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type: 'error'}));
+        };
+        
+        function getGeoCoordsByAddress(params, onSuccess) {
+            
+        }
+
+        validateEmailUniqueness(true);
+
+        const mapHandler = new AgencyMapHandler(
+            mapWrapper, {
+                onSelect: (coordinates) => {
+                    _frm.latitude.value = coordinates.lat.toFixed(6);
+                    _frm.longitude.value = coordinates.lng.toFixed(6);
+                }                
+            }
+        );
+
+        void new AddressExplorer(_frm, {
+            onChange: (name, params) => {
+                if (name != 'zipcode') {
+                    return;
+                }
+                HttpRequest.post(`${res.absolutePath}api/address/coordinates`, params, (data, response) => {
+                    if (data.status == 1) {
+                        mapHandler.setPosition(data.result);
+                        _frm.latitude.value = data.result.lat;
+                        _frm.longitude.value = data.result.lng;
+                    }
+                });
+            }
+        });
+        
+        void new AddressExplorer(_frm, {
+            prefix: 'business'
+        });
+
+    });
+
+</script>
+{% endblock content %}

@@ -1,0 +1,222 @@
+{% extends "index.twig" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-10 col-lg-8">
+		<div class="widget">
+			<div class="head">
+				<div class="icon fa fa-pencil"></div>
+				<p class="title">Gestione pagina</p>
+			</div>
+			<div class="content">
+				<form class="form-horizontal admin-page-form" action="javascript:void(0);" method="POST">
+					<input type="hidden" name="params.id" value="{{ data.page.getId() }}">
+					<div class="form-group">
+						<label class="control-label col-md-3">Nome pagina</label>
+						<div class="col-md-6">
+							<input type="text" name="params.name" class="form-control reqField" value="{{ data.page.getName() }}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Categoria</label>
+						<div class="col-md-6">
+							<select class="form-control" name="params.id_admin_page_category">
+								{% for category in data.categories %}
+								<option value="{{ category.id }}" {{ data.categoryId == category.id ? 'selected' : '' }}>{{ category.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Visibile nel men&ugrave;</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.visible" value="1" {{ data.page.isVisible() ? 'checked' : ''}}> SI
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.visible" value="0" {{ data.page.isVisible() ? '' : 'checked'}}> NO
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Pubblica</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.is_public" value="1" {{ data.page.isPublic() ? 'checked' : ''}}> SI
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.is_public" value="0" {{ data.page.isPublic() ? '' : 'checked'}}> NO
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Abilitata di default</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.is_default" value="1" {{ data.page.isDefault() ? 'checked' : ''}}> SI
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.is_default" value="0" {{ data.page.isDefault() ? '' : 'checked'}}> NO
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Men&ugrave; laterale</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.has_nav" value="1" {{ data.page.hasNav() ? 'checked' : ''}}> SI
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.has_nav" value="0" {{ data.page.hasNav() ? '' : 'checked'}}> NO
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Barra superiore</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.has_topbar" value="1" {{ data.page.hasTopbar() ? 'checked' : ''}}> SI
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.has_topbar" value="0" {{ data.page.hasTopbar() ? '' : 'checked'}}> NO
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Titolo di pagina e azioni</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.has_pagebar" value="1" {{ data.page.hasPagebar() ? 'checked' : ''}}> SI
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.has_pagebar" value="0" {{ data.page.hasPagebar() ? '' : 'checked'}}> NO
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Link esterno</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.is_external" value="1" {{ data.page.isExternal() ? 'checked' : ''}}> SI
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.is_external" value="0" {{ data.page.isExternal() ? '' : 'checked'}}> NO
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Apertura</label>
+						<div class="col-md-9">
+							<label class="radio-inline">
+								<input type="radio" name="params.is_new_page" value="0" {{ data.page.isNewPage() ? '' : 'checked'}}> Stessa pagina
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="params.is_new_page" value="1" {{ data.page.isNewPage() ? 'checked' : ''}}> Nuova pagina
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">URL</label>
+						<div class="col-md-6">
+							<input type="text" name="params.url" class="form-control reqField" value="{{ data.page.getUrl() }}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Template Twig</label>
+						<div class="col-md-6">
+							<input type="text" name="params.view" class="form-control reqField" value="{{ data.page.getView() }}" {{ data.page.isExternal() ? 'readonly' : '' }}>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Filtro</label>
+						<div class="col-md-4">
+							<input type="text" name="params.filter" class="form-control" value="{{ data.page.getFilterName() }}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Gruppi utente</label>
+						<div class="col-md-9">
+							<div class="checkbox multiple">
+								{% for roleId, roleName in constant('User::ROLES') %}
+								<label>
+									<input type="checkbox" name="params.roles[]" value="{{ roleId }}" {{ flagInArray(roleId, data.page.getUserRoles(), 'checked') }}>{{ roleName }}
+								</label>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">Ordine</label>
+						<div class="col-md-2">
+							<input type="number" name="params.sort" class="form-control monospace f16pt" value="{{ data.page.getSort() }}">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="footer">
+				<button class="btn btn-primary action submit">
+					<span class="fa fa-check navyFont"></span>&nbsp;APPLICA
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+
+	document.addEventListener('DOMContentLoaded', function() {
+
+		Delegate(document).on('change', 'input[name="is_external"]', function() {
+			document.querySelector('input[name="view"]').readOnly = (this.value == '1' && this.checked == true);
+		});
+
+		Delegate(document).on('click', '.action.submit', function() {
+			let error = false;
+			let _frm = document.querySelector('.admin-page-form');
+			_frm.querySelectorAll('.reqField:not([readonly])').forEach(itm => {
+				if (!Utils.validateString(itm.value)) {
+					itm.closest('.form-group').classList.add('has-error');
+					error = true;
+				}
+			});
+			if (error) {
+				return new resAlert('Dati mancanti', 'Uno o pi&ugrave; campi non sono stati compilati correttamente.', {type:'error'});
+			}
+			_frm.classList.add('loading-overlay');
+			this.disabled = true;
+			let serializer = new FormSerializer(_frm);
+			HttpRequest.post(`${res.path}admin-page`, serializer.serialize(), 
+				response => {
+					if (response.status == 0) {
+						_frm.classList.remove('loading-overlay');
+						this.disabled = false;
+						throw response.message ?? 'Errore generico';
+					}
+					window.location.href = `${res.path}admin-pages/${response.result.categoryId}`;
+				}, 
+				error => {
+					void new resAlert('Operazione fallita', error.toString(), {type:'error'});
+				}
+			);
+		});
+
+		Delegate(document).on('click', '.delete-page', function() {
+			if (!confirm('Eliminare questa pagina?')) {
+				return false;
+			}
+			this.classList.add('loading');
+			HttpRequest.delete(`${res.path}admin-page/${this.dataset.id}`, {},
+				response => {
+					if (response.status == 0) {
+						throw response.message ?? 'Errore generico';
+					}
+					window.location.href = `${res.path}admin-pages/${this.dataset.categoryId}`;
+				}, 
+				error => {
+					void new resAlert('Operazione fallita', error.toString(), {type:'error'});
+				}
+			);
+		});
+
+	});
+
+</script>
+{% endblock content %}

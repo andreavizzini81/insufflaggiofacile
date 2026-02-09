@@ -1,0 +1,303 @@
+<div class="col-12 my-3 text-light">
+    <h3>Scheda pareti perimetrali</h3>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label class="control-label">Ci sono cassonetti / avvolgibili?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="cassonetti_avvolgibili" value="Si" {{ immobile.cassonetti_avvolgibili == 'Si' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="Si" disabled>
+            <input type="text" class="form-control field" name="cassonetti_avvolgibili_numero" value="{{ immobile.cassonetti_avvolgibili_numero != '' ? immobile.cassonetti_avvolgibili_numero : '' }}" placeholder="Se si, scrivi quì il numero">
+        </div>
+        <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="cassonetti_avvolgibili" value="No" {{ immobile.cassonetti_avvolgibili == 'No' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="No" disabled>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label class="control-label">Se ci sono cassonetti / avvolgibili, comunicano con l'intercapedine?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="cassonetti_avvolgibili_comunicanti" value="Si" {{ immobile.cassonetti_avvolgibili_comunicanti == 'Si' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Si" disabled>
+        </div>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="cassonetti_avvolgibili_comunicanti" value="No" {{ immobile.cassonetti_avvolgibili_comunicanti == 'No' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="No" disabled>
+        </div>
+        <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="cassonetti_avvolgibili_comunicanti" value="Non so" {{ immobile.cassonetti_avvolgibili_comunicanti == 'Non so' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Non so" disabled>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label class="control-label">Ci sono verande da insufflare?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="verande_da_insufflare" value="Si" {{ immobile.verande_da_insufflare == 'Si' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="Si" disabled>
+        </div>
+        <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="verande_da_insufflare" value="No" {{ immobile.verande_da_insufflare == 'No' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="No" disabled>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label class="control-label">Ci sono vani scala da insufflare?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="vano_scala_da_insufflare" {{ immobile.vano_scala_da_insufflare == 'Si' ? 'checked' : '' }} value="Si" required>
+            </div>
+            <input type="text" class="form-control" placeholder="Si" disabled>
+        </div>
+        <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="vano_scala_da_insufflare" value="No" {{ immobile.vano_scala_da_insufflare == 'No' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="No" disabled>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label class="control-label">Ci sono canne fumarie?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="canne_fumarie" {{ immobile.canne_fumarie == 'Si' ? 'checked' : '' }} value="Si" required>
+            </div>
+            <input type="text" class="form-control" placeholder="Si" disabled>
+        </div>
+        <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="canne_fumarie" value="No" {{ immobile.canne_fumarie == 'No' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="No" disabled>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label class="control-label">Da dove si svolge la lavorazione?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="lavorazione" value="Interno" {{ immobile.lavorazione == 'Interno' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="Interno" disabled>
+        </div>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="lavorazione" value="Esterno" {{ immobile.lavorazione == 'Esterno' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Esterno" disabled>
+        </div>
+        <div class="input-group">	
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="lavorazione" value="Misto" {{ immobile.lavorazione == 'Misto' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Misto" disabled>
+            <input type="text" class="form-control field" name="lavorazione_misto" value="{{ immobile.lavorazione_misto != '' ? immobile.lavorazione_misto : '' }}" placeholder="Se misto, specifica">
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3 esterno int-ext">
+    <div class="form-group">
+        <label class="control-label">Esternamente che tipo di facciata ha l'immobile?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="facciata_immobile" value="Rasata" {{ immobile.facciata_immobile == 'Rasata' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="Rasata" disabled>
+        </div>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="facciata_immobile" value="Mattone faccia vista" {{ immobile.facciata_immobile == 'Mattone faccia vista' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Mattone faccia vista" disabled>
+        </div>
+        <div class="input-group">	
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="facciata_immobile" value="Altro" {{ immobile.facciata_immobile == 'Altro' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Altro" disabled>
+            <input type="text" class="form-control field" name="facciata_altro" value="{{ immobile.facciata_altro != '' ? immobile.facciata_altro : '' }}" placeholder="Se altro, specifica">
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3 esterno int-ext">
+    <div class="form-group">
+        <label class="control-label">Esternamente si ha un piano d'appoggio?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="piano_appoggio" value="Si" {{ immobile.piano_appoggio == 'Si' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="Si" disabled>
+        </div>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="piano_appoggio" value="No" {{ immobile.piano_appoggio == 'No' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="No" disabled>
+        </div>
+        <div class="input-group">	
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="piano_appoggio" value="In parte" {{ immobile.piano_appoggio == 'In parte' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="In parte" disabled>
+            <input type="text" class="form-control field" name="piano_appoggio_altro" value="{{ immobile.piano_appoggio_altro != '' ? immobile.piano_appoggio_altro : '' }}" placeholder="Se in parte, specifica">
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3 esterno int-ext">
+    <div class="form-group">
+        <label class="control-label">Quali strumenti di elevazione sono necessari?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="strumenti_necessari" value="Nessuno" {{ immobile.strumenti_necessari == 'Nessuno' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="Nessuno" disabled>
+        </div>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="strumenti_necessari" value="Trabattello" {{ immobile.strumenti_necessari == 'Trabattello' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="Trabattello" disabled>
+        </div>
+        <div class="input-group">	
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="strumenti_necessari" value="Cestello" {{ immobile.strumenti_necessari == 'Cestello' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Cestello" disabled>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3 interno int-ext">
+    <div class="form-group">
+        <label class="control-label">Internamente come si presenta l'immobile?</label>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field"  type="radio" name="immobile_interno" value="In ristrutturazione" {{ immobile.immobile_interno == 'In ristrutturazione' ? 'checked' : '' }} required>
+            </div>
+            <input type="text" class="form-control" placeholder="In ristrutturazione" disabled>
+        </div>
+        <div class="input-group mb-1">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="immobile_interno" value="Finito e non arredato" {{ immobile.immobile_interno == 'Finito e non arredato' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Finito e non arredato" disabled>
+        </div>
+        <div class="input-group">	
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 field" type="radio" name="immobile_interno" value="Finito e arredato" {{ immobile.immobile_interno == 'Finito e arredato' ? 'checked' : '' }}>
+            </div>
+            <input type="text" class="form-control" placeholder="Finito e arredato" disabled>
+        </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label>Altezza sottotrave in metri</label>
+        <input type="text" name="altezza_sottotrave" class="form-control mka-decimal field" value="{{ immobile.altezza_sottotrave != '' ? immobile.altezza_sottotrave : '' }}">
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label>Metri lineari delle pareti</label>
+        <input type="text" name="metri_lineari_delle_pareti" class="form-control mka-decimal field" value="{{ immobile.metri_lineari_delle_pareti != '' ? immobile.metri_lineari_delle_pareti : '' }}">
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group"> 
+        <label>Metri quadri totali degli infissi</label>
+        <input type="text" name="metri_quadri_infissi" class="form-control mka-decimal field" value="{{ immobile.metri_quadri_infissi != '' ? immobile.metri_quadri_infissi : '' }}">
+    </div>
+</div> 
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label>Spessore intercapedine in metri</label>
+        <input type="text" name="spessore_intercapedine" class="form-control mka-decimal field" value="{{ immobile.spessore_intercapedine != '' ? immobile.spessore_intercapedine : '' }}">
+    </div>
+</div>
+<div class="col-12 mb-3">
+    <div class="form-group">
+        <label>Metri cubi da insufflare a parete</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button class="btn btn-warning btn-calc" type="button">Calcola</button>
+            </div>
+            <input type="text" name="metri_cubi_pareti" class="form-control" value="{{ immobile.metri_cubi_pareti != '' ? immobile.metri_cubi_pareti : '' }}" readonly>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+		Delegate(document).on('click', '.btn-calc', function() {
+			const metriCubiOutput = document.querySelector('[name="metri_cubi_pareti"]');
+			const altezza = parseFloat(document.querySelector('[name="altezza_sottotrave"]').value.replace(",", "."));
+			const lunghezzaPareti = parseFloat(document.querySelector('[name="metri_lineari_delle_pareti"]').value.replace(",", "."));
+			const mqInfissi = parseFloat(document.querySelector('[name="metri_quadri_infissi"]').value.replace(",", "."));
+			const spessoreIntercapedine = parseFloat(document.querySelector('[name="spessore_intercapedine"]').value.replace(",", "."));
+			const metriCubi = (((altezza*lunghezzaPareti)-mqInfissi)*spessoreIntercapedine).toFixed(2);
+			metriCubiOutput.value = metriCubi;
+		});
+
+    });
+	
+	Delegate(document).on('change', '[name="lavorazione"]', () => {
+		const selectedValue = document.querySelector('input[name="lavorazione"]:checked').value;
+		console.log("Nuovo valore selezionato: " + selectedValue);
+		intExt();
+	});
+	
+	function intExt() {
+		const selectedValue = document.querySelector('input[name="lavorazione"]:checked').value;
+		const selectorsIntExtAll = document.querySelectorAll(".int-ext");
+		selectorsIntExtAll.forEach(function(el) {
+			el.classList.add('invisible');
+			el.classList.remove('col-12');
+			el.classList.remove('col-lg-6');
+			el.classList.remove('mb-3');
+			el.style.height = "0px"
+		});
+		if (selectedValue.toLowerCase() === 'esterno' || selectedValue.toLowerCase() === 'interno') {
+			const selectors = document.querySelectorAll("." + selectedValue.toLowerCase());
+			selectors.forEach(function(el) {
+				el.classList.remove('invisible');
+				el.classList.add('col-12');
+				el.classList.add('col-lg-6');
+				el.classList.add('mb-3');
+				el.style.height = "100%"
+			});
+			return;
+		}
+		selectorsIntExtAll.forEach(function(el) {
+			el.classList.remove('invisible');
+			el.classList.add('col-12');
+			el.classList.add('col-lg-6');
+			el.classList.add('mb-3');
+			el.style.height = "100%"
+		});
+		
+	}
+	
+	intExt();
+	
+</script>

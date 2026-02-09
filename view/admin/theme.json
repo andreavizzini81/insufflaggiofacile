@@ -1,0 +1,255 @@
+{
+    "title": "CasaBioCasaMia Management System",
+    "assets": {
+        "links": [
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "{{path}}assets/css/bootstrap.css"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "{{path}}assets/css/pro.min.css"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "{{path}}assets/css/daterangepicker.min.css"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "{{path}}assets/css/style.css?v=4"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "{{path}}assets/css/kanban.css?v=6"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "stylesheet",
+                    "href": "{{path}}assets/css/suneditor.min.css"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "57x57",
+                    "href": "{{path}}assets/metadata/pwa/ios/57.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "60x60",
+                    "href": "{{path}}assets/metadata/pwa/ios/60.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "72x72",
+                    "href": "{{path}}assets/metadata/pwa/ios/72.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "76x76",
+                    "href": "{{path}}assets/metadata/pwa/ios/76.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "114x114",
+                    "href": "{{path}}assets/metadata/pwa/ios/114.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "120x120",
+                    "href": "{{path}}assets/metadata/pwa/ios/120.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "144x144",
+                    "href": "{{path}}assets/metadata/pwa/ios/144.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "152x152",
+                    "href": "{{path}}assets/metadata/pwa/ios/152.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "apple-touch-icon",
+                    "sizes": "180x180",
+                    "href": "{{path}}assets/metadata/pwa/ios/180.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "icon",
+                    "type": "image/png",
+                    "sizes": "192x192",
+                    "href": "{{path}}assets/metadata/pwa/ios/192.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "icon",
+                    "type": "image/png",
+                    "sizes": "48x48",
+                    "href": "{{path}}assets/metadata/pwa/android/android-launchericon-48-48.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "icon",
+                    "type": "image/png",
+                    "sizes": "96x96",
+                    "href": "{{path}}assets/metadata/pwa/android/android-launchericon-96-96.png"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "rel": "manifest",
+                    "href": "{{path}}assets/metadata/pwa/manifest.json"
+                }
+            }
+        ],
+        "scripts": [
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/Delegate.min.js",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/datepicker-full.min.js",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/classes.js?v=7",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/moment.min.js",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/sortable.min.js",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/validator.min.js",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/auto-complete.min.js",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/modal.min.js",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/custom.js?v=8",
+                    "type": "application/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/vanillaselectbox.min.js",
+                    "type": "text/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "https://maps.googleapis.com/maps/api/js?key=AIzaSyB1n5NX3Nq0sK3H167-KaqhMdLpViVjsJk",
+                    "type": "text/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/suneditor.min.js",
+                    "type": "text/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/suneditor-lang_it.js",
+                    "type": "text/javascript"
+                }
+            },
+            {
+                "position": "head",
+                "attributes": {
+                    "src": "{{path}}assets/js/ckeditor.js",
+                    "type": "text/javascript"
+                }
+            }
+        ]
+    }
+}

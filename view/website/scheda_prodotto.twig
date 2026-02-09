@@ -1,0 +1,259 @@
+{% extends "index.twig" %}
+{% block content %}
+<section class="page_title ds s-pt-115 s-pb-65 s-pb-lg-85 s-pt-lg-145 bg-auto page_title s-parallax s-overlay">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 text-center text-lg-left">
+				<h1 class="color-main">{{ data.product.title }}</h1>
+				<ol class="breadcrumb links-light">
+					<li class="breadcrumb-item">
+						<a href="/home">Home</a>
+					</li>
+					<li class="breadcrumb-item active">
+						<span class="bg-maincolor">Scheda prodotto</span>
+					</li>
+				</ol>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+<section class="ls s-pt-60 s-pb-10 s-py-lg-100 s-py-xl-150 c-gutter-60 c-mb-50 c-mb-lg-0">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-7">
+
+				<h1>{{ data.product.title }}</h1>
+
+				{{ data.product.description | raw }}
+				<!--
+				<p class="excerpt">
+					Namber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat
+					facer possim assum.
+				</p>
+
+				<p>
+					Lorem idolorame conseetur sadipscing elitdiam nonumy eirmod tempor invidunt ut labore et dolore
+					magna aliquyam ersed diam voluptua vero eoet accusam et justo duo dolores et ea rebum. Stet clita
+					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet rem ipsum dolorsit amet
+					consetetur sadipscing elitr:
+				</p>
+				<p>
+					Lorem idolorame conseetur sadipscing elitdiam nonumy eirmod tempor invidunt ut labore et dolore
+					magna aliquyam ersed diam voluptua vero eoet accusam et justo duo dolores et ea rebum. Stet clita
+					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet rem ipsum dolorsit amet
+					consetetur sadipscing elitr:
+				</p>
+				<p>
+					Lorem idolorame conseetur sadipscing elitdiam nonumy eirmod tempor invidunt ut labore et dolore
+					magna aliquyam ersed diam voluptua vero eoet accusam et justo duo dolores et ea rebum. Stet clita
+					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet rem ipsum dolorsit amet
+					consetetur sadipscing elitr:
+				</p>
+				<ul class="list-styled">
+					<li>
+						<a href="javascript:void(0);">Lorem ipsum dolor sit amet</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Sint animi non ut sed</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Eaque blanditiis nemo</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Amet, consectetur adipisicing</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Blanditiis nemo quaerat</a>
+					</li>
+				</ul>
+				-->
+			</div>
+
+			<div class="col-lg-5 service-tab">
+				<div class="mb-30">
+					<img src="{{ data.product.getImage() }}" alt="">
+				</div>
+				<div id="accordion01" role="tablist">
+					{% for product in f_nav['product'] %}
+					{% if  product.getId() != data.product.id %}
+					<div class="card">
+						<div class="card-header" role="tab" id="collapse{{ product.getId() }}_header">
+							<h6>
+								<a class="collapsed" data-toggle="collapse" href="#collapse{{ product.getId() }}" aria-expanded="false" aria-controls="collapse{{ product.getId() }}">
+									{{ product.getTitle() }}
+								</a>
+							</h6>
+						</div>
+						<div id="collapse{{ product.getId() }}" class="collapse" role="tabpanel" aria-labelledby="collapse{{ product.getId() }}_header" data-parent="#accordion01">
+							<div class="card-body">
+								<div class="media align-items-center">
+									<div class="media-left">
+										<a href="{{ path }}scheda-prodotto/{{ product.getId() }}">
+											<img src="{{ product.getImage() }}" alt="">
+										</a>
+									</div>
+									<div class="media-body">
+										Scheda di approfondimento
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+					{% endfor %}
+				</div>
+
+				<div class="ls ms mt-40 p-40">
+					<form class="contact-form c-mb-10 c-gutter-10" method="post">
+						<h5 class="special-heading">
+							Compila il form sottostante e sarai ricontattato telefonicamente per ricevere un preventivo
+						</h5>
+						<div class="form-group has-placeholder text-left">
+							<p>Lavoriamo solo in Sicilia, in quale provincia si trova il tuo immobile?</p>
+						</div>
+						<div class="form-group has-placeholder">
+							<select class="form-select provincia" name="provincia" class="form-control" required>
+								<option value="">Scegli la provincia</option>
+								<option value="AG">AGRIGENTO</option>
+								<option value="CL">CALTANISSETTA</option>
+								<option value="CT">CATANIA</option>
+								<option value="EN">ENNA</option>
+								<option value="ME">MESSINA</option>
+								<option value="PA">PALERMO</option>
+								<option value="RG">RAGUSA</option>
+								<option value="PA">PALERMO</option>
+								<option value="TP">TRAPANI</option>
+							<select>
+						</div>
+						<div class="form-group has-placeholder text-left">
+							<p>In quale comune?</p>
+						</div>
+						<div class="form-group has-placeholder">
+							<select class="form-select comune" name="comune" class="form-control" required>
+								<option value="">Scegli il comune</option>
+							<select>
+						</div>
+						<div class="form-group has-placeholder text-left">
+							<p>In quale condizione si trova il tuo immobile?</p>
+						</div>
+						<div class="form-group has-placeholder">
+							<select class="form-select" name="stato_immobile" class="form-control" required>
+								<option value="">Ad es. in ristrutturazione</option>
+								<option value="in costruzione">In costruzione</option>
+								<option value="in ristrutturazione">In ristrutturazione</option>
+								<option value="ci vivo dentro">Ci vivo dentro</option>
+							<select>
+						</div>
+						<div class="form-group has-placeholder text-left">
+							<p>Cosa vuoi isolare?</p>
+						</div>
+						<div class="form-group has-placeholder">
+							<select class="form-select" name="isolamento_immobile" class="form-control" required>
+								<option value="">Ad es. muri perimetrali</option>
+								<option value="muri perimetrali">Muri perimetrali</option>
+								<option value="tetto">Tetto</option>
+								<option value="solaio">Solaio</option>
+							<select>
+						</div>
+						<div class="form-group has-placeholder text-left">
+							<p>Quando vuoi iniziare i lavori?</p>
+						</div>
+						<div class="form-group has-placeholder">
+							<select class="form-select" name="lavori_immobile" class="form-control" required>
+								<option value="">Ad es. subito</option>
+								<option value="subito">Subito</option>
+								<option value="1 - 3 mesi">1 - 3 Mesi</option>
+								<option value="3 - 6 mesi">3 - 6 Mesi</option>
+								<option value="non so">Non so</option>
+							<select>
+						</div>
+						<div class="form-group has-placeholder d-none">
+							<textarea rows="7" cols="45" name="messaggio" class="form-control" placeholder="Descrivi il problema" required>Voglio insufflare il mio immobile con: {{ data.product.title }}</textarea>
+						</div>
+						<div class="form-group has-placeholder text-left">
+							<p>Inserisci le informazioni richieste di seguito, le useremo per contattarti ed inviarti il preventivo richiesto.</p>
+						</div>
+						<div class="form-group has-placeholder">
+							<label for="name">Nome <span class="required">*</span></label>
+							<i class="fa fa-user"></i>
+							<input type="text" size="30" value="" name="nome" class="form-control" placeholder="Nome" required>
+						</div>
+
+						<div class="form-group has-placeholder">
+							<label for="surname">Cognome <span class="required">*</span></label>
+							<input type="text" size="30" value="" name="cognome" class="form-control" placeholder="Cognome" required>
+						</div>
+
+						<div class="form-group has-placeholder">
+							<label for="phone">Telefono<span class="required">*</span></label>
+							<i class="fa fa-phone"></i>
+							<input type="text" size="30" value="" name="telefono" class="form-control" placeholder="Telefono" required>
+						</div>
+
+						<div class="form-group has-placeholder">
+							<label for="email">Email<span class="required">*</span></label>
+							<i class="fa fa-envelope"></i>
+							<input type="email" size="30" value="" name="email" class="form-control" placeholder="Email" required>
+						</div>
+
+						<button type="button" id="send-form" class="btn btn-wide btn-small btn-maincolor with-icon ">Invia</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+
+ document.addEventListener('DOMContentLoaded', function() {
+
+	Delegate(document).on('change', '.provincia', function(event) {
+		let provincia = document.querySelector('.provincia');
+		HttpRequest.post(`/api/address/getCity`, { state: provincia.value }, response => {
+			if (response.status != 1) {
+				throw response.message ?? 'Errore generico';
+			}
+			let comune = document.querySelector('.comune');
+			response.result.list.forEach(item => {
+				const option = document.createElement('option');
+				option.value = item._key;
+				option.text = item._value;
+				comune.add(option);
+			});
+		});
+		/**/
+	});
+
+	Delegate(document).on('click', '#send-form', function(event) {
+		const badElements = document.querySelectorAll('.bad');
+		badElements.forEach(element => {
+			element.classList.remove('bad');
+		});
+		let _frm = document.querySelector('.contact-form');
+		let validation = (new FormValidator({alerts: false})).checkAll(_frm);
+		console.log(validation);
+		if (!validation.valid) {
+			validation.fields.forEach(entry => {
+				entry.field.closest('.form-group').classList.toggle('bad', !entry.valid);
+			});
+		} else {
+			let data = (new FormSerializer(_frm)).serialize();
+			this.classList.add('invisible');
+			HttpRequest.post(`/api/richiedi-preventivo`, {...data, piattaforma: 'website' }, response => {
+				this.classList.remove('invisible');
+				if (response.status != 1) {
+					throw response.message ?? 'Errore generico';
+				}
+				gtag_report_conversion('/ok');
+			});
+		}
+	});
+	
+});
+
+</script>
+
+{% endblock content %}

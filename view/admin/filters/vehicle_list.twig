@@ -1,0 +1,141 @@
+<form action="javascript:void(0);" method="get" class="filter-wrapper list-filter-form" data-action="{{ path }}vehicle-list">
+    <input type="hidden" name="page" value="{{ data.pagination_obj.current }}">
+    <div class="params-wrapper">
+        <div class="dropdown-toggle" data-toggle-filter></div>
+        <div class="tokens-wrapper"></div>
+        <div class="search-input-wrapper">
+            <input type="text" name="params[key]" value="{{ data.filterParams.key ?? '' }}" placeholder="Ricerca..." autocomplete="off">
+        </div>
+        <button type="button" class="filter-submit" data-action="submit"></button>
+    </div>
+    <div class="dropdown-wrapper">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-md-3">Marca</label>
+                <div class="col-md-9">
+                    <select class="form-control multiselect filter-param" data-label="Marca" name="params[make_id][]" data-place-holder="Tutte le marche" multiple>
+                        {% for makeId, makeData in data.makeModels %}
+                        <option value="{{ makeId }}" {{ setOption(data.filterParams.make_id ?? '', makeId) }}>{{ makeData.make.description }}</option>
+                        {% endfor %}
+                    </select>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Modello</label>
+                <div class="col-md-9">
+                    <select class="form-control filter-param" data-label="Modello" name="params[model_id][]" multiple>
+                        {% for makeId, makeData in data.makeModels %}
+                        <optgroup label="{{ makeData.make.description }}" data-make-id="{{ makeId }}">
+                            {% for model in makeData.models %}
+                            <option value="{{ model.id }}" {{ setOption(data.filterParams.model_id ?? '', model.id) }}>{{ model.description }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        {% endfor %}
+                    </select>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Extra sconto</label>
+                <div class="col-md-4">
+                    <select class="form-control filter-param" data-label="Extra sconto" name="params[on_sale]">
+                        <option value="">Non selezionato</option>
+                        <option value="1" {{ setOption(data.filterParams.on_sale ?? -1, 1)}}>SI</option>
+                        <option value="0" {{ setOption(data.filterParams.on_sale ?? -1, 0)}}>NO</option>
+                    </select>                  
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Pronta cons.</label>
+                <div class="col-md-4">
+                    <select class="form-control filter-param" data-label="Pronta consegna" name="params[in_stock]">
+                        <option value="">Non selezionato</option>
+                        <option value="1" {{ setOption(data.filterParams.in_stock ?? -1, 1)}}>SI</option>
+                        <option value="0" {{ setOption(data.filterParams.in_stock ?? -1, 0)}}>NO</option>
+                    </select>                   
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Alimentazione</label>
+                <div class="col-md-9">
+                    <select class="form-control multiselect filter-param" data-label="Alimentazione" name="params[fuel_type][]" data-select-all="1" data-place-holder="Tutte le alimentazioni" multiple>
+                        {% for key, value in constant('Definitions::FUEL_TYPE')%}
+                        <option value="{{ key }}" {{ setOption(data.filterParams.fuel_type ?? '', key) }}>{{ value }}</option>
+                        {% endfor %}
+                    </select>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Tipo cambio</label>
+                <div class="col-md-9">
+                    <select class="form-control filter-param" data-label="Tipo cambio" name="params[gear_type]">
+                        <option value="">Tutte i tipi di cambio</option>
+                        {% for key, value in constant('Definitions::GEAR_TYPE')%}
+                        <option value="{{ key }}" {{ setOption(data.filterParams.gear_type ?? '', key) }}>{{ value }}</option>
+                        {% endfor %}
+                    </select>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Tipo carrozz.</label>
+                <div class="col-md-9">
+                    <select class="form-control filter-param" data-label="Tipo carrozz." name="params[body_type]">
+                        <option value="">Tutte le carrozzerie</option>
+                        {% for key, value in constant('Definitions::NORMALIZED_BODY_TYPES')%}
+                        <option value="{{ key }}" {{ setOption(data.filterParams.body_type ?? '', key) }}>{{ value }}</option>
+                        {% endfor %}
+                    </select>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Disponibile</label>
+                <div class="col-md-5">
+                    <select class="form-control filter-param" data-label="Disponibile" name="params[active]">
+                        <option value="">Non selezionato</option>
+                        <option value="1" {{ setOption(data.filterParams.active ?? -1, 1)}}>SI</option>
+                        <option value="0" {{ setOption(data.filterParams.active ?? -1, 0)}}>NO</option>
+                    </select>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Importo rata</label>
+                <div class="col-md-9">
+                    <div class="inline-fields">
+                        <input type="text" class="form-control numeric filter-param" data-label="Importo rata" name="params[offers_from]" value="{{ data.filterParams.offers_from ?? '' }}" placeholder="Min...">
+                        <input type="text" class="form-control numeric filter-param" data-label="Importo rata" name="params[offers_to]" value="{{ data.filterParams.offers_to ?? '' }}" placeholder="Max...">
+                    </div>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Multiselezione</label>
+                <div class="col-md-6">
+                    <select class="form-control filter-param" data-label="Multiselezione" name="params[is_selected]">
+                        <option value="">Qualsiasi stato</option>
+                        <option value="1" {{ setOption(data.filterParams.is_selected ?? -1, 1)}}>Selezionato</option>
+                        <option value="0" {{ setOption(data.filterParams.is_selected ?? -1, 0)}}>Non selezionato</option>
+                    </select>                
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Immagine</label>
+                <div class="col-md-5">
+                    <select class="form-control filter-param" data-label="Immagine" name="params[no_image]">
+                        <option value="">Non selezionato</option>
+                        <option value="0" {{ setOption(data.filterParams.no_image ?? -1, 0)}}>Presente</option>
+                        <option value="1" {{ setOption(data.filterParams.no_image ?? -1, 1)}}>Assente</option>
+                    </select>                   
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">Lungh. pagina</label>
+                <div class="col-md-5">
+                    <select class="form-control" name="page_size">
+                        {% for size in data.page_size %}
+                        <option value="{{ size }}" {{ setOption(size, data.pagination_obj.size)}}>{{ size }} elementi</option>
+                        {% endfor %}
+                    </select>                   
+                </div>  
+            </div>
+        </div>
+        <button class="submit" data-action="submit">APPLICA FILTRO</button>
+    </div>
+</form>

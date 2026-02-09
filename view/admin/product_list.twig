@@ -1,0 +1,61 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<!--{{ data | json_encode(constant('JSON_PRETTY_PRINT')) }}  -->
+<div class="table-responsive dashboard-stage mb15">
+    <table class="bordered hover w100">
+        <thead>
+            <tr>
+                <th>Titolo</th>
+                <th>Descrizione</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in data.list %}         
+            <tr>
+                <td>{{ product.title }}</td>
+                <td>{{ product.description }}</td>
+                <td>
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex">
+							<button type="button" class="btn btn-success btn-square-small ml5 edit-product" data-id="{{ product.getId() }}">
+								<span class="fa fa-pencil"></span>
+							</button>
+							<button type="button" class="btn btn-danger  btn-square-small ml5 delete-product" data-id="{{ product.getId() }}">
+								<span class="fa fa-times"></span>
+							</button>
+						</div>
+					</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.delete-product', function() {
+            if (!confirm('Eliminare il contatto selezionato?')) {
+                return false;
+            }
+            this.classList.add('loading');
+            HttpRequest.delete(`/api/product/${this.dataset.id}`, null, response => {
+                if (response.status != 1) {
+                    this.classList.remove('loading');
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location.reload();
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+		Delegate(document).on('click', '.edit-product', function() {
+                window.location.href = `/admin/product/${this.dataset.id}`;
+        });
+    }); 
+/**/
+</script>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+{% endblock content %}

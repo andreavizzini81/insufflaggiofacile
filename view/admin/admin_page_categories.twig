@@ -1,0 +1,49 @@
+{% extends "index.twig" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="folders" id="folderContainer">
+		{% for category in data.categories %}
+		<div class="folder" data-id="{{ category.id }}">
+			<img src="{{theme}}assets/img/folder.png">
+			<label>{{ category.name }}</label>
+		</div>
+		{% endfor %}
+		</div>
+	</div>
+</div>
+<script>
+	var timer = 0;
+	var prevent = false;
+
+	Delegate(document).on('click', '.folder', function() {
+		timer = setTimeout(() => {
+			if (!prevent) {
+				window.location.href = `${res.path}admin-page-category/${this.dataset.id}`;
+			}
+			prevent = false;
+		}, 180);
+	});
+	
+	Delegate(document).on('dblclick', '.folder', function() {
+		clearTimeout(timer);
+		prevent = true;
+		window.location.href = `${res.path}admin-pages/${this.dataset.id}`;
+	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+		void new Sortable(document.getElementById('folderContainer'), {
+			onSort: function (evt) {
+				let sort = Array.from(document.querySelectorAll('.folder')).map(itm => itm.dataset.id);
+				HttpRequest.post(`${res.path}admin-page-category/order`, {ids: sort}, (result, response) => {
+					if (result.status !== 1) {
+						throw result.message ?? 'Errore generico';
+					}
+					resAlert.info('Il nuovo ordine è stato applicato')
+				}, err => resAlert.error('Operazione fallita', err.toString()));
+			}
+		});
+	});
+
+</script>
+{% endblock content %}

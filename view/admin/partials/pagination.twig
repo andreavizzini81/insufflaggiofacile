@@ -1,0 +1,18 @@
+<div class="pagination">
+    <a class="item navigation" href="{{ data.prev.href }}" {{data.prev.active ? '' : 'disabled' }}>
+        <span class="far fa-chevron-left"></span>
+    </a>
+    <a class="item navigation" href="{{ data.next.href }}" {{data.next.active ? '' : 'disabled' }}>
+        <span class="far fa-chevron-right"></span>
+    </a>
+    {% for page in data.pages %}
+    <a class="item {{page.active ? 'active' : '' }}" href="{{ page.href }}">{{page.value}}</a>
+    {% endfor %}
+    {% if data.results is defined %}
+        {% if data.results > 0 %}
+        <div class="summary">{{ data.results }} risultati</div>
+        {% else %}
+        <div class="summary">Nessun risultato trovato</div>
+        {% endif %}
+    {% endif %}
+</div>

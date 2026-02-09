@@ -1,0 +1,66 @@
+<nav>
+    <div class="user-data">
+        <div class="user-role" data-role="{{ user.getRoleId() }}">
+            <span>{{ user.getFirstName()[:1] }}{{ user.getLastName()[:1] }}</span>
+        </div>
+        <div class="info">
+            <span class="name">{{ user.getFullName() }}</span>
+            <span class="role">{{ user.getRoleDescription() }}</span>
+        </div>
+    </div>
+    <div class="entries">
+        {% for item in nav %}
+        <div class="entry {{ item.pages|length > 0 ? 'has-child' : '' }}" data-href="{{ item.url }}" data-title="{{ item.pages|length > 0 ? item.name : '' }}">
+            <div class="inner">
+                <span class="icon {{ item.icon }}"></span>
+                <span class="title">{{ item.name }}</span>                
+            </div>
+            {% if item.pages|length > 0 %}
+            <div class="child">
+                <span class="category-name">{{ item.name }}</span>
+                {% for page in item.pages %}
+                <div class="entry" data-href="{{ page.url }}">
+                    <span class="title">{{ page.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}      
+    </div>
+    <div class="expand-collapse"></div>
+</nav>
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    Delegate(document).on('click', 'nav .expand-collapse', function() {
+        document.body.classList.toggle('collapsed-nav');
+        let status = document.body.classList.contains('collapsed-nav') ? 'close' : 'open';
+        document.cookie = `NAV_STATUS=${status};path=/;max-age=86400`;
+    });
+
+    Delegate(document).on('click', 'nav .entry', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let _entry = e.target.closest('.entry[data-href]');
+        if (_entry.classList.contains('has-child')) {
+            Array.from(document.querySelectorAll('nav .entry.open')).forEach(_item => {
+                if (_item === _entry) {
+                    return;
+                }
+                _item.classList.remove('open');
+            });
+            return _entry.classList.toggle('open');
+        }
+        const href = _entry.dataset.href;
+        const target = (e.metaKey || e.ctrlKey) ? '_blank' : '_self';
+        window.open(href, target);
+    });
+
+    Delegate(document).on('click', '.show-mobile-nav', function() {
+        document.querySelector('nav').classList.toggle('side-open');
+    });
+});
+
+</script>

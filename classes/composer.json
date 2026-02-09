@@ -1,0 +1,13 @@
+{
+    "require": {
+        "twig/twig":"^3.0",
+        "vlucas/phpdotenv": "^5.4",
+        "firebase/php-jwt": "^6.3",
+        "phpmailer/phpmailer": "^6.7",
+        "twig/intl-extra": "^3.5",
+        "twig/string-extra": "^3.7",
+        "stefangabos/zebra_image": "^2.8",
+        "icamys/php-sitemap-generator": "^5.0",
+        "spatie/icalendar-generator": "^2.5"
+    }
+}

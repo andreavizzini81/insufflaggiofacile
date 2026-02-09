@@ -1,0 +1,679 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* preventivo.twig */
+class __TwigTemplate_0e9fc049f6995f931380f3fc6d0b34e6 extends Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'content' => [$this, 'block_content'],
+        ];
+    }
+
+    protected function doGetParent(array $context)
+    {
+        // line 1
+        return "index.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        $this->parent = $this->loadTemplate("index.twig", "preventivo.twig", 1);
+        $this->parent->display($context, array_merge($this->blocks, $blocks));
+    }
+
+    // line 2
+    public function block_content($context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 3
+        echo "<section class=\"page_title ds s-pt-115 s-pb-65 s-pb-lg-85 s-pt-lg-145 bg-auto page_title s-parallax s-overlay\">
+\t<div class=\"container\">
+\t\t<div class=\"row\">
+\t\t\t<div class=\"col-md-12 text-center text-lg-left\">
+\t\t\t\t<h1 class=\"color-main\">Richiedi un preventivo</h1>
+\t\t\t\t<ol class=\"breadcrumb links-light\">
+\t\t\t\t\t<li class=\"breadcrumb-item\">
+\t\t\t\t\t\t<a href=\"/home\">Home</a>
+\t\t\t\t\t</li>
+\t\t\t\t\t<li class=\"breadcrumb-item active\">
+\t\t\t\t\t\t<span class=\"bg-maincolor\">Richiedi un preventivo</span>
+\t\t\t\t\t</li>
+\t\t\t\t</ol>
+\t\t\t</div>
+
+\t\t</div>
+\t</div>
+</section>
+
+<section class=\"ls ms s-pt-55 s-pb-60 s-pt-lg-95 s-pb-lg-100 s-pt-xl-145 s-pb-xl-150\">
+\t<div class=\"container\">
+\t\t<div class=\"row\">
+\t\t\t<div class=\"m-auto col-lg-9 animate text-center\" data-animation=\"fadeInUp\">
+\t\t\t\t<h5 class=\"special-heading\">
+\t\t\t\t\tCompila il form sottostante e sarai ricontattato telefonicamente per ricevere un preventivo
+\t\t\t\t</h5>
+\t\t\t\t<div class=\"divider-35 divider-lg-50\"></div>
+\t\t\t\t<form class=\"contact-form c-mb-15 c-gutter-15\" method=\"post\">
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Lavoriamo solo in Sicilia, in quale provincia si trova il tuo immobile?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"provincia\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Scegli la provincia</option>
+\t\t\t\t\t\t\t\t\t<option value=\"AG\">AGRIGENTO</option>
+\t\t\t\t\t\t\t\t\t<option value=\"CL\">CALTANISSETTA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"CT\">CATANIA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"EN\">ENNA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"ME\">MESSINA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"PA\">PALERMO</option>
+\t\t\t\t\t\t\t\t\t<option value=\"RG\">RAGUSA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"PA\">PALERMO</option>
+\t\t\t\t\t\t\t\t\t<option value=\"TP\">TRAPANI</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>In quale comune?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"comune\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Scegli il comune</option>
+\t\t\t\t\t\t\t\t\t<option value=\"Giarre\">Giarre</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>In quale condizione si trova il tuo immobile?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"stato_immobile\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Ad es. in ristrutturazione</option>
+\t\t\t\t\t\t\t\t\t<option value=\"in costruzione\">In costruzione</option>
+\t\t\t\t\t\t\t\t\t<option value=\"in ristrutturazione\">In ristrutturazione</option>
+\t\t\t\t\t\t\t\t\t<option value=\"ci vivo dentro\">Ci vivo dentro</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Cosa vuoi isolare?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"isolamento_immobile\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Ad es. muri perimetrali</option>
+\t\t\t\t\t\t\t\t\t<option value=\"muri perimetrali\">Muri perimetrali</option>
+\t\t\t\t\t\t\t\t\t<option value=\"tetto\">Tetto</option>
+\t\t\t\t\t\t\t\t\t<option value=\"solaio\">Solaio</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Quando vuoi iniziare i lavori?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"lavori_immobile\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Ad es. subito</option>
+\t\t\t\t\t\t\t\t\t<option value=\"subito\">Subito</option>
+\t\t\t\t\t\t\t\t\t<option value=\"1 - 3 mesi\">1 - 3 Mesi</option>
+\t\t\t\t\t\t\t\t\t<option value=\"3 - 6 mesi\">3 - 6 Mesi</option>
+\t\t\t\t\t\t\t\t\t<option value=\"non so\">Non so</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-12\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Descrivi brevemente il problema che vuoi risolvere</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-12\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"message\">Message</label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-pencil\"></i>
+\t\t\t\t\t\t\t\t<textarea rows=\"7\" cols=\"45\" name=\"messaggio\" class=\"form-control\" placeholder=\"Descrivi il problema\" required></textarea>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row\">
+\t\t\t\t\t\t<div class=\"col-12\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Inserisci le informazioni richieste di seguito, le useremo per contattarti ed inviarti il preventivo richiesto.</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"name\">Nome <span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-user\"></i>
+\t\t\t\t\t\t\t\t<input type=\"text\" size=\"30\" value=\"\" name=\"nome\" class=\"form-control\" placeholder=\"Nome\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"surname\">Cognome <span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<input type=\"text\" size=\"30\" value=\"\" name=\"cognome\" class=\"form-control\" placeholder=\"Cognome\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"phone\">Phone Number<span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-phone\"></i>
+\t\t\t\t\t\t\t\t<input type=\"text\" size=\"30\" value=\"\" name=\"telefono\" class=\"form-control\" placeholder=\"Telefono\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"email\">Email address<span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-envelope\"></i>
+\t\t\t\t\t\t\t\t<input type=\"email\" size=\"30\" value=\"\" name=\"email\" class=\"form-control\" placeholder=\"Email\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"row mt-35\">
+\t\t\t\t\t\t<div class=\"col-sm-12\">
+\t\t\t\t\t\t\t<div class=\"form-group text-center\">
+\t\t\t\t\t\t\t\t<button type=\"button\" id=\"send-form\" class=\"btn btn-wide btn-small btn-maincolor with-icon \">Invia
+\t\t\t\t\t\t\t\t</button>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t</form>
+\t\t\t</div>
+\t\t\t<!--.col-* -->
+\t\t</div>
+\t</div>
+</section>
+
+<section class=\"ls py-5 c-gutter-45 c-mb-30 c-mb-lg-0\">
+\t<div class=\"container\">
+\t\t<h5 class=\"special-heading text-center mb-5\">
+\t\t\tI nostri contatti
+\t\t</h3>
+\t\t<div class=\"row\">
+\t\t\t<div class=\"col-lg-4 animate\" data-animation=\"fadeInDown\">
+\t\t\t\t<div class=\"media box-shadow\">
+\t\t\t\t\t<div class=\"fs-40\">
+\t\t\t\t\t\t<i class=\"fa fa-map-marker fa-lg color-main\"></i>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"media-body\">
+\t\t\t\t\t\t<h6>Indirizzo</h6>
+\t\t\t\t\t\t<p>
+\t\t\t\t\t\t\tVia G. Ungaretti, 15/a <br>
+\t\t\t\t\t\t\t95014 Giarre (CT)
+\t\t\t\t\t\t</p>
+\t\t\t\t\t</div>
+\t\t\t\t</div>
+\t\t\t</div>
+\t\t\t<div class=\"col-lg-4 animate\" data-animation=\"fadeInDown\">
+\t\t\t\t<div class=\"media box-shadow\">
+\t\t\t\t\t<div class=\"fs-40\">
+\t\t\t\t\t\t<i class=\"fa fa-phone-square fa-lg color-main\"></i>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"media-body\">
+\t\t\t\t\t\t<h6>Phone</h6>
+\t\t\t\t\t\t<a href=\"tel:+393518964605\">+39 3518964605</a><br>&nbsp;
+\t\t\t\t\t</div>
+\t\t\t\t</div>
+\t\t\t</div>
+\t\t\t<div class=\"col-lg-4 animate\" data-animation=\"fadeInDown\">
+\t\t\t\t<div class=\"media box-shadow\">
+\t\t\t\t\t<div class=\"fs-40\">
+\t\t\t\t\t\t<i class=\"fa fa-envelope fa-lg color-main\"></i>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"media-body\">
+\t\t\t\t\t\t<h6>Email</h6>
+\t\t\t\t\t\t<a href=\"mailto:info@insufflaggiofacile.it\">info@insufflaggiofacile.it</a><br>&nbsp;
+\t\t\t\t\t</div>
+\t\t\t\t</div>
+\t\t\t</div>
+\t\t</div>
+\t</div>
+</section>
+
+<section class=\"ls s-py-xl-0 container-px-0\">
+\t<div class=\"container-fluid\">
+\t\t<div class=\"row\">
+\t\t\t<div class=\"col-12\">
+\t\t\t\t<div class=\"ls page_map absolute_map\">
+\t\t\t\t\t<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3156.346331358047!2d15.18030587626157!3d37.71154781579898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1314065183933c4b%3A0x5cd4a1150d087f5!2sVia%20Giuseppe%20Ungaretti%2C%2015%2C%2095014%20Giarre%20CT!5e0!3m2!1sit!2sit!4v1711782490003!5m2!1sit!2sit\" width=\"100%\" height=\"100%\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>
+\t\t\t\t</div>
+\t\t\t\t<div class=\"divider-40 divider-lg-0\"></div>
+\t\t\t</div>
+\t\t</div>
+\t</div>
+</section>
+
+<script>
+
+ document.addEventListener('DOMContentLoaded', function() {
+\t/*
+\tDelegate(document).on('click', '#send-form', function() {
+\t\talert(\"OK\");
+\t\t
+\t\tlet _frm = document.querySelector('.contact-form');
+\t\tlet validation = (new FormValidator({alerts: false})).checkAll(_frm);
+\t\tif (!validation.valid) {
+\t\t\tvalidation.fields.forEach(entry => {
+\t\t\t\tentry.field.closest('.form-group').classList.toggle('has-error', !entry.valid);
+\t\t\t});
+\t\t\treturn new resAlert('Operazione fallita', 'I campi contrassegnati in rosso sono incompleti o contengono valori non validi.', {type:'error'});
+\t\t}
+\t\tlet data = (new FormSerializer(_frm)).serialize();
+\t\tthis.classList.add('loading');
+\t\t
+\t\tHttpRequest.post(`\${res.absolutePath}api/faq`, data, response => {
+\t\t\tthis.classList.remove('loading');
+\t\t\tif (response.status != 1) {
+\t\t\t\tthrow response.message ?? 'Errore generico';
+\t\t\t}
+\t\t\twindow.location = `\${res.path}faq-list`;
+\t\t}, err => resAlert.error('Operazione fallita', err.toString()));
+\t\t
+\t});     
+\t*/
+
+\tDelegate(document).on('click', '#send-form', function(event) {
+\t\tlet _frm = document.querySelector('.contact-form');
+\t\tlet validation = (new FormValidator({alerts: false})).checkAll(_frm);
+\t\tconsole.log(validation);
+\t\tif (!validation.valid) {
+\t\t\tvalidation.fields.forEach(entry => {
+\t\t\t\tentry.field.closest('.form-group').classList.toggle('bad', !entry.valid);
+\t\t\t});
+\t\t}
+\t\tlet data = (new FormSerializer(_frm)).serialize();
+\t\tthis.classList.add('invisible');
+\t\tHttpRequest.post(`/api/richiedi-preventivo`, {...data, piattaforma: 'website' }, response => {
+\t\t\tthis.classList.remove('invisible');
+\t\t\tif (response.status != 1) {
+\t\t\t\tthrow response.message ?? 'Errore generico';
+\t\t\t}
+\t\t\t//window.location = `\${res.path}faq-list`;
+\t\t});
+\t});
+\t
+});
+
+</script>
+
+";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName()
+    {
+        return "preventivo.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable()
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo()
+    {
+        return array (  50 => 3,  46 => 2,  35 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("{% extends \"index.twig\" %}
+{% block content %}
+<section class=\"page_title ds s-pt-115 s-pb-65 s-pb-lg-85 s-pt-lg-145 bg-auto page_title s-parallax s-overlay\">
+\t<div class=\"container\">
+\t\t<div class=\"row\">
+\t\t\t<div class=\"col-md-12 text-center text-lg-left\">
+\t\t\t\t<h1 class=\"color-main\">Richiedi un preventivo</h1>
+\t\t\t\t<ol class=\"breadcrumb links-light\">
+\t\t\t\t\t<li class=\"breadcrumb-item\">
+\t\t\t\t\t\t<a href=\"/home\">Home</a>
+\t\t\t\t\t</li>
+\t\t\t\t\t<li class=\"breadcrumb-item active\">
+\t\t\t\t\t\t<span class=\"bg-maincolor\">Richiedi un preventivo</span>
+\t\t\t\t\t</li>
+\t\t\t\t</ol>
+\t\t\t</div>
+
+\t\t</div>
+\t</div>
+</section>
+
+<section class=\"ls ms s-pt-55 s-pb-60 s-pt-lg-95 s-pb-lg-100 s-pt-xl-145 s-pb-xl-150\">
+\t<div class=\"container\">
+\t\t<div class=\"row\">
+\t\t\t<div class=\"m-auto col-lg-9 animate text-center\" data-animation=\"fadeInUp\">
+\t\t\t\t<h5 class=\"special-heading\">
+\t\t\t\t\tCompila il form sottostante e sarai ricontattato telefonicamente per ricevere un preventivo
+\t\t\t\t</h5>
+\t\t\t\t<div class=\"divider-35 divider-lg-50\"></div>
+\t\t\t\t<form class=\"contact-form c-mb-15 c-gutter-15\" method=\"post\">
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Lavoriamo solo in Sicilia, in quale provincia si trova il tuo immobile?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"provincia\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Scegli la provincia</option>
+\t\t\t\t\t\t\t\t\t<option value=\"AG\">AGRIGENTO</option>
+\t\t\t\t\t\t\t\t\t<option value=\"CL\">CALTANISSETTA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"CT\">CATANIA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"EN\">ENNA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"ME\">MESSINA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"PA\">PALERMO</option>
+\t\t\t\t\t\t\t\t\t<option value=\"RG\">RAGUSA</option>
+\t\t\t\t\t\t\t\t\t<option value=\"PA\">PALERMO</option>
+\t\t\t\t\t\t\t\t\t<option value=\"TP\">TRAPANI</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>In quale comune?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"comune\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Scegli il comune</option>
+\t\t\t\t\t\t\t\t\t<option value=\"Giarre\">Giarre</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>In quale condizione si trova il tuo immobile?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"stato_immobile\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Ad es. in ristrutturazione</option>
+\t\t\t\t\t\t\t\t\t<option value=\"in costruzione\">In costruzione</option>
+\t\t\t\t\t\t\t\t\t<option value=\"in ristrutturazione\">In ristrutturazione</option>
+\t\t\t\t\t\t\t\t\t<option value=\"ci vivo dentro\">Ci vivo dentro</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Cosa vuoi isolare?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"isolamento_immobile\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Ad es. muri perimetrali</option>
+\t\t\t\t\t\t\t\t\t<option value=\"muri perimetrali\">Muri perimetrali</option>
+\t\t\t\t\t\t\t\t\t<option value=\"tetto\">Tetto</option>
+\t\t\t\t\t\t\t\t\t<option value=\"solaio\">Solaio</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Quando vuoi iniziare i lavori?</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<select class=\"form-select\" name=\"lavori_immobile\" class=\"form-control\" required>
+\t\t\t\t\t\t\t\t\t<option value=\"\">Ad es. subito</option>
+\t\t\t\t\t\t\t\t\t<option value=\"subito\">Subito</option>
+\t\t\t\t\t\t\t\t\t<option value=\"1 - 3 mesi\">1 - 3 Mesi</option>
+\t\t\t\t\t\t\t\t\t<option value=\"3 - 6 mesi\">3 - 6 Mesi</option>
+\t\t\t\t\t\t\t\t\t<option value=\"non so\">Non so</option>
+\t\t\t\t\t\t\t\t<select>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row mb-3\">
+\t\t\t\t\t\t<div class=\"col-12\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Descrivi brevemente il problema che vuoi risolvere</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-12\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"message\">Message</label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-pencil\"></i>
+\t\t\t\t\t\t\t\t<textarea rows=\"7\" cols=\"45\" name=\"messaggio\" class=\"form-control\" placeholder=\"Descrivi il problema\" required></textarea>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t
+\t\t\t\t\t<div class=\"row\">
+\t\t\t\t\t\t<div class=\"col-12\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder text-left\">
+\t\t\t\t\t\t\t\t<p>Inserisci le informazioni richieste di seguito, le useremo per contattarti ed inviarti il preventivo richiesto.</p>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"name\">Nome <span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-user\"></i>
+\t\t\t\t\t\t\t\t<input type=\"text\" size=\"30\" value=\"\" name=\"nome\" class=\"form-control\" placeholder=\"Nome\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"surname\">Cognome <span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<input type=\"text\" size=\"30\" value=\"\" name=\"cognome\" class=\"form-control\" placeholder=\"Cognome\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"phone\">Phone Number<span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-phone\"></i>
+\t\t\t\t\t\t\t\t<input type=\"text\" size=\"30\" value=\"\" name=\"telefono\" class=\"form-control\" placeholder=\"Telefono\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t\t<div class=\"col-sm-6 col-md-6\">
+\t\t\t\t\t\t\t<div class=\"form-group has-placeholder\">
+\t\t\t\t\t\t\t\t<label for=\"email\">Email address<span class=\"required\">*</span></label>
+\t\t\t\t\t\t\t\t<i class=\"fa fa-envelope\"></i>
+\t\t\t\t\t\t\t\t<input type=\"email\" size=\"30\" value=\"\" name=\"email\" class=\"form-control\" placeholder=\"Email\" required>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"row mt-35\">
+\t\t\t\t\t\t<div class=\"col-sm-12\">
+\t\t\t\t\t\t\t<div class=\"form-group text-center\">
+\t\t\t\t\t\t\t\t<button type=\"button\" id=\"send-form\" class=\"btn btn-wide btn-small btn-maincolor with-icon \">Invia
+\t\t\t\t\t\t\t\t</button>
+\t\t\t\t\t\t\t</div>
+\t\t\t\t\t\t</div>
+\t\t\t\t\t</div>
+\t\t\t\t</form>
+\t\t\t</div>
+\t\t\t<!--.col-* -->
+\t\t</div>
+\t</div>
+</section>
+
+<section class=\"ls py-5 c-gutter-45 c-mb-30 c-mb-lg-0\">
+\t<div class=\"container\">
+\t\t<h5 class=\"special-heading text-center mb-5\">
+\t\t\tI nostri contatti
+\t\t</h3>
+\t\t<div class=\"row\">
+\t\t\t<div class=\"col-lg-4 animate\" data-animation=\"fadeInDown\">
+\t\t\t\t<div class=\"media box-shadow\">
+\t\t\t\t\t<div class=\"fs-40\">
+\t\t\t\t\t\t<i class=\"fa fa-map-marker fa-lg color-main\"></i>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"media-body\">
+\t\t\t\t\t\t<h6>Indirizzo</h6>
+\t\t\t\t\t\t<p>
+\t\t\t\t\t\t\tVia G. Ungaretti, 15/a <br>
+\t\t\t\t\t\t\t95014 Giarre (CT)
+\t\t\t\t\t\t</p>
+\t\t\t\t\t</div>
+\t\t\t\t</div>
+\t\t\t</div>
+\t\t\t<div class=\"col-lg-4 animate\" data-animation=\"fadeInDown\">
+\t\t\t\t<div class=\"media box-shadow\">
+\t\t\t\t\t<div class=\"fs-40\">
+\t\t\t\t\t\t<i class=\"fa fa-phone-square fa-lg color-main\"></i>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"media-body\">
+\t\t\t\t\t\t<h6>Phone</h6>
+\t\t\t\t\t\t<a href=\"tel:+393518964605\">+39 3518964605</a><br>&nbsp;
+\t\t\t\t\t</div>
+\t\t\t\t</div>
+\t\t\t</div>
+\t\t\t<div class=\"col-lg-4 animate\" data-animation=\"fadeInDown\">
+\t\t\t\t<div class=\"media box-shadow\">
+\t\t\t\t\t<div class=\"fs-40\">
+\t\t\t\t\t\t<i class=\"fa fa-envelope fa-lg color-main\"></i>
+\t\t\t\t\t</div>
+\t\t\t\t\t<div class=\"media-body\">
+\t\t\t\t\t\t<h6>Email</h6>
+\t\t\t\t\t\t<a href=\"mailto:info@insufflaggiofacile.it\">info@insufflaggiofacile.it</a><br>&nbsp;
+\t\t\t\t\t</div>
+\t\t\t\t</div>
+\t\t\t</div>
+\t\t</div>
+\t</div>
+</section>
+
+<section class=\"ls s-py-xl-0 container-px-0\">
+\t<div class=\"container-fluid\">
+\t\t<div class=\"row\">
+\t\t\t<div class=\"col-12\">
+\t\t\t\t<div class=\"ls page_map absolute_map\">
+\t\t\t\t\t<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3156.346331358047!2d15.18030587626157!3d37.71154781579898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1314065183933c4b%3A0x5cd4a1150d087f5!2sVia%20Giuseppe%20Ungaretti%2C%2015%2C%2095014%20Giarre%20CT!5e0!3m2!1sit!2sit!4v1711782490003!5m2!1sit!2sit\" width=\"100%\" height=\"100%\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>
+\t\t\t\t</div>
+\t\t\t\t<div class=\"divider-40 divider-lg-0\"></div>
+\t\t\t</div>
+\t\t</div>
+\t</div>
+</section>
+
+<script>
+
+ document.addEventListener('DOMContentLoaded', function() {
+\t/*
+\tDelegate(document).on('click', '#send-form', function() {
+\t\talert(\"OK\");
+\t\t
+\t\tlet _frm = document.querySelector('.contact-form');
+\t\tlet validation = (new FormValidator({alerts: false})).checkAll(_frm);
+\t\tif (!validation.valid) {
+\t\t\tvalidation.fields.forEach(entry => {
+\t\t\t\tentry.field.closest('.form-group').classList.toggle('has-error', !entry.valid);
+\t\t\t});
+\t\t\treturn new resAlert('Operazione fallita', 'I campi contrassegnati in rosso sono incompleti o contengono valori non validi.', {type:'error'});
+\t\t}
+\t\tlet data = (new FormSerializer(_frm)).serialize();
+\t\tthis.classList.add('loading');
+\t\t
+\t\tHttpRequest.post(`\${res.absolutePath}api/faq`, data, response => {
+\t\t\tthis.classList.remove('loading');
+\t\t\tif (response.status != 1) {
+\t\t\t\tthrow response.message ?? 'Errore generico';
+\t\t\t}
+\t\t\twindow.location = `\${res.path}faq-list`;
+\t\t}, err => resAlert.error('Operazione fallita', err.toString()));
+\t\t
+\t});     
+\t*/
+
+\tDelegate(document).on('click', '#send-form', function(event) {
+\t\tlet _frm = document.querySelector('.contact-form');
+\t\tlet validation = (new FormValidator({alerts: false})).checkAll(_frm);
+\t\tconsole.log(validation);
+\t\tif (!validation.valid) {
+\t\t\tvalidation.fields.forEach(entry => {
+\t\t\t\tentry.field.closest('.form-group').classList.toggle('bad', !entry.valid);
+\t\t\t});
+\t\t}
+\t\tlet data = (new FormSerializer(_frm)).serialize();
+\t\tthis.classList.add('invisible');
+\t\tHttpRequest.post(`/api/richiedi-preventivo`, {...data, piattaforma: 'website' }, response => {
+\t\t\tthis.classList.remove('invisible');
+\t\t\tif (response.status != 1) {
+\t\t\t\tthrow response.message ?? 'Errore generico';
+\t\t\t}
+\t\t\t//window.location = `\${res.path}faq-list`;
+\t\t});
+\t});
+\t
+});
+
+</script>
+
+{% endblock content %}", "preventivo.twig", "/var/www/vhosts/insufflaggiofacile.it/staging/view/website/preventivo.twig");
+    }
+}

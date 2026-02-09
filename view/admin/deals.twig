@@ -1,0 +1,69 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="kanban loading-overlay"></div>
+<script>
+
+    function adjustKanban() {
+        if (window.innerWidth >= 992) {
+            return;
+        }
+        let kanbanPosition = document.querySelector('.kanban').getBoundingClientRect();
+        let main = document.querySelector('main');
+        main.style.cssText = `height: calc(100svh - ${kanbanPosition.top}px);`    
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const filter = new ToolbarFilter(document.querySelector('.page-toolbar .filter-wrapper'), {
+            onSubmit: () => {
+                kanban.init();
+            }
+        });
+
+        window.kanbanWrapper = document.querySelector('.kanban');
+
+        const kanban = new Kanban(null, {
+            wrapper: kanbanWrapper,
+            config: {
+                cardClass: DealKanbanCard
+            },
+            onInit: async () => {
+
+                kanbanWrapper.classList.add('loading-overlay');
+
+                const data = await HttpRequest.post(`${res.absolutePath}api/deals/kanban`, filter.getData());
+                if (data.status !== 1) {
+                    return resAlert.error('Kanban non disponibile', data.message ?? 'Errore generico');
+                }
+                
+                return data.result.data;
+            },
+            onFetchData: async (params, page) => {
+                return await HttpRequest.post(`${res.absolutePath}api/deals/kanban/${page ?? ''}`, {
+                    ...filter.getData(),
+                    ...params
+                });
+            }
+        });
+
+        Delegate(document).on('click', '.create-deal', () => {
+            void new ContactModal({
+                onSelect: async (contact) => {
+                    const data = await HttpRequest.put(`${res.absolutePath}api/deal`, {
+                        contact_id: contact.id
+                    });
+                    if (data.status !== 1) {
+                        return resAlert.error('Operazione fallita', data.message ?? 'Errore generico');
+                    }
+                    window.location = `${res.path}deal/${data.result.dealId}`;
+                }
+            });
+        });
+
+        adjustKanban();
+
+    });
+
+    window.addEventListener('resize', adjustKanban);
+</script>
+{% endblock content %}

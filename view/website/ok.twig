@@ -1,0 +1,27 @@
+{% extends "index.twig" %}
+{% block content %}
+
+<section class="ds s-pt-145 s-pb-100 s-pt-lg-195 s-pb-lg-150 s-pt-xl-240 s-pb-xl-195 s-overlay error-404 not-found page_404 s-overlay error-404">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <div class="img_404">
+                    <img src="{{ theme }}images/img404.png" alt="">
+                </div>
+                <div class="page-content">
+                    <h1>Grazie per la tua richiesta!</h1>
+                    <p>Abbiamo ricevuto la tua richiesta di preventivo. Uno dei nostri consulenti ti contatterà al più presto.</p>
+                    <p>Nel frattempo, se hai bisogno di ulteriori informazioni, non esitare a <a href="contact.html">contattarci</a>.</p>
+                    <p class="buttons_404 ">
+                        <a href="{{ path }}home" class="btn btn-small with-icon btn-maincolor">Vai alla home</a>
+                    </p>
+                </div>
+                <!-- .page-content -->
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include '/partials/map.twig' %}
+
+{% endblock content %}

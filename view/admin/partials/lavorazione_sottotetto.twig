@@ -1,0 +1,51 @@
+<div class="col-12 my-3 text-light">
+    <h3>Scheda sottotetto</h3>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label>Larghezza sottotetto</label>
+        <input type="text" name="larghezzaSottotetto" class="form-control mka-decimal field" value="{{ immobile.larghezzaSottotetto != '' ? immobile.larghezzaSottotetto : '' }}">
+    </div>
+</div> 
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label>Lunghezza sottotetto</label>
+        <input type="text" name="lunghezzaSottotetto" class="form-control mka-decimal field" value="{{ immobile.lunghezzaSottotetto != '' ? immobile.lunghezzaSottotetto : '' }}">
+    </div>
+</div>
+<div class="col-12 col-lg-6 mb-3">
+    <div class="form-group">
+        <label>Spessore intercapedine in metri</label>
+        <input type="text" name="intercapedineSottotetto" class="form-control mka-decimal field" value="{{ immobile.intercapedineSottotetto != '' ? immobile.intercapedineSottotetto : '' }}">
+    </div>
+</div>
+<div class="col-12 mb-3">
+    <div class="form-group">
+        <label>Metri cubi da insufflare nel sottotetto</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button class="btn btn-warning btnCalcSottotetto" type="button">Calcola</button>
+            </div>
+            <input type="text" name="metriCubiSottotetto" class="form-control" value="{{ immobile.metriCubiSottotetto != '' ? immobile.metriCubiSottotetto : '' }}" readonly>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("OK");
+		Delegate(document).on('click', '.btnCalcSottotetto', function() {
+			console.log("BTN");
+			const metriCubiOutput = document.querySelector('[name="metriCubiSottotetto"]');
+			const larghezzaSottotetto = parseFloat(document.querySelector('[name="larghezzaSottotetto"]').value.replace(",", "."));
+			const lunghezzaSottotetto = parseFloat(document.querySelector('[name="lunghezzaSottotetto"]').value.replace(",", "."));
+			const intercapedineSottotetto = parseFloat(document.querySelector('[name="intercapedineSottotetto"]').value.replace(",", "."));
+			const metriCubiSottotetto = (larghezzaSottotetto*lunghezzaSottotetto*intercapedineSottotetto).toFixed(2);
+            console.log('larghezza-> '+larghezzaSottotetto);
+			console.log('lunghezza-> '+lunghezzaSottotetto);
+			console.log('intercapedine-> '+intercapedineSottotetto);
+			console.log(metriCubiSottotetto);
+			metriCubiOutput.value = metriCubiSottotetto;
+		});
+
+    });
+</script>

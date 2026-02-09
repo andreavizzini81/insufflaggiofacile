@@ -1,0 +1,37 @@
+<header>
+    <div class="product-logo">
+        <a href="{{ path }}">
+            <picture>
+                <source srcset="{{theme}}assets/img/logo.png" media="(min-width: 992px)" />
+                <img src="{{theme}}assets/img/logo-small.svg"/>
+            </picture>        
+        </a>
+    </div>
+	<!--
+    <div class="global-search">
+        <input type="text" name="key" placeholder="Ricerca...">
+        <button type="button" class="submit-global-search"></button>
+    </div>
+	-->
+    <div class="user-info">
+        <div class="dropdown">
+            <span class="dropdown-toggle">
+                <span class="fad fa-user-alt fa-fw"></span>
+                <span class="user-name">{{ user.getFullName() }}</span>
+            </span>
+            <div class="dropdown-content">
+                <ul>
+                    <li>
+                        <a href="javascript:void(0);" class="generate-calendar-link">Ottieni link calendario</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="send-logout-req">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="show-mobile-nav">
+        <i class="fas fa-ellipsis-v-alt"></i>
+    </div>
+</header>

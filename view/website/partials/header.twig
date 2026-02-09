@@ -1,0 +1,64 @@
+{% block header %}
+<div class="header_absolute ds cover-background s-overlay">
+	<!-- header with two Bootstrap columns - left for logo and right for navigation and includes ( phone ) -->
+	<header class="page_header ds justify-nav-center">
+		<div class="container-fluid">
+			<div class="row align-items-center">
+				<div class="my-15 my-md-0 col-xl-2 col-md-4 col-11">
+					<a href="/home" class="logo">
+						<img src="{{ theme }}assets/images/logo.png" alt="">
+					</a>
+				</div>
+				<div class="col-xl-8 col-1 order-3 order-lg-2">
+					<div class="nav-wrap">
+						<!-- main nav start -->
+						<nav class="top-nav">
+							<ul class="nav sf-menu">
+								<li class="active">
+									<a href="/home">Home</a>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Insufflaggio</a>
+									<ul>
+										{% for staticPage in f_nav['staticPage'] %}
+										<li>
+											<a href="{{ path }}insufflaggio/{{ staticPage.title | url_encode }}/{{ staticPage.id }}">{{ staticPage.title }}</a>
+										</li>
+										{% endfor %}
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Materiali</a>
+									<ul>
+										{% for product in f_nav['product'] %}
+										<li>
+											<a href="{{ path }}scheda-prodotto/{{ product.id }}">{{ product.title }}</a>
+										</li>
+										{% endfor %}
+									</ul>
+								</li>
+								<li>
+									<a href="/faq">FAQ</a>
+								</li>
+								<li>
+									<a href="/richiedi-preventivo">Richiedi un preventivo</a>
+								</li>
+							</ul>
+						</nav>
+						<!-- eof main nav -->
+					</div>
+				</div>
+				<div class="col-xl-2 col-5 order-2 order-lg-3 d-none d-md-block top-phone">
+					<a href="tel:+393518964605" class="fs-20 fw-500 d-flex align-items-center justify-content-xl-end links-light">
+						<i class="fa fa-phone-square color-main fs-37 mr-2"></i>
+						<span>3518964605</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- header toggler -->
+		<span class="toggle_menu"><span></span></span>
+	</header>
+
+</div>
+{% endblock header %}

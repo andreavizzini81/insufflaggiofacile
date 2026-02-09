@@ -1,0 +1,18 @@
+<head>
+    <meta charset="utf-8" />
+    <title>{{ title }} - {{ getenv('SW_PRODUCT_NAME') }}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    {% include '/partials/head_bundle.twig' %}
+    <link href="{{ path }}assets/img/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon">
+    <script>
+		const res = {
+            path: '{{ path }}',
+            absolutePath: '{{ absolutePath }}',
+            assets: '{{ theme }}'
+        };
+    </script>
+</head>

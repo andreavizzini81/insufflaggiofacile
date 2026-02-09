@@ -1,0 +1,172 @@
+{% extends 'index.twig' %}
+{% block content %}
+<!--<pre> {{ data.deal|json_encode|raw }} </pre> -->
+<div class="stage-manager">
+    <script type="application/json" class="stage-manager-config">{{ data.deal.getStageManagerConfig()|json_encode|raw }}</script>
+</div>
+<div class="widget">
+    <div class="content">
+        <div class="calendar-events-wrapper mb-3">
+            <script type="application/json" class="calendar-events-list">{{ data.deal.getEvents()|json_encode|raw }}</script>
+        </div>
+        <div class="crm-note-wrapper mb-3">
+            <script type="application/json" class="crm-note-list">{{ data.deal.getNotes()|json_encode|raw }}</script>
+        </div>
+    </div>
+</div>
+<form class="widget deal-data-wrapper" data-id="{{ data.deal.getId() }}">
+    <input type="hidden" name="id" value="{{ data.deal.getId() }}">
+    <div class="content">
+        <div class="row mb-5">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Titolo</label>
+                    <input type="text" class="form-control" name="title" value="{{ data.deal.getTitle() }}" maxlength="60">
+                </div>
+            </div>
+            {#
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Tipo richiesta</label>
+                    <input type="text" class="form-control" value="{{ data.deal.getType() }}" readonly>
+                </div>
+            </div>            
+            #}
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Società/Ditta</label>
+                    <select class="form-control" name="agency_id">
+                        <option value="">Nessuna opzione selezionata</option>
+                        {% for agency in data.agencies %}
+                        <option 
+                            value="{{ agency.getId() }}" 
+                            {{ setOption(agency.getId(), data.deal.getAgencyId()) }}
+                        >{{ agency.getDescription() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Responsabile</label>
+                    <select class="form-control" name="responsible_id">
+                        <option value="">Nessuna opzione selezionata</option>
+                        {% for responsible in data.responsibleList %}
+                        <option 
+                            value="{{ responsible.getId() }}"
+                            {{ setOption(responsible.getId(), data.deal.getResponsibleId()) }}
+                        >{{ responsible.getFullName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+			<div class="col-md-2">
+                <div class="form-group">
+                    <label>Data e ora</label>
+                    <input type="text" class="form-control" value="{{ data.deal.getCreatedAt()|date('d/m/Y H:i:s') }}" readonly>
+                </div>
+            </div>
+			<div class="col-md-1">
+                <div class="form-group">
+                    <label>Valore</label>
+                    <input type="text" name="value" class="form-control" value="{{ data.deal.getValue() }}" >
+                </div>
+            </div>
+        </div>
+        <fieldset class="mb-3">
+            <legend>ANAGRAFICA CONTATTO</legend>
+            {% include 'partials/contact.twig' with {'contact': data.contact} %}
+        </fieldset>
+        <fieldset class="mb-3">
+            <legend>DETTAGLIO RICHIESTA</legend>
+            <div class="row">
+				<div class="col-md-12">
+                    <div class="form-group">
+                        <label>Messaggio richiesta</label>
+                        {% if data.deal.getCreatedById() is not null %}
+                        <textarea class="form-control" rows="5" name="message">{{ data.deal.getMessage() }}</textarea>
+                        {% else %}
+                        <textarea class="form-control" rows="3" readonly>{{ data.deal.getMessage() }}</textarea>
+                        {% endif %}
+                    </div>
+                </div>
+			</div>
+			<div class="row">
+				{% for metaKey, metaValue in data.deal.getMetadata() %}
+                <div class="col-sm-6 col-lg-4 col-12">
+                    <div class="form-group">
+                        <label>{{ metaKey }}</label>
+                        <input type="text" class="form-control" value="{{ metaValue }}" readonly>
+                    </div>
+                </div>
+                {% endfor %} 
+            </div>
+        </fieldset>
+        {% if data.deal.exists() %}
+        <fieldset class="attachment-list mb-3" data-entity="Deal" data-entity-id="{{ data.deal.getId() }}">
+            <legend>
+                DOCUMENTI E ALLEGATI
+                <div class="action-group">
+                    <a class="action add-attachment" href="javascript:void(0);">
+                        <i class="far fa-plus"></i>
+                        <span>CARICA ALLEGATO</span>
+                    </a>
+                </div>
+            </legend>
+            <div class="attachment-grid" data-empty="Non sono stati trovati allegati"></div>
+        </fieldset>
+		
+        {% endif %}
+    </div>
+</form>
+{% include '/partials/scheda_lavorazione_immobile.twig' %}
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const wrapper = document.querySelector('.deal-data-wrapper');
+        const dealId = wrapper.dataset.id;
+
+        void new StageManager(document.querySelector('.stage-manager'), {
+            onChange: async (stageId) => {
+                const data = await HttpRequest.put(
+                    `${res.absolutePath}api/deal/${dealId}/stage/${stageId}`, {}, 
+                    (data, response) => data.status === 1,
+                    err => alert(err.message)
+                );
+                return data.status === 1;
+            }
+        });
+
+        void new AttachmentsList
+            (document.querySelector('.attachment-list')
+        );
+        
+        void new CrmNoteFieldset('.crm-note-wrapper', {
+            entity: 'deal',
+            entityId: dealId
+        });
+
+        void new CalendarEventsFieldset('.calendar-events-wrapper', {
+            entity: 'deal',
+            entityId: dealId
+        });
+
+        Delegate(document).on('click', '.action.save-deal', function() {
+            const form = document.querySelector('.deal-data-wrapper');
+
+            this.classList.add('loading');
+
+            HttpRequest.patch(`${res.absolutePath}api/deal/${dealId}`, FormSerializer.for(form).serialize(), (data, response) => {
+                if (data.status !== 1) {
+                    throw data.message ?? 'Errore generico';
+                }
+                window.location = `${res.path}deals`;
+            }, err => void new ResAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+
+    });
+
+</script>
+{% endblock content %}

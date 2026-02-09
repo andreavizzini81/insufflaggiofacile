@@ -1,0 +1,254 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="widget">
+    <div class="content">
+        <form class="form-horizontal linked-fields contact-form" action="javascript:void(0);" method="POST" autocomplete="off">
+            {% if data.contact.getId() is not null %}
+            <input type="hidden" name="id" value="{{ data.contact.getId() }}">
+            {% endif %}
+            <div class="row">
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>INFORMAZIONI PRINCIPALI</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Tipologia</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="contact_type_id" value="0" data-toggle-group="contact-type" {{ setCheckbox(0, data.contact.getTypeId()) }}>Privato
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="contact_type_id" value="1" data-toggle-group="contact-type" {{ setCheckbox(1, data.contact.getTypeId()) }}>Azienda
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Nome</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="first_name" value="{{ data.contact.getFirstName() }}" data-toggled-by="contact-type" data-toggled-on="0" required>
+                            </div>
+                        </div>     
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Cognome</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="last_name" value="{{ data.contact.getLastName() }}" data-toggled-by="contact-type" data-toggled-on="0" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Ragione sociale</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="business_name" value="{{ data.contact.getBusinessName() }}" data-toggled-by="contact-type" data-toggled-on="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Partita IVA</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="vat_number" value="{{ data.contact.getVatNumber() }}" data-toggled-by="contact-type" data-toggled-on="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">PEC/SDI</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="pec" value="{{ data.contact.getPec() }}" data-toggled-by="contact-type" data-toggled-on="1" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Referente</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="contact_person" value="{{ data.contact.getContactPerson() }}" data-toggled-by="contact-type" data-toggled-on="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Indirizzo email</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" name="email" value="{{ data.contact.getEmail() }}" data-uid="{{ data.contact.getId() }}" required>
+                                    <div class="input-group-addon">
+                                        <span class="fas fa-fw"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Telefono</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="phone" value="{{ data.contact.getPhone() }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Indirizzo</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="address" value="{{ data.contact.getAddress() }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Citt&agrave;</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="city" value="{{ data.contact.getCity() }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">CAP</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="zipcode" value="{{ data.contact.getZipcode() }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Provincia</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="state" value="{{ data.contact.getState() }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Data di nascita</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control dtpicker" name="birth_date" data-toggled-by="contact-type" data-toggled-on="0"
+                                 value="{{ data.contact.getBirthDate() is not null ? data.contact.getBirthDate()|date('d/m/Y') : '' }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Luogo di nascita</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="birth_place" data-toggled-by="contact-type" data-toggled-on="0"
+                                 value="{{ data.contact.getBirthPlace() }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Codice fiscale</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="tax_code" data-toggled-by="contact-type" data-toggled-on="0" value="{{ data.contact.getTaxCode() }}">
+                            </div>
+                        </div>   
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>PRIVACY</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Privacy Standard</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="privacy_standard" value="1" {{ setCheckbox(true, data.contact.getPrivacyStandard()) }}>SI
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="privacy_standard" value="0" {{ setCheckbox(false, data.contact.getPrivacyStandard()) }}>NO
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Privacy Marketing</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="privacy_marketing" value="1" {{ setCheckbox(true, data.contact.getPrivacyMarketing()) }}>SI
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="privacy_marketing" value="0" {{ setCheckbox(false, data.contact.getPrivacyMarketing()) }}>NO
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Privacy Analisi</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="privacy_analysis" value="1" {{ setCheckbox(true, data.contact.getPrivacyAnalysis()) }}>SI
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="privacy_analysis" value="0" {{ setCheckbox(false, data.contact.getPrivacyAnalysis()) }}>NO
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">IP registrazione</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" value="{{ data.contact.getRegistrationIp() }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Data registrazione</label>
+                            <div class="col-md-6">
+                                <input type="text" name="fd" class="form-control" 
+                                value="{{ data.contact.getCreatedAt() is not null ? data.contact.getCreatedAt()|date('d/m/Y H:i:s') : '' }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Data aggiornamento</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" 
+                                value="{{ data.contact.getUpdatedAt() is not null ? data.contact.getUpdatedAt()|date('d/m/Y H:i:s') : '' }}" readonly>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>NOTE CONTATTO</legend>
+                        <div class="mt10">
+                            <textarea class="form-control" name="note" rows="8">{{ data.contact.getNote() }}</textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+   
+    document.addEventListener('DOMContentLoaded', function() {
+
+        Delegate(document).on('click', '.save-contact', function() {
+            let _frm = document.querySelector('.contact-form');
+            let validation = (new FormValidator({alerts: false})).checkAll(_frm);
+            if (!validation.valid) {
+                validation.fields.forEach(entry => {
+                    entry.field.closest('.form-group').classList.toggle('has-error', !entry.valid);
+                });
+                return new resAlert('Operazione fallita', 'I campi contrassegnati in rosso sono incompleti o contengono valori non validi.', {type:'error'});
+            }
+            let data = (new FormSerializer(_frm)).serialize();
+            this.classList.add('loading');
+            HttpRequest.post(`${res.absolutePath}api/contact`, data, response => {
+                this.classList.remove('loading');
+                if (response.status != 1) {
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location = `${res.path}contact-list`;
+            }, err => resAlert.error('Operazione fallita', err.toString()));
+        });
+
+        function validateEmailUniqueness(skipOnEmpty = false) {
+            let _ctl = document.querySelector('input[type="email"][data-uid]');
+            if (skipOnEmpty && _ctl.value.trim() == '') {
+                return;
+            }
+            let _adn = _ctl.nextElementSibling;
+            _adn.classList.remove('is-valid', 'is-error');
+            _adn.classList.add('loading');
+            HttpRequest.post(`${res.absolutePath}api/contact/validate`, {
+                id: _ctl.dataset.uid,
+                email: _ctl.value
+            }, response => {
+                _adn.classList.remove('loading');
+                if (response.status != 1) {
+                    _adn.classList.add('is-error');
+                    _ctl.closest('.form-group').classList.add('has-error');
+                    if (response.result.contactId != null) {
+                        return resAlert.error('Contatto gi&agrave; registrato', `L&rsquo;indirizzo email inserito risulta gi&agrave; registrato in anagrafica. <a href="${res.path}contact/${response.result.contactId}" target="_blank">Fai click qui per visualizzare il contatto.</a>`)
+                    }
+                    throw response.message ?? 'Errore generico';
+                }
+                _adn.classList.add('is-valid');
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type: 'error'}));
+        }      
+
+        Delegate(document).on('change', 'input[type="email"][data-uid]', validateEmailUniqueness);
+
+        validateEmailUniqueness(true);
+    });
+
+</script>
+{% endblock content %}

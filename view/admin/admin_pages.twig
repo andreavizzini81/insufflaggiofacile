@@ -1,0 +1,38 @@
+{% extends "index.twig" %}
+{% block content %}
+<div class="row">
+	<div class="col-md-12"> 
+		<div class="folders" id="folderContainer">
+		{% for page in data.pages %}
+		<div class="folder" data-id="{{ page.id }}">
+			<img src="{{theme}}assets/img/php.png">
+			<label>{{ page.name }}</label>
+		</div>
+		{% endfor %}
+		</div>
+	</div>
+</div>
+<script>
+
+	document.addEventListener('DOMContentLoaded', function() {
+
+		Delegate(document).on('click', '.folder', function() {
+			window.location.href = `${res.path}admin-page/${this.dataset.id}`;
+		});
+
+		void new Sortable(document.getElementById('folderContainer'), {
+			onSort: function (evt) {
+				let sort = Array.from(document.querySelectorAll('.folder')).map(itm => itm.dataset.id);
+				postRequest(`${res.path}admin-page/order`, {ids: sort}, result => {
+					if (result.status == 1) {
+						void new resAlert('Operazione completata', 'Il nuovo ordine è stato applicato', {autoclose:true});
+					} else {
+						void new resAlert('Operazione fallita', result.message, {type:'error'});
+					}
+				});
+			}
+		});
+	});
+
+</script>
+{% endblock content %}

@@ -1,0 +1,257 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="widget">
+    <div class="content">
+        <form class="form-horizontal user-form" action="javascript:void(0);" method="POST" autocomplete="off">
+            {% if data.user.getId() is not null %}
+            <input type="hidden" name="id" value="{{ data.user.getId() }}">
+            {% endif %}
+            <div class="row">
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>INFORMAZIONI PRINCIPALI</legend>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Ruolo</label>
+                            <div class="col-md-5">
+                                <select class="form-control" name="role_id">
+                                    {% for roleId, roleName in constant('User::ROLES') %}
+                                    <option value="{{ roleId }}" {{ setOption(roleId, data.user.getRoleId()) }}>{{ roleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Ruolo sito web</label>
+                            <div class="col-md-5">
+                                <select class="form-control" name="website_role_id">
+                                    <option>Nessun ruolo</option>
+                                    {% for roleId, roleName in constant('User::WEBSITE_ROLES') %}
+                                    <option value="{{ roleId }}" {{ setOption(roleId, data.user.getWebsiteRoleId()) }}>{{ roleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Nome</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="first_name" value="{{ data.user.getFirstName() }}" required>
+                            </div>
+                        </div>     
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Cognome</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="last_name" value="{{ data.user.getLastName() }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Ragione sociale</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="business_name" value="{{ data.user.getBusinessName() }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Telefono</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="phone" value="{{ data.user.getPhone() }}" required>
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Indirizzo email</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="email" class="form-control" name="email" value="{{ data.user.getEmail() }}" data-uid="{{ data.user.id }}" autocomplete="off" role="presentation" required>
+                                    <div class="input-group-addon">
+                                        <span class="fas fa-fw"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Password</label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input 
+                                        type="password" 
+                                        class="form-control {% if data.user.hasPassword() %}optional{% endif %}" 
+                                        name="password" 
+                                        placeholder="Lasciare vuoto per non modificare la password corrente..." 
+                                        autocomplete="new-password" 
+                                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                                        {% if not data.user.hasPassword() %}required{% endif %}
+                                    >
+                                    <div class="input-group-addon accentFont cursor-pointer password-strength-info" title="Visualizza come creare la password">
+                                        <span class="fad fa-info fa-fw"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Conferma password</label>
+                            <div class="col-md-8">
+                                <input 
+                                    type="password" 
+                                    class="form-control {% if data.user.hasPassword() %}optional{% endif %}" 
+                                    name="password_confirm" 
+                                    data-validate-linked="password" 
+                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" 
+                                    {% if not data.user.hasPassword() %}required{% endif %}
+                                >
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend>ACCESSO E PERMESSI</legend>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Stato</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="is_active" value="1" {{ setCheckbox(1, data.user.getIsActive()) }}> ATTIVO
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="is_active" value="0" {{ setCheckbox(0, data.user.getIsActive()) }}> NON ATTIVO
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Inserimento offerte</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="can_insert_offers" value="1" {{ setCheckbox(1, data.user.getCanInsertOffers()) }}> ABILITATO
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="can_insert_offers" value="0" {{ setCheckbox(0, data.user.getCanInsertOffers()) }}> NON ABILITATO
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Data scadenza abbonamento</label>
+                            <div class="col-md-6">
+                                <input 
+                                    type="text" 
+                                    name="subscription_expiration" 
+                                    class="form-control dtpicker"
+                                    value="{{ data.user.getSubscriptionExpiration() is not null ? data.user.getSubscriptionExpiration()|date('d/m/Y') : '' }}"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Agenzia di riferimento</label>
+                            <div class="col-md-5">
+                                <select class="form-control" name="default_agency_id">
+                                    <option value="">Nessuna agenzia di riferimento</option>
+                                    {% for agency in data.agencyList %}
+                                    <option value="{{ agency.getId() }}" {{ setOption(agency.getId(), data.user.getDefaultAgencyId()) }}>{{ agency.getDescription() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Agenzie assegnate</label>
+                            <div class="col-md-9">
+                                <div class="checkbox multiple">
+                                    {% for agency in data.agencyList %}
+                                    <label class="mb10">
+                                        <input 
+                                            type="checkbox" 
+                                            name="authorized_agency_id[]" 
+                                            value="{{ agency.getId() }}" 
+                                            {{ flagInArray(agency.getId(), data.user.getAuthorizedAgenciesId(), 'checked') }}
+                                        >{{ agency.getDescription() }}
+                                    </label>
+                                    {% endfor %}                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Data creazione</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" 
+                                value="{{ data.user.getCreatedAt() is not null ? data.user.getCreatedAt()|date('d/m/Y H:i:s') : '' }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label field-descriptor col-md-3">Data aggiornamento</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" 
+                                value="{{ data.user.getUpdatedAt() is not null ? data.user.getUpdatedAt()|date('d/m/Y H:i:s') : '' }}" readonly>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+   
+    document.addEventListener('DOMContentLoaded', function() {
+
+        Delegate(document).on('click', '.save-user', function() {
+            let _frm = document.querySelector('.user-form');
+            let validation = (new FormValidator({alerts: false})).checkAll(_frm);
+            if (!validation.valid) {
+                let invalidFieldsErrors = [];
+                validation.fields.forEach(entry => {
+                    let _group = entry.field.closest('.form-group');
+                    _group.classList.toggle('has-error', !entry.valid);
+                    if (!entry.valid) {
+                        let label = _group.querySelector('label.field-descriptor');
+                        invalidFieldsErrors.push(`<span class="fw400 blackFont">${label.textContent}: </span>${entry.error}`);
+                    }
+                });
+                return new resAlert('Verificare i campi contrassegnati in rosso:', `${invalidFieldsErrors.join('<br>')}`, {type:'warning'});
+            }
+            let data = (new FormSerializer(_frm)).serialize();
+            this.classList.add('loading');
+            HttpRequest.post(`${res.path}user`, data, response => {
+                this.classList.remove('loading');
+                if (response.status != 1) {
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location = `${res.path}user-list`;
+            });
+        });
+
+        Delegate(document).on('change', 'select[name="default_agency_id"]', function() {
+            const checkbox = document.querySelector(`input[name="authorized_agency_id[]"][value="${this.value}"]`);
+            if (!checkbox) { return; }
+            checkbox.checked = true;
+        });
+
+        function validateEmailUniqueness(skipOnEmpty = false) {
+            let _ctl = document.querySelector('input[type="email"][data-uid]');
+            if (skipOnEmpty && _ctl.value.trim() == '') {
+                return;
+            }
+            let _adn = _ctl.nextElementSibling;
+            _adn.classList.remove('is-valid', 'is-error');
+            _adn.classList.add('loading');
+            HttpRequest.post(`${res.path}user/validate`, {
+                id: _ctl.dataset.uid,
+                email: _ctl.value
+            }, response => {
+                _adn.classList.remove('loading');
+                if (response.status != 1) {
+                    _adn.classList.add('is-error');
+                    _ctl.closest('.form-group').classList.add('has-error');
+                    throw response.message ?? 'Errore generico';
+                }
+                _adn.classList.add('is-valid');
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type: 'error'}));
+        }      
+
+        Delegate(document).on('change', 'input[type="email"][data-uid]', validateEmailUniqueness);
+
+        validateEmailUniqueness(true);
+    });
+
+
+</script>
+{% endblock content %}
