@@ -1928,6 +1928,52 @@ class Kanban {
         );
     }
 
+    resolveTargetStageId(stage, card = null) {
+        if (!Array.isArray(stage?.delegatedStageIds) || stage.delegatedStageIds.length === 0) {
+            return null;
+        }
+        if (card && stage.delegatedStageIds.includes(card.stageId)) {
+            return card.stageId;
+        }
+        return stage.delegatedStageIds[0];
+    }
+
+    async moveCard(card, targetStage) {
+        if (!card || !targetStage || card.currentStage === targetStage) {
+            return;
+        }
+
+        const originStage = card.currentStage;
+        if (!originStage) {
+            return;
+        }
+
+        const targetStageId = this.resolveTargetStageId(targetStage, card);
+        if (!targetStageId) {
+            alert('Impossibile spostare la card: stage di destinazione non valido');
+            return;
+        }
+
+        const previousStageId = card.stageId;
+
+        targetStage.appendCard(card, { prepend: true });
+        card.stageId = targetStageId;
+        card.wrapper.classList.add('loading');
+
+        try {
+            const response = await HttpRequest.put(`${res.absolutePath}api/deal/${card.id}/stage/${targetStageId}`, {});
+            if (!response || response.status !== 1) {
+                throw new Error(response?.message ?? 'Errore durante lo spostamento della card');
+            }
+            card.wrapper.classList.remove('loading');
+        } catch (error) {
+            originStage.appendCard(card);
+            card.stageId = previousStageId;
+            card.wrapper.classList.remove('loading');
+            alert(error?.message ?? 'Spostamento non riuscito, ripristino posizione precedente');
+        }
+    }
+
 }
 
 class KanbanStage {
@@ -1995,17 +2041,13 @@ class KanbanStage {
                 this.pagination.current = data.result.pagination.current;
             });
         });
-        /*
         this.wrapper.addEventListener('dragover', (e) => {
-            //console.log(e.target);
+            e.preventDefault();
             this.wrapper.classList.add('is-drop-target');
         });
 
         this.wrapper.addEventListener('dragenter', (e) => {
-            if (!e.relatedTarget || !e.relatedTarget.classList.contains('kanban-stage-list')) {
-                //e.stopPropagation();
-                return;
-            }
+            e.preventDefault();
             this.wrapper.classList.add('is-drop-target');
         });
 
@@ -2016,17 +2058,45 @@ class KanbanStage {
             }
         });
 
-        this.list.addEventListener('drop', (e) => {
-            //console.log('drop', e);
+        this.wrapper.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            const cardId = e.dataTransfer.getData('text/plain');
+            this.wrapper.classList.remove('is-drop-target');
+            if (!cardId) {
+                return;
+            }
+            const cardElement = document.querySelector(`.kanban-card[data-id="${cardId}"]`);
+            if (!cardElement?.kanbanCard) {
+                return;
+            }
+            await this.parent.moveCard(cardElement.kanbanCard, this);
         });
-        */
+
+        this.list.addEventListener('drop', (e) => {
+            e.preventDefault();
+            this.wrapper.classList.remove('is-drop-target');
+        });
     }
 
     addDelegatedStageId(stageId) {
         this.delegatedStageIds.push(stageId);
     }
 
-    appendCard(card) {
+    appendCard(card, options = {}) {
+        if (card.currentStage && card.currentStage !== this) {
+            card.currentStage.cards = card.currentStage.cards.filter(item => item !== card);
+        }
+        card.currentStage = this;
+        if (!this.cards.includes(card)) {
+            this.cards.push(card);
+        }
+
+        const shouldPrepend = options.prepend === true;
+        if (shouldPrepend) {
+            this.list.prepend(card.wrapper);
+            return;
+        }
+
         this.list.appendChild(card.wrapper);
     }
 
@@ -2106,6 +2176,7 @@ class KanbanCard {
         this.wrapper.classList.add('kanban-card', 'has-side-actions');
         this.wrapper.dataset.id = this.data.id;
         this.wrapper.draggable = true;
+        this.wrapper.kanbanCard = this;
     }
 
     render() {
@@ -2117,7 +2188,15 @@ class KanbanCard {
     }
 
     registerEventsHandlers() {
+        this.wrapper.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', `${this.id}`);
+            e.dataTransfer.effectAllowed = 'move';
+            this.wrapper.classList.add('is-dragging');
+        });
 
+        this.wrapper.addEventListener('dragend', () => {
+            this.wrapper.classList.remove('is-dragging');
+        });
     }
 
 }
@@ -2227,23 +2306,6 @@ class DealKanbanCard extends KanbanCard {
 
         });
         */
-        /*
-        this.wrapper.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData(
-                'application/json',
-                JSON.stringify({
-                    itemId: this.id,
-                    origin: this.stageId
-                })
-            );
-            //console.log('drag started', e.dataTransfer.getData('application/json'));
-        });
-
-        this.wrapper.addEventListener('dragend', (e) => {
-            //console.log('drag ended', e);
-        });
-        */
-
     }
 
     openCalendarEventModal() {
