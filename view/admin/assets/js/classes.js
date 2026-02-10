@@ -900,8 +900,12 @@ class StageManager {
     async setStage(stageId) {
         const result = await this.onChange(stageId);
         if (result) {
+            const targetStage = this.stages.find(stage => stage.dataset.id == stageId);
+            const stageLabel = targetStage?.textContent?.trim() || stageId;
+
+            console.info('[StageManager] Stage updated', { stageId, stageLabel });
             this.updateUI(stageId);
-			new resAlert('Stage aggiornato', `Hai modificato lo stage in ${stageId}`, {type:'success'});
+			new resAlert('Stage aggiornato', `Stage aggiornato a: ${stageLabel}`, {type:'success'});
         }
     }
 
