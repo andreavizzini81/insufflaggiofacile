@@ -820,7 +820,7 @@ class StageManager {
         stage.classList.add('stage');
         stage.classList.toggle('tag', !data.isFinal);
         stage.dataset.id = data.id;
-        stage.dataset.color = data.color;
+        stage.dataset.color = normalizeHexColor(data.color);
         stage.dataset.index = index + (data.isFinal ? 100 : 0);
         stage.isFinal = data.isFinal;
         stage.innerHTML = data.isFinal ? data.label : `<span class="inner">${data.label}</span>`;
@@ -891,9 +891,20 @@ class StageManager {
     }
 
     applyBackgroundByIndex(color, index) {
-        this.wrapper.setAttribute('class', `stage-manager ${color}`);
+        const resolvedColor = normalizeHexColor(color);
+
+        this.wrapper.setAttribute('class', 'stage-manager');
         this.tags.forEach(tag => {
-            tag.classList.toggle('inherit-color', parseInt(tag.dataset.index) <= parseInt(index));
+            const hasInheritedColor = parseInt(tag.dataset.index) <= parseInt(index);
+            const tagInner = tag.querySelector('.inner');
+
+            tag.classList.toggle('inherit-color', hasInheritedColor);
+
+            if (!(tagInner instanceof HTMLElement)) {
+                return;
+            }
+
+            tagInner.style.backgroundColor = hasInheritedColor && resolvedColor ? resolvedColor : '';
         });
     }
 
@@ -923,6 +934,19 @@ class StageManager {
         this.highlightActiveStage();
     }
 
+}
+
+function normalizeHexColor(color) {
+    if (typeof color !== 'string') {
+        return '';
+    }
+
+    const trimmedColor = color.trim();
+    if (!trimmedColor) {
+        return '';
+    }
+
+    return trimmedColor.startsWith('#') ? trimmedColor : `#${trimmedColor}`;
 }
 
 class AttachmentModal {
@@ -1997,7 +2021,7 @@ class KanbanStage {
 
         this.token = params.config.token;
         this.label = params.config.label;
-        this.color = params.config.color;
+        this.color = normalizeHexColor(params.config.color);
         this.isGroup = params.isGroup ?? false;
         this.delegatedStageIds = params.stagesId;
         this.pagination = params.pagination;
@@ -2012,12 +2036,13 @@ class KanbanStage {
 
     render() {
         this.wrapper = document.createElement('div');
-        this.wrapper.classList.add('kanban-stage', this.color);
+        this.wrapper.classList.add('kanban-stage');
         this.wrapper.classList.toggle('is-group', this.isGroup);
 
         this.header = document.createElement('div');
         this.header.classList.add('kanban-stage-header');
         this.header.innerHTML = `${this.label} (${this.pagination.results})`;
+        this.header.style.backgroundColor = this.color;
         this.wrapper.appendChild(this.header);
 
         this.list = document.createElement('div');
@@ -2096,10 +2121,12 @@ class KanbanStage {
         const shouldPrepend = options.prepend === true;
         if (shouldPrepend) {
             this.list.prepend(card.wrapper);
+            card.wrapper.style.borderLeftColor = this.color;
             return;
         }
 
         this.list.appendChild(card.wrapper);
+        card.wrapper.style.borderLeftColor = this.color;
     }
 
     getCurrentListScrollPosition() {
