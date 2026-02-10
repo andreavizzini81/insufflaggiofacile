@@ -15,6 +15,7 @@ class AdminCrmStagePageController extends BackendController {
         }
 
         $this->data['crmStage'] = $stage;
+        $this->data['crmStageGroups'] = $this->db->getResults('SELECT id, label AS value FROM crm_stage_group ORDER BY id ASC;') ?? [];
         $this->data['actions'] = [
             new TopbarAction([
                 'attributes' => [

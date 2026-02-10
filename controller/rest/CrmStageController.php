@@ -15,6 +15,12 @@ class CrmStageController extends RestController {
     public function setData(): Response {
 
         $stageData = $this->request->getInputParams();
+        $stageData['entity'] = 'deal';
+
+        $groupId = $stageData['group_id'] ?? null;
+        if ($groupId === 'NULL' || $groupId === '' || $groupId === null || (is_numeric($groupId) && (int)$groupId <= 0)) {
+            $stageData['group_id'] = null;
+        }
 
         $stage = new CrmStage($stageData['id'] ?? null);
         $stage->import((object)$stageData);
