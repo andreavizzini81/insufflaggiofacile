@@ -5366,34 +5366,9 @@ fieldset legend .action-group .action {
 	opacity: 1;
 }
 
-.stage-manager.red .tag.inherit-color .inner,
-.stage-manager .tag.red.active .inner {
-	background-color: #ff5b55;
-}
-
-.stage-manager.orange .tag.inherit-color .inner,
-.stage-manager .tag.orange.active .inner {
-	background-color: #ffa801;
-}
-
-.stage-manager.blue .tag.inherit-color .inner,
-.stage-manager .tag.blue.active .inner {
-	background-color: #3f8bcd;
-}
-
-.stage-manager.cyan .tag.inherit-color .inner,
-.stage-manager .tag.cyan.active .inner {
-	background-color: #5BC;
-}
-
-.stage-manager.green .tag.inherit-color .inner,
-.stage-manager .tag.green.active .inner {
-	background-color: #00a74c;
-}
-
-.stage-manager.black .tag.inherit-color .inner,
-.stage-manager .tag.black.active .inner {
-	background-color: #000000;
+.stage-manager .tag.inherit-color .inner,
+.stage-manager .tag.active .inner {
+	background-color: var(--stage-manager-color, #AAA);
 }
 
 @media screen and (max-width: 991.999px) {
