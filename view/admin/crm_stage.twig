@@ -1,0 +1,95 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="widget">
+    <div class="content">
+        <form class="form-horizontal linked-fields crm-stage-form" action="javascript:void(0);" method="POST" autocomplete="off">
+            {% if data.crmStage.getId() is not null %}
+            <input type="hidden" name="id" value="{{ data.crmStage.getId() }}">
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <fieldset>
+                        <legend>Fase CRM</legend>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Etichetta</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="label" value="{{ data.crmStage.getLabel() }}" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Colore (hex)</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="color" value="{{ data.crmStage.getColor() }}" maxlength="6" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Entity</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="entity" value="{{ data.crmStage.getEntity() }}" maxlength="25">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Group ID</label>
+                            <div class="col-md-9">
+                                <input type="number" class="form-control" name="group_id" value="{{ data.crmStage.getGroupId() }}" min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Posizione</label>
+                            <div class="col-md-9">
+                                <input type="number" class="form-control" name="position" value="{{ data.crmStage.getPosition() }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Won</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="is_won" value="1" {{ data.crmStage.isWon() ? 'checked' : '' }}>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Lost</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="is_lost" value="1" {{ data.crmStage.isLost() ? 'checked' : '' }}>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Default</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="is_default" value="1" {{ data.crmStage.isDefault() ? 'checked' : '' }}>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.save-crm-stage', function() {
+            let _frm = document.querySelector('.crm-stage-form');
+            let validation = (new FormValidator({alerts: false})).checkAll(_frm);
+            if (!validation.valid) {
+                validation.fields.forEach(entry => {
+                    entry.field.closest('.form-group').classList.toggle('has-error', !entry.valid);
+                });
+                return new resAlert('Operazione fallita', 'I campi contrassegnati in rosso sono incompleti o contengono valori non validi.', {type:'error'});
+            }
+
+            let data = (new FormSerializer(_frm)).serialize();
+            data.is_won = data.is_won ? 1 : 0;
+            data.is_lost = data.is_lost ? 1 : 0;
+            data.is_default = data.is_default ? 1 : 0;
+
+            this.classList.add('loading');
+            HttpRequest.post(`${res.absolutePath}api/crm-stage`, data, response => {
+                this.classList.remove('loading');
+                if (response.status != 1) {
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location = `${res.path}crm-stage-list`;
+            }, err => resAlert.error('Operazione fallita', err.toString()));
+        });
+    });
+</script>
+{% endblock content %}
