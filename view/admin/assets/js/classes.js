@@ -1956,7 +1956,7 @@ class Kanban {
 
         const previousStageId = card.stageId;
 
-        targetStage.appendCard(card);
+        targetStage.appendCard(card, { prepend: true });
         card.stageId = targetStageId;
         card.wrapper.classList.add('loading');
 
@@ -2082,7 +2082,7 @@ class KanbanStage {
         this.delegatedStageIds.push(stageId);
     }
 
-    appendCard(card) {
+    appendCard(card, options = {}) {
         if (card.currentStage && card.currentStage !== this) {
             card.currentStage.cards = card.currentStage.cards.filter(item => item !== card);
         }
@@ -2090,6 +2090,13 @@ class KanbanStage {
         if (!this.cards.includes(card)) {
             this.cards.push(card);
         }
+
+        const shouldPrepend = options.prepend === true;
+        if (shouldPrepend) {
+            this.list.prepend(card.wrapper);
+            return;
+        }
+
         this.list.appendChild(card.wrapper);
     }
 
