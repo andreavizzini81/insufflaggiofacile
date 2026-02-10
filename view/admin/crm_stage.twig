@@ -19,19 +19,27 @@
                         <div class="form-group">
                             <label class="control-label col-md-3">Colore (hex)</label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="color" value="{{ data.crmStage.getColor() }}" maxlength="6" required>
+                                {% set stageColor = data.crmStage.getColor() %}
+                                {% set colorValue = (stageColor matches '/^#?[0-9a-fA-F]{6}$/' ? (stageColor starts with '#' ? stageColor : '#' ~ stageColor) : '#000000') %}
+                                <input type="color" class="form-control" name="color" value="{{ colorValue }}" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3">Entity</label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="entity" value="{{ data.crmStage.getEntity() }}" maxlength="25">
+                                <input type="text" class="form-control" value="deal" disabled>
+                                <input type="hidden" name="entity" value="deal">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3">Group ID</label>
                             <div class="col-md-9">
-                                <input type="number" class="form-control" name="group_id" value="{{ data.crmStage.getGroupId() }}" min="0">
+                                <select class="form-control" name="group_id">
+                                    <option value="NULL" {{ data.crmStage.getGroupId() is null ? 'selected' : '' }}>Nessuno (NULL)</option>
+                                    {% for group in data.crmStageGroups %}
+                                    <option value="{{ group.id }}" {{ data.crmStage.getGroupId() == group.id ? 'selected' : '' }}>{{ group.id }} - {{ group.value }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -77,6 +85,8 @@
             }
 
             let data = (new FormSerializer(_frm)).serialize();
+            data.color = data.color.replace('#', '');
+            data.group_id = data.group_id === 'NULL' ? null : data.group_id;
             data.is_won = data.is_won ? 1 : 0;
             data.is_lost = data.is_lost ? 1 : 0;
             data.is_default = data.is_default ? 1 : 0;
