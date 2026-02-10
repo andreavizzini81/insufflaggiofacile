@@ -186,6 +186,12 @@ $app->router->group('/admin', function(&$group) {
     $group->get('\/deals\/?')
         ->setController('AdminDealListPage');
 
+    $group->get('\/deals\/kanban\-manager\/?')
+        ->setController('AdminDealListPage')
+        ->setParams([
+            'mode' => 'kanban-manager'
+        ]);
+
     $group->get('\/deal\/?(\d+)?\/?')
         ->setController('AdminDealPage')
         ->setParams(['id' => '@1']);
@@ -402,6 +408,25 @@ $app->router->group('/api', function(&$group) {
         ->setParams([
             'page' => '@2',
             'kanban' => true
+        ]);
+
+    $group->get('\/crm\-stages\/?')
+        ->setController('CrmStage')
+        ->setAction('getList');
+
+    $group->post('\/crm\-stage\/?')
+        ->setController('CrmStage')
+        ->setAction('setData');
+
+    $group->post('\/crm\-stage\/order\/?')
+        ->setController('CrmStage')
+        ->setAction('setOrder');
+
+    $group->delete('\/crm\-stage\/(\d+)\/?')
+        ->setController('CrmStage')
+        ->setAction('delete')
+        ->setParams([
+            'id' => '@1'
         ]);
 
     $group->post('\/deal\/(\d+)\/event\/?')

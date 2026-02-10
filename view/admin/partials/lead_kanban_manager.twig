@@ -1,0 +1,206 @@
+<div class="widget">
+    <div class="content">
+        <fieldset>
+            <legend>GESTIONE STAGE KANBAN LEAD</legend>
+            <p class="mb15">Trascina le righe per cambiare ordine. Usa modifica/elimina per gestire gli stage.</p>
+            <div class="table-responsive">
+                <table class="table table-striped" id="leadKanbanStageTable">
+                    <thead>
+                        <tr>
+                            <th width="40"></th>
+                            <th>Etichetta</th>
+                            <th>Colore</th>
+                            <th>Gruppo</th>
+                            <th>Default</th>
+                            <th>Vinto</th>
+                            <th>Perso</th>
+                            <th width="140">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div class="modal fade" id="leadKanbanStageModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Stage Kanban Lead</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="leadKanbanStageForm" action="javascript:void(0);">
+                    <input type="hidden" name="params.id">
+                    <input type="hidden" name="params.position" value="0">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Etichetta</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="params.label" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Colore</label>
+                        <div class="col-md-9">
+                            <select class="form-control" name="params.color">
+                                <option value="black">Nero</option>
+                                <option value="blue">Blu</option>
+                                <option value="green">Verde</option>
+                                <option value="orange">Arancione</option>
+                                <option value="red">Rosso</option>
+                                <option value="cyan">Ciano</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">ID Gruppo</label>
+                        <div class="col-md-9">
+                            <input type="number" min="1" class="form-control" name="params.group_id" placeholder="Lascia vuoto se non usato">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Stage default</label>
+                        <div class="col-md-9">
+                            <label class="radio-inline"><input type="radio" name="params.is_default" value="1"> SI</label>
+                            <label class="radio-inline"><input type="radio" name="params.is_default" value="0" checked> NO</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Stage vinto</label>
+                        <div class="col-md-9">
+                            <label class="radio-inline"><input type="radio" name="params.is_won" value="1"> SI</label>
+                            <label class="radio-inline"><input type="radio" name="params.is_won" value="0" checked> NO</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Stage perso</label>
+                        <div class="col-md-9">
+                            <label class="radio-inline"><input type="radio" name="params.is_lost" value="1"> SI</label>
+                            <label class="radio-inline"><input type="radio" name="params.is_lost" value="0" checked> NO</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-primary" id="saveLeadKanbanStage">Salva</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const tableBody = document.querySelector('#leadKanbanStageTable tbody');
+    const modal = $('#leadKanbanStageModal');
+    const form = document.getElementById('leadKanbanStageForm');
+    let stageMap = {};
+
+    const boolBadge = (value) => value ? '<span class="label label-success">SI</span>' : '<span class="label label-default">NO</span>';
+
+    function fillForm(stage = null) {
+        form.reset();
+        form.querySelector('input[name="params.id"]').value = stage?.id ?? '';
+        form.querySelector('input[name="params.position"]').value = stage?.position ?? 0;
+        form.querySelector('input[name="params.label"]').value = stage?.label ?? '';
+        form.querySelector('select[name="params.color"]').value = stage?.color ?? 'black';
+        form.querySelector('input[name="params.group_id"]').value = stage?.groupId ?? '';
+        form.querySelector(`input[name="params.is_default"][value="${stage?.isDefault ? 1 : 0}"]`).checked = true;
+        form.querySelector(`input[name="params.is_won"][value="${stage?.isWon ? 1 : 0}"]`).checked = true;
+        form.querySelector(`input[name="params.is_lost"][value="${stage?.isLost ? 1 : 0}"]`).checked = true;
+    }
+
+    function buildRow(stage) {
+        const tr = document.createElement('tr');
+        tr.dataset.id = stage.id;
+        tr.innerHTML = `
+            <td class="text-center"><span class="fa fa-bars"></span></td>
+            <td>${stage.label}</td>
+            <td><span class="label ${stage.color}">${stage.color}</span></td>
+            <td>${stage.group?.label ?? stage.groupId ?? '-'}</td>
+            <td>${boolBadge(stage.isDefault)}</td>
+            <td>${boolBadge(stage.isWon)}</td>
+            <td>${boolBadge(stage.isLost)}</td>
+            <td>
+                <button class="btn btn-xs btn-info edit-stage" data-id="${stage.id}">Modifica</button>
+                <button class="btn btn-xs btn-danger delete-stage" data-id="${stage.id}">Elimina</button>
+            </td>
+        `;
+        return tr;
+    }
+
+    async function loadList() {
+        const data = await HttpRequest.get(`${res.absolutePath}api/crm-stages`);
+        if (data.status !== 1) {
+            return resAlert.error('Operazione fallita', data.message ?? 'Errore durante il caricamento degli stage');
+        }
+
+        tableBody.innerHTML = '';
+        stageMap = {};
+        data.result.list.forEach(stage => {
+            stageMap[stage.id] = stage;
+            tableBody.appendChild(buildRow(stage));
+        });
+
+        void new Sortable(tableBody, {
+            animation: 120,
+            onEnd: async () => {
+                const ids = Array.from(tableBody.querySelectorAll('tr')).map(row => row.dataset.id);
+                const result = await HttpRequest.post(`${res.absolutePath}api/crm-stage/order`, { ids });
+                if (result.status !== 1) {
+                    return resAlert.error('Operazione fallita', result.message ?? 'Impossibile salvare il nuovo ordine');
+                }
+                await loadList();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadList();
+    });
+
+    Delegate(document).on('click', '.create-stage', function() {
+        fillForm();
+        modal.modal('show');
+    });
+
+    Delegate(document).on('click', '.edit-stage', function() {
+        const stage = stageMap[this.dataset.id] ?? null;
+        fillForm(stage);
+        modal.modal('show');
+    });
+
+    Delegate(document).on('click', '#saveLeadKanbanStage', async function() {
+        const validation = (new FormValidator()).checkAll(form);
+        if (!validation.valid) {
+            return resAlert.error('Operazione annullata', 'Compila i campi obbligatori');
+        }
+
+        const payload = FormSerializer.for(form).serialize();
+        const response = await HttpRequest.post(`${res.absolutePath}api/crm-stage`, payload);
+        if (response.status !== 1) {
+            return resAlert.error('Operazione fallita', response.message ?? 'Salvataggio non riuscito');
+        }
+
+        modal.modal('hide');
+        await loadList();
+        return resAlert.success('Operazione completata', 'Stage salvato correttamente');
+    });
+
+    Delegate(document).on('click', '.delete-stage', async function() {
+        if (!confirm('Confermi l\'eliminazione dello stage?')) {
+            return;
+        }
+
+        const response = await HttpRequest.delete(`${res.absolutePath}api/crm-stage/${this.dataset.id}`, null);
+        if (response.status !== 1) {
+            return resAlert.error('Operazione fallita', response.message ?? 'Eliminazione non riuscita');
+        }
+
+        await loadList();
+        return resAlert.success('Operazione completata', 'Stage eliminato correttamente');
+    });
+})();
+</script>

@@ -1,5 +1,8 @@
 {% extends 'index.twig' %}
 {% block content %}
+{% if data.mode == 'kanban-manager' %}
+    {% include '/partials/lead_kanban_manager.twig' %}
+{% else %}
 <div class="kanban loading-overlay"></div>
 <script>
 
@@ -66,4 +69,5 @@
 
     window.addEventListener('resize', adjustKanban);
 </script>
+{% endif %}
 {% endblock content %}
