@@ -16,7 +16,9 @@ class CrmStageController extends RestController {
 
         $stageData = $this->request->getInputParams();
         $stageData['entity'] = 'deal';
-        if (($stageData['group_id'] ?? null) === 'NULL') {
+
+        $groupId = $stageData['group_id'] ?? null;
+        if ($groupId === 'NULL' || $groupId === '' || $groupId === null || (is_numeric($groupId) && (int)$groupId <= 0)) {
             $stageData['group_id'] = null;
         }
 
