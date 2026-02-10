@@ -1,0 +1,74 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<div class="table-responsive dashboard-stage mb15">
+    <table class="bordered hover w100">
+        <thead>
+            <tr>
+                <th>Etichetta</th>
+                <th>Colore</th>
+                <th>Entity</th>
+                <th>Gruppo</th>
+                <th>Posizione</th>
+                <th>Won</th>
+                <th>Lost</th>
+                <th>Default</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stage in data.list %}
+            <tr>
+                <td>{{ stage.getLabel() }}</td>
+                <td>
+                    <span class="d-inline-block mr10" style="width:14px;height:14px;border-radius:50%;background-color:#{{ stage.getColor() }};"></span>
+                    #{{ stage.getColor() }}
+                </td>
+                <td>{{ stage.getEntity() }}</td>
+                <td>{{ stage.getGroupId() }}</td>
+                <td>{{ stage.getPosition() }}</td>
+                <td>{{ stage.isWon() ? 'SI' : 'NO' }}</td>
+                <td>{{ stage.isLost() ? 'SI' : 'NO' }}</td>
+                <td>{{ stage.isDefault() ? 'SI' : 'NO' }}</td>
+                <td>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-success btn-square-small ml5 edit-crm-stage" data-id="{{ stage.getId() }}">
+                                <span class="fa fa-pencil"></span>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-square-small ml5 delete-crm-stage" data-id="{{ stage.getId() }}">
+                                <span class="fa fa-times"></span>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Delegate(document).on('click', '.delete-crm-stage', function() {
+            if (!confirm('Eliminare la fase CRM selezionata?')) {
+                return false;
+            }
+
+            this.classList.add('loading');
+            HttpRequest.delete(`/api/crm-stage/${this.dataset.id}`, null, response => {
+                if (response.status != 1) {
+                    this.classList.remove('loading');
+                    throw response.message ?? 'Errore generico';
+                }
+                window.location.reload();
+            }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+
+        Delegate(document).on('click', '.edit-crm-stage', function() {
+            window.location.href = `/admin/crm-stage/${this.dataset.id}`;
+        });
+    });
+</script>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+{% endblock content %}

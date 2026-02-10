@@ -137,6 +137,13 @@ $app->router->group('/admin', function(&$group) {
 
     $group->get('\/faq\-list\/?')
         ->setController('AdminFaqListPage');
+
+    $group->get('\/crm\-stage\/?(\d+)?')
+        ->setParams(['id' => '@1'])
+        ->setController('AdminCrmStagePage');
+
+    $group->get('\/crm\-stage\-list\/?')
+        ->setController('AdminCrmStageListPage');
 		
 	$group->get('\/product\/?(\d+)?')
         ->setParams(['id' => '@1'])
@@ -485,6 +492,11 @@ $app->router->group('/api', function(&$group) {
         ->setController('Faq')
         ->setAction('delete')
         ->setParams(['id' => '@1']);
+
+    $group->delete('\/crm\-stage\/(\d+)\/?')
+        ->setController('CrmStage')
+        ->setAction('delete')
+        ->setParams(['id' => '@1']);
     
     $group->post('\/insufflaggio\/?')
         ->setController('Insufflaggio')
@@ -497,6 +509,10 @@ $app->router->group('/api', function(&$group) {
     
     $group->post('\/faq\/?')
         ->setController('Faq')
+        ->setAction('setData');
+
+    $group->post('\/crm\-stage\/?')
+        ->setController('CrmStage')
         ->setAction('setData');
 		
 	$group->delete('\/product\/(\d+)\/?')
