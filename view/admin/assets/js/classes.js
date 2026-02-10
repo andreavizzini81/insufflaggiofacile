@@ -2061,7 +2061,9 @@ class KanbanStage {
         this.wrapper.addEventListener('drop', async (e) => {
             e.preventDefault();
             const cardId = e.dataTransfer.getData('text/plain');
-            this.wrapper.classList.remove('is-drop-target');
+            this.container.querySelectorAll('.kanban-stage.is-drop-target').forEach(stage => {
+                stage.classList.remove('is-drop-target');
+            });
             if (!cardId) {
                 return;
             }
@@ -2192,10 +2194,16 @@ class KanbanCard {
             e.dataTransfer.setData('text/plain', `${this.id}`);
             e.dataTransfer.effectAllowed = 'move';
             this.wrapper.classList.add('is-dragging');
+            this.wrapper.closest('.kanban-wrapper')?.classList.add('is-dragging-card');
         });
 
         this.wrapper.addEventListener('dragend', () => {
             this.wrapper.classList.remove('is-dragging');
+            const kanbanWrapper = this.wrapper.closest('.kanban-wrapper');
+            kanbanWrapper?.classList.remove('is-dragging-card');
+            kanbanWrapper?.querySelectorAll('.kanban-stage.is-drop-target').forEach(stage => {
+                stage.classList.remove('is-drop-target');
+            });
         });
     }
 
