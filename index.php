@@ -514,6 +514,10 @@ $app->router->group('/api', function(&$group) {
     $group->post('\/crm\-stage\/?')
         ->setController('CrmStage')
         ->setAction('setData');
+
+    $group->post('\/crm\-stage\/order\/?')
+        ->setController('CrmStage')
+        ->setAction('setOrder');
 		
 	$group->delete('\/product\/(\d+)\/?')
         ->setController('Product')

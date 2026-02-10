@@ -1,10 +1,24 @@
 {% extends 'index.twig' %}
 {% block content %}
 {% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<style>
+    .crm-stage-drag-handle {
+        cursor: move;
+        text-align: center;
+        color: #888;
+        width: 36px;
+    }
+
+    .crm-stage-drag-handle:hover {
+        color: #333;
+    }
+</style>
+
 <div class="table-responsive dashboard-stage mb15">
-    <table class="bordered hover w100">
+    <table class="bordered hover w100 crm-stage-list-table">
         <thead>
             <tr>
+                <th style="width:36px;"></th>
                 <th>Etichetta</th>
                 <th>Colore</th>
                 <th>Entity</th>
@@ -18,7 +32,8 @@
         </thead>
         <tbody>
             {% for stage in data.list %}
-            <tr>
+            <tr class="crm-stage-row" data-id="{{ stage.getId() }}">
+                <td class="crm-stage-drag-handle" title="Trascina per riordinare"><span class="fa fa-bars"></span></td>
                 <td>{{ stage.getLabel() }}</td>
                 <td>
                     <span class="d-inline-block mr10" style="width:14px;height:14px;border-radius:50%;background-color:#{{ stage.getColor() }};"></span>
@@ -26,7 +41,7 @@
                 </td>
                 <td>{{ stage.getEntity() }}</td>
                 <td>{{ stage.getGroupId() }}</td>
-                <td>{{ stage.getPosition() }}</td>
+                <td class="crm-stage-position">{{ stage.getPosition() }}</td>
                 <td>{{ stage.isWon() ? 'SI' : 'NO' }}</td>
                 <td>{{ stage.isLost() ? 'SI' : 'NO' }}</td>
                 <td>{{ stage.isDefault() ? 'SI' : 'NO' }}</td>
@@ -50,6 +65,32 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        const tableBody = document.querySelector('.crm-stage-list-table tbody');
+
+        if (tableBody) {
+            void new Sortable(tableBody, {
+                handle: '.crm-stage-drag-handle',
+                animation: 150,
+                onEnd: function() {
+                    const ids = Array.from(tableBody.querySelectorAll('.crm-stage-row')).map(row => row.dataset.id);
+                    HttpRequest.post(`${res.absolutePath}api/crm-stage/order`, {ids: ids}, result => {
+                        if (result.status !== 1) {
+                            throw result.message ?? 'Errore nel salvataggio del nuovo ordinamento';
+                        }
+
+                        Array.from(tableBody.querySelectorAll('.crm-stage-position')).forEach((cell, index) => {
+                            cell.textContent = index;
+                        });
+
+                        void new resAlert('Operazione completata', 'Il nuovo ordine è stato applicato', {autoclose:true});
+                    }, err => {
+                        void new resAlert('Operazione fallita', err.toString(), {type:'error'});
+                        window.location.reload();
+                    });
+                }
+            });
+        }
         Delegate(document).on('click', '.delete-crm-stage', function() {
             if (!confirm('Eliminare la fase CRM selezionata?')) {
                 return false;
