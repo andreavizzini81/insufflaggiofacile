@@ -891,7 +891,7 @@ class StageManager {
     }
 
     applyBackgroundByIndex(color, index) {
-        this.wrapper.style.setProperty('--stage-manager-color', color || '#AAA');
+        this.wrapper.setAttribute('class', `stage-manager ${color}`);
         this.tags.forEach(tag => {
             tag.classList.toggle('inherit-color', parseInt(tag.dataset.index) <= parseInt(index));
         });
@@ -2012,8 +2012,7 @@ class KanbanStage {
 
     render() {
         this.wrapper = document.createElement('div');
-        this.wrapper.classList.add('kanban-stage');
-        this.wrapper.style.setProperty('--kanban-stage-color', this.color || '#DDD');
+        this.wrapper.classList.add('kanban-stage', this.color);
         this.wrapper.classList.toggle('is-group', this.isGroup);
 
         this.header = document.createElement('div');
