@@ -274,8 +274,8 @@
 				if (response.status != 1) {
 					throw response.message ?? 'Errore generico';
 				}
-				gtag_report_conversion('/ok');
-				//window.location.href = `/home`;
+				//gtag_report_conversion('/ok');
+				window.location.href = `/home`;
 			});
 		}
 	});
