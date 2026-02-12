@@ -22,6 +22,10 @@ class FacebookLeadFormsGatewayController extends RestController {
 
             $dealData = $this->requestData;
 
+            $cityInput = $dealData['citta'] ?? $dealData['comune_immobile'] ?? $dealData['comune'] ?? '';
+
+            $stateInput = $dealData['provincia_immobile'] ?? $dealData['provincia'] ?? '';
+
             $contactDeal = (array)[
 
                 'first_name' => (array_key_exists('nome_cognome', $dealData)) ? $dealData['nome_cognome'] : $dealData['nome'],
@@ -32,9 +36,9 @@ class FacebookLeadFormsGatewayController extends RestController {
 
                 'phone' => (array_key_exists('telefono', $dealData)) ? $dealData['telefono'] : '',
 
-                'city' => (array_key_exists('citta', $dealData)) ? $dealData['citta'] : $dealData['comune_immobile'],
+                'city' => $cityInput,
 
-                'state' => (array_key_exists('provincia_immobile', $dealData)) ? $this->getState($dealData['provincia_immobile']) : '',
+                'state' => ($stateInput !== '') ? $this->getState($stateInput) : '',
 
             ];
 
