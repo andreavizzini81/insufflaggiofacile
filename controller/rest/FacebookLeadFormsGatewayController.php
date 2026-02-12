@@ -32,9 +32,11 @@ class FacebookLeadFormsGatewayController extends RestController {
 
                 'phone' => (array_key_exists('telefono', $dealData)) ? $dealData['telefono'] : '',
 
-                'city' => (array_key_exists('citta', $dealData)) ? $dealData['citta'] : $dealData['comune_immobile'],
+                'city' => $dealData['citta'] ?? $dealData['comune_immobile'] ?? $dealData['comune'] ?? '',
 
-                'state' => (array_key_exists('provincia_immobile', $dealData)) ? $this->getState($dealData['provincia_immobile']) : '',
+                'state' => isset($dealData['provincia_immobile'])
+                    ? $this->getState($dealData['provincia_immobile'])
+                    : (isset($dealData['provincia']) ? $this->getState($dealData['provincia']) : ''),
 
                 'registration_channel' => (array_key_exists('registration', $dealData)) ? $dealData['registration'] : ''
 
@@ -47,7 +49,18 @@ class FacebookLeadFormsGatewayController extends RestController {
 
             $dealMetadata = [];
 			
-			$chiaviEscluse = ['nome', 'cognome', 'email', 'telefono', 'comune_immobile', 'provincia_immobile', 'descrizione_problema'];
+			$chiaviEscluse = [
+				'nome',
+				'cognome',
+				'email',
+				'telefono',
+				'citta',
+				'comune',
+				'comune_immobile',
+				'provincia',
+				'provincia_immobile',
+				'descrizione_problema'
+			];
 			
 			foreach ($dealData as $key => $value) {
 				
