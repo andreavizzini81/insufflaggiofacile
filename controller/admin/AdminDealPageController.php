@@ -37,9 +37,10 @@ class AdminDealPageController extends BackendController {
 
         $this->data['actions'][] = new TopbarAction([
             'attributes' => [
-                'class' => 'delete-deal danger icon-only',
+                'class' => 'delete-deal danger',
                 'title' => 'ELIMINA'
             ],
+            'label' => 'ELIMINA',
             'icon' => 'trash'
         ]);
 
