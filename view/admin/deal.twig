@@ -153,6 +153,21 @@
             entityId: dealId
         });
 
+        Delegate(document).on('click', '.action.delete-deal', function() {
+            if (!confirm('Eliminare la lead selezionata?')) {
+                return false;
+            }
+
+            this.classList.add('loading');
+
+            HttpRequest.delete(`${res.absolutePath}api/deal/${dealId}`, null, (data, response) => {
+                if (data.status !== 1) {
+                    throw data.message ?? 'Errore generico';
+                }
+                window.location = `${res.path}deals`;
+            }, err => void new ResAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+
         Delegate(document).on('click', '.action.save-deal', function() {
             const form = document.querySelector('.deal-data-wrapper');
 

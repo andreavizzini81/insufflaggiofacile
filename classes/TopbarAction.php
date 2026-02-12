@@ -172,7 +172,9 @@ class TopbarAction {
             $span->setAttribute('class', "{$iconClassPrefix} fa-{$this->icon} {$this->iconColor}");
             $action->appendChild($span);            
         }
-        $action->appendChild($domDocument->createElement('label', $this->label));
+        if ($this->label !== '') {
+            $action->appendChild($domDocument->createElement('label', $this->label));
+        }
         $domDocument->appendChild($action);
         return $domDocument->saveHTML();
     }

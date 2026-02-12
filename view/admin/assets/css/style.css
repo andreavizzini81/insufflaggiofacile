@@ -5756,6 +5756,14 @@ fieldset legend .action-group .action {
     pointer-events: none;
 }
 
+.page-toolbar .actions .action.icon-only {
+    padding: 6px 11px;
+}
+
+.page-toolbar .actions .action.icon-only span {
+    margin: 0;
+}
+
 .page-toolbar .actions .action.accent {
 	background-color: var(--accent);    
 }

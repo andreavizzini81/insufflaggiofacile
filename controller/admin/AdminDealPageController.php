@@ -35,6 +35,14 @@ class AdminDealPageController extends BackendController {
 
         $this->data['actions'] = [];
 
+        $this->data['actions'][] = new TopbarAction([
+            'attributes' => [
+                'class' => 'delete-deal danger icon-only',
+                'title' => 'ELIMINA'
+            ],
+            'icon' => 'trash'
+        ]);
+
         if ($agency->smtpIsEnabled()) {
             $this->data['actions'][] = new TopbarAction([
                 'attributes' => [

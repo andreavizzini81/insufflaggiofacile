@@ -189,6 +189,17 @@ class DealController extends RestController {
         return $this->returnResult([]);
     }
 
+    public function delete(): Response {
+
+        if (!$this->deal->exists()) {
+            return $this->returnErrorMessage('Riferimento deal non valido', 400);
+        }
+
+        return $this->deal->delete() ?
+            $this->returnResult(null) :
+            $this->returnErrorMessage('Impossibile eliminare la deal');
+    }
+
     public function setStage(?int $stageId = null): Response {
 
         $stageId ??= $this->request->getQueryParam('stageId');
