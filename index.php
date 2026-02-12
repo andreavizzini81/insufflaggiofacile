@@ -331,6 +331,13 @@ $app->router->group('/api', function(&$group) {
             'id' => '@1'
         ]);
 
+    $group->delete('\/deal\/(\d+)\/?')
+        ->setController('Deal')
+        ->setAction('delete')
+        ->setParams([
+            'id' => '@1'
+        ]);
+
     $group->get('\/deal\/(\d+)\/attachment\/?')
         ->setController('Deal')
         ->setAction('getAttachments')
