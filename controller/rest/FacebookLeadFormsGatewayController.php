@@ -24,7 +24,7 @@ class FacebookLeadFormsGatewayController extends RestController {
 
             $cityInput = $dealData['citta'] ?? $dealData['comune_immobile'] ?? $dealData['comune'] ?? '';
 
-            $stateInput = $dealData['provincia_immobile'] ?? $dealData['provincia'] ?? '';
+            $provinceInput = $dealData['provincia_immobile'] ?? $dealData['provincia'] ?? '';
 
             $contactDeal = (array)[
 
@@ -38,7 +38,7 @@ class FacebookLeadFormsGatewayController extends RestController {
 
                 'city' => $cityInput,
 
-                'state' => $stateInput,
+                'state' => $this->getProvinceCode($provinceInput),
 
             ];
 
@@ -196,11 +196,24 @@ class FacebookLeadFormsGatewayController extends RestController {
 
 
 
-    private function getState(string $city){
+    private function getProvinceCode(string $provinceInput): string {
 
-        $row = $this->db->getRow(sprintf("SELECT provincia FROM cappario WHERE nome_provincia LIKE LOWER('%s')", trim(strtolower($city)) ));
+        $provinceInput = trim($provinceInput);
 
-        return $row->provincia;
+        if ($provinceInput === '') {
+            return '';
+        }
+
+        if (strlen($provinceInput) === 2) {
+            return strtoupper($provinceInput);
+        }
+
+        $row = $this->db->getRow(sprintf(
+            "SELECT provincia FROM cappario WHERE LOWER(nome_provincia) = '%s' LIMIT 1",
+            $this->db->escape(strtolower($provinceInput))
+        ));
+
+        return ($row && isset($row->provincia)) ? strtoupper(trim($row->provincia)) : '';
 
     }
 
