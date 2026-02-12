@@ -38,7 +38,7 @@ class FacebookLeadFormsGatewayController extends RestController {
 
                 'city' => $cityInput,
 
-                'state' => ($stateInput !== '') ? $this->getState($stateInput) : '',
+                'state' => $stateInput,
 
             ];
 
