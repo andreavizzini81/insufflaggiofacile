@@ -394,9 +394,9 @@ select:focus-visible,
 textarea:focus-visible,
 button:focus-visible,
 form a:focus-visible {
-	outline: 3px solid #111;
+	outline: 3px solid #e6ecef;
 	outline-offset: 2px;
-	box-shadow: 0 0 0 2px #fff, 0 0 0 5px #111;
+	box-shadow: 0 0 0 2px #fff, 0 0 0 5px #e6ecef;
 }
 
 a > img {
