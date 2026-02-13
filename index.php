@@ -794,6 +794,13 @@ $app->router->group('', function(&$group) {
             'language' => 'it',
             'uri' => 'richiedi-preventivo'
         ]);  
+
+	$group->get('\/privacy\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'privacy'
+        ]);
 		
 	$group->get('\/scheda-prodotto\/(\d+)\/?')
         ->setController('ProductPage')
