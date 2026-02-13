@@ -25,6 +25,11 @@ class FacebookLeadFormsGatewayController extends RestController {
             $cityInput = $dealData['citta'] ?? $dealData['comune_immobile'] ?? $dealData['comune'] ?? '';
 
             $provinceInput = $dealData['provincia_immobile'] ?? $dealData['provincia'] ?? '';
+            $normalizedPhone = $this->normalizePhone((string)($dealData['telefono'] ?? ''));
+            if (!$this->isPhoneValid($normalizedPhone)) {
+                throw new Exception('Numero di telefono non valido');
+            }
+            $dealData['telefono'] = $normalizedPhone;
 
             $contactDeal = (array)[
 
@@ -34,7 +39,7 @@ class FacebookLeadFormsGatewayController extends RestController {
 
                 'email' => (array_key_exists('email', $dealData)) ? $dealData['email'] : '',
 
-                'phone' => (array_key_exists('telefono', $dealData)) ? $dealData['telefono'] : '',
+                'phone' => $normalizedPhone,
 
                 'city' => $cityInput,
 
@@ -194,6 +199,32 @@ class FacebookLeadFormsGatewayController extends RestController {
 		
 	}
 
+
+
+
+    private function normalizePhone(string $phone): string {
+
+        $phone = trim($phone);
+
+        if ($phone === '') {
+            return '';
+        }
+
+        $hasLeadingPlus = str_starts_with($phone, '+');
+        $digits = preg_replace('/\D+/', '', $phone);
+
+        return sprintf('%s%s', $hasLeadingPlus ? '+' : '', $digits);
+
+    }
+
+
+    private function isPhoneValid(string $phone): bool {
+
+        $digitsCount = strlen(preg_replace('/\D+/', '', $phone));
+
+        return $digitsCount >= 6 && $digitsCount <= 15;
+
+    }
 
 
     private function getProvinceCode(string $provinceInput): string {
