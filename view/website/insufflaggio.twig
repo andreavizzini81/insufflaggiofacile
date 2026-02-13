@@ -52,7 +52,8 @@
 							<p>Lavoriamo solo in Sicilia, in quale provincia si trova il tuo immobile?</p>
 						</div>
 						<div class="form-group has-placeholder">
-							<select class="form-select provincia" name="provincia" required>
+							<label for="insufflaggio-provincia">Provincia <span class="required">*</span></label>
+									<select id="insufflaggio-provincia" class="form-select provincia" name="provincia" required>
 								<option value="">Scegli la provincia</option>
 								<option value="AG">AGRIGENTO</option>
 								<option value="CL">CALTANISSETTA</option>
@@ -69,37 +70,39 @@
 							<p>In quale comune?</p>
 						</div>
 						<div class="form-group has-placeholder">
-							<select class="form-select comune" name="comune" required>
+							<label for="insufflaggio-comune">Comune <span class="required">*</span></label>
+									<select id="insufflaggio-comune" class="form-select comune" name="comune" required>
 								<option value="">Scegli il comune</option>
 							</select>
 						</div>
 						<div class="form-group has-placeholder d-none">
-							<textarea rows="7" cols="45" name="messaggio" class="form-control" placeholder="Descrivi il problema" required>Voglio insufflare il mio immobile con: {{ data.staticPage.title }}</textarea>
+							<label for="insufflaggio-messaggio">Descrizione del problema</label>
+									<textarea id="insufflaggio-messaggio" rows="7" cols="45" name="messaggio" class="form-control" placeholder="Descrivi il problema" required>Voglio insufflare il mio immobile con: {{ data.staticPage.title }}</textarea>
 						</div>
 						<div class="form-group has-placeholder text-left">
 							<p>Inserisci le informazioni richieste di seguito, le useremo per contattarti ed inviarti il preventivo richiesto.</p>
 						</div>
 						<div class="form-group has-placeholder">
-							<label for="name">Nome <span class="required">*</span></label>
+							<label for="insufflaggio-nome">Nome <span class="required">*</span></label>
 							<i class="fa fa-user"></i>
-							<input type="text" size="30" value="" name="nome" class="form-control" placeholder="Nome" required>
+							<input id="insufflaggio-nome" type="text" size="30" value="" name="nome" class="form-control" placeholder="Nome" required>
 						</div>
 
 						<div class="form-group has-placeholder">
-							<label for="surname">Cognome <span class="required">*</span></label>
-							<input type="text" size="30" value="" name="cognome" class="form-control" placeholder="Cognome" required>
+							<label for="insufflaggio-cognome">Cognome <span class="required">*</span></label>
+							<input id="insufflaggio-cognome" type="text" size="30" value="" name="cognome" class="form-control" placeholder="Cognome" required>
 						</div>
 
 						<div class="form-group has-placeholder">
-							<label for="phone">Telefono<span class="required">*</span></label>
+							<label for="insufflaggio-telefono">Telefono<span class="required">*</span></label>
 							<i class="fa fa-phone"></i>
-							<input type="text" size="30" value="" name="telefono" class="form-control" placeholder="Telefono" required>
+							<input id="insufflaggio-telefono" type="text" size="30" value="" name="telefono" class="form-control" placeholder="Telefono" required>
 						</div>
 
 						<div class="form-group has-placeholder">
-							<label for="email">Email<span class="required">*</span></label>
+							<label for="insufflaggio-email">Email<span class="required">*</span></label>
 							<i class="fa fa-envelope"></i>
-							<input type="email" size="30" value="" name="email" class="form-control" placeholder="Email" required>
+							<input id="insufflaggio-email" type="email" size="30" value="" name="email" class="form-control" placeholder="Email" required>
 						</div>
 
 						<button type="submit" id="send-form" class="btn btn-wide btn-small btn-maincolor with-icon ">Invia</button>

@@ -36,7 +36,8 @@
 						</div>
 						<div class="col-sm-6 col-md-6">
 							<div class="form-group has-placeholder">
-								<select class="form-select provincia" name="provincia" required>
+								<label for="preventivo-provincia">Provincia <span class="required">*</span></label>
+								<select id="preventivo-provincia" class="form-select provincia" name="provincia" required>
 									<option value="">Scegli la provincia</option>
 									<option value="AG">AGRIGENTO</option>
 									<option value="CL">CALTANISSETTA</option>
@@ -59,7 +60,8 @@
 						</div>
 						<div class="col-sm-6 col-md-6">
 							<div class="form-group has-placeholder">
-								<select class="form-select comune" name="comune" required>
+								<label for="preventivo-comune">Comune <span class="required">*</span></label>
+								<select id="preventivo-comune" class="form-select comune" name="comune" required>
 									<option value="">Scegli il comune</option>
 								</select>
 							</div>
@@ -74,9 +76,9 @@
 						</div>
 						<div class="col-12">
 							<div class="form-group has-placeholder">
-								<label for="message">Message</label>
+								<label for="preventivo-messaggio">Descrizione del problema</label>
 								<i class="fa fa-pencil"></i>
-								<textarea rows="7" cols="45" name="messaggio" class="form-control" placeholder="Descrivi il problema"></textarea>
+								<textarea id="preventivo-messaggio" rows="7" cols="45" name="messaggio" class="form-control" placeholder="Descrivi il problema"></textarea>
 							</div>
 						</div>
 					</div>
@@ -89,29 +91,29 @@
 						</div>
 						<div class="col-sm-6 col-md-6">
 							<div class="form-group has-placeholder">
-								<label for="name">Nome <span class="required">*</span></label>
+								<label for="preventivo-nome">Nome <span class="required">*</span></label>
 								<i class="fa fa-user"></i>
-								<input type="text" size="30" value="" name="nome" class="form-control" placeholder="Nome" required>
+								<input id="preventivo-nome" type="text" size="30" value="" name="nome" class="form-control" placeholder="Nome" required>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-6">
 							<div class="form-group has-placeholder">
-								<label for="surname">Cognome <span class="required">*</span></label>
-								<input type="text" size="30" value="" name="cognome" class="form-control" placeholder="Cognome" required>
+								<label for="preventivo-cognome">Cognome <span class="required">*</span></label>
+								<input id="preventivo-cognome" type="text" size="30" value="" name="cognome" class="form-control" placeholder="Cognome" required>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-6">
 							<div class="form-group has-placeholder">
-								<label for="phone">Telefono<span class="required">*</span></label>
+								<label for="preventivo-telefono">Telefono<span class="required">*</span></label>
 								<i class="fa fa-phone"></i>
-								<input type="text" size="30" value="" name="telefono" class="form-control" placeholder="Telefono" required>
+								<input id="preventivo-telefono" type="text" size="30" value="" name="telefono" class="form-control" placeholder="Telefono" required>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-6">
 							<div class="form-group has-placeholder">
-								<label for="email">Email<span class="required">*</span></label>
+								<label for="preventivo-email">Email<span class="required">*</span></label>
 								<i class="fa fa-envelope"></i>
-								<input type="email" size="30" value="" name="email" class="form-control" placeholder="Email" required>
+								<input id="preventivo-email" type="email" size="30" value="" name="email" class="form-control" placeholder="Email" required>
 							</div>
 						</div>
 					</div>
