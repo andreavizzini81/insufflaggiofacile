@@ -180,18 +180,53 @@
  document.addEventListener('DOMContentLoaded', function() {
 
 	Delegate(document).on('change', '.provincia', function(event) {
-		let provincia = document.querySelector('.provincia');
+		const _frm = event.target.closest('form');
+		const provincia = _frm?.querySelector('.provincia');
+		const comune = _frm?.querySelector('.comune');
+		if (!provincia || !comune) {
+			return;
+		}
+
+		const setComuneMessage = (message = '') => {
+			let messageNode = _frm.querySelector('.comune-feedback');
+			if (!messageNode) {
+				messageNode = document.createElement('small');
+				messageNode.className = 'comune-feedback';
+				messageNode.style.display = 'block';
+				messageNode.style.marginTop = '8px';
+				messageNode.style.color = '#cc4b37';
+				comune.insertAdjacentElement('afterend', messageNode);
+			}
+			messageNode.textContent = message;
+		};
+
+		const resetComuneSelect = () => {
+			comune.innerHTML = '';
+			const placeholderOption = document.createElement('option');
+			placeholderOption.value = '';
+			placeholderOption.text = 'Scegli il comune';
+			comune.add(placeholderOption);
+		};
+
+		resetComuneSelect();
+		setComuneMessage('');
+		comune.disabled = true;
+
 		HttpRequest.post(`/api/address/getCity`, { state: provincia.value }, response => {
 			if (response.status != 1) {
-				throw response.message ?? 'Errore generico';
+				setComuneMessage(response.message ?? 'Impossibile caricare i comuni. Riprova tra poco.');
+				comune.disabled = false;
+				return;
 			}
-			let comune = document.querySelector('.comune');
-			response.result.list.forEach(item => {
+
+			(response.result?.list ?? []).forEach(item => {
 				const option = document.createElement('option');
 				option.value = item._key;
 				option.text = item._value;
 				comune.add(option);
 			});
+
+			comune.disabled = false;
 		});
 		/**/
 	});
