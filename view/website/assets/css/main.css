@@ -24737,6 +24737,15 @@ button.gm-ui-hover-effect {
 	color: #D00;
 }
 
-.bad {
+.form-group.bad .form-control,
+.form-control.bad,
+.form-control.invalid {
 	border-color: #D00;
+}
+
+.error-text {
+	margin-top: 6px;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #8B0000;
 }

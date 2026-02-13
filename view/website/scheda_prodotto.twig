@@ -195,17 +195,34 @@
 
 	Delegate(document).on('submit', '.contact-form', function(event) {
 		event.preventDefault();
-		const badElements = document.querySelectorAll('.bad');
-		badElements.forEach(element => {
-			element.classList.remove('bad');
+		const formGroups = this.querySelectorAll('.form-group');
+		formGroups.forEach(group => {
+			group.classList.remove('bad');
+			group.querySelector('.error-text')?.remove();
 		});
+		this.querySelectorAll('input.bad, select.bad, textarea.bad').forEach(field => {
+			field.classList.remove('bad');
+		});
+
 		let _frm = this;
 		let submitButton = _frm.querySelector('button[type="submit"]');
 		let validation = (new FormValidator({alerts: false})).checkAll(_frm);
-		console.log(validation);
 		if (!validation.valid) {
 			validation.fields.forEach(entry => {
-				entry.field.closest('.form-group').classList.toggle('bad', !entry.valid);
+				const formGroup = entry.field.closest('.form-group');
+				const isInvalid = !entry.valid;
+				formGroup?.classList.toggle('bad', isInvalid);
+				entry.field.classList.toggle('bad', isInvalid);
+
+				if (formGroup) {
+					formGroup.querySelector('.error-text')?.remove();
+					if (isInvalid) {
+						const errorText = document.createElement('div');
+						errorText.className = 'error-text';
+						errorText.textContent = entry.message || 'Campo non valido';
+						formGroup.append(errorText);
+					}
+				}
 			});
 		} else {
 			let data = (new FormSerializer(_frm)).serialize();
