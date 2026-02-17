@@ -203,10 +203,10 @@
                 if (response.status !== 1) {
                     throw response.message ?? 'Errore generico';
                 }
-                void new ResAlert('Operazione completata', 'Anagrafica contatto aggiornata con successo.', {type:'success'});
+                void new resAlert('Operazione completata', 'Anagrafica contatto aggiornata con successo.', {type:'success'});
             }, err => {
                 this.classList.remove('loading');
-                void new ResAlert('Operazione fallita', err.toString(), {type:'error'});
+                void new resAlert('Operazione fallita', err.toString(), {type:'error'});
             });
         });
 
