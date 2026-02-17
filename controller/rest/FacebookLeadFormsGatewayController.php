@@ -143,6 +143,7 @@ class FacebookLeadFormsGatewayController extends RestController {
             */
 			
 			$mailsend = "false";
+			$mailErrorCode = null;
 			
 			$mailTemplate = file_get_contents(sprintf('%sview/static/CallPhoneNotification.txt', ROOT));
 			$mailFields = [
@@ -175,6 +176,28 @@ class FacebookLeadFormsGatewayController extends RestController {
 				}
 			} catch (\Exception $ex) {
 				$mailsend = "errore";
+				$mailErrorCode = 'MAIL_SEND_ERROR';
+
+				error_log(json_encode([
+					'context' => 'FacebookLeadFormsGatewayController::registerLeadRequest',
+					'error' => [
+						'code' => $mailErrorCode,
+						'message' => $ex->getMessage(),
+						'stack' => $ex->getTraceAsString()
+					],
+					'smtp' => [
+						'host' => $_ENV['MAIL_SMTP_HOST'] ?? null,
+						'port' => $_ENV['MAIL_SMTP_PORT'] ?? null,
+						'recipients' => [
+							$contact->getEmail(),
+							'andrea.vizzini81@gmail.com'
+						]
+					]
+				], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+				if (defined('DEBUG') && DEBUG) {
+					$mailsend = $mailErrorCode;
+				}
 			}
 			/**/
             return $this->returnResult(['deal' => $dealData, 'contact' => $contact, 'event' => $calendarEvent, 'contactGoogle' => $contactGoogle, 'mailSend' => $mailsend, 'metadata' => $dealMetadata ]);
