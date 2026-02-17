@@ -1,5 +1,6 @@
 {% extends 'index.twig' %}
 {% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
 <div class="widget">
     <div class="content">
         <div class="table-responsive">
@@ -11,43 +12,38 @@
                         <th style="width: 140px;"></th>
                     </tr>
                 </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        const tableBody = document.querySelector('.calendar-activity-table tbody');
-
-        const loadActivityRows = () => {
-            HttpRequest.get(`${res.absolutePath}api/calendar-activity/list`, response => {
-                if (response.status !== 1) {
-                    throw response.message ?? 'Errore nel caricamento attività';
-                }
-
-                tableBody.innerHTML = response.result.list.map(item => {
-                    return `<tr>
-                        <td>${item.id}</td>
-                        <td>${item.activity}</td>
+                <tbody>
+                {% if data.list|length > 0 %}
+                    {% for item in data.list %}
+                    <tr>
+                        <td>{{ item.getId() }}</td>
+                        <td>{{ item.getActivity() }}</td>
                         <td>
                             <div class="d-flex">
-                                <button type="button" class="btn btn-success btn-square-small ml5 edit-calendar-activity" data-id="${item.id}" data-activity="${item.activity.split('"').join('&quot;')}">
+                                <button type="button" class="btn btn-success btn-square-small ml5 edit-calendar-activity" data-id="{{ item.getId() }}" data-activity="{{ item.getActivity() }}">
                                     <span class="fa fa-pencil"></span>
                                 </button>
-                                <button type="button" class="btn btn-danger btn-square-small ml5 delete-calendar-activity" data-id="${item.id}">
+                                <button type="button" class="btn btn-danger btn-square-small ml5 delete-calendar-activity" data-id="{{ item.getId() }}">
                                     <span class="fa fa-times"></span>
                                 </button>
                             </div>
                         </td>
-                    </tr>`;
-                }).join('');
-            }, err => void resAlert.error('Operazione fallita', err.toString()));
-        };
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">Nessuna attività trovata</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
 
-        loadActivityRows();
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
 
         const saveActivity = (id = null, defaultValue = '') => {
             const label = prompt('Inserisci il nome attività', defaultValue);
@@ -59,6 +55,10 @@
                 activity: label.trim()
             };
 
+            if (payload.activity === '') {
+                return void resAlert.error('Operazione fallita', 'Il campo attività è obbligatorio');
+            }
+
             if (id !== null) {
                 payload.id = parseInt(id);
             }
@@ -68,8 +68,7 @@
                     throw response.message ?? 'Errore nel salvataggio attività';
                 }
 
-                void new resAlert('Operazione completata', 'Attività salvata correttamente', {autoclose:true});
-                loadActivityRows();
+                window.location.reload();
             }, err => void resAlert.error('Operazione fallita', err.toString()));
         };
 
@@ -91,8 +90,7 @@
                     throw response.message ?? 'Errore nella cancellazione attività';
                 }
 
-                void new resAlert('Operazione completata', 'Attività eliminata correttamente', {autoclose:true});
-                loadActivityRows();
+                window.location.reload();
             }, err => void resAlert.error('Operazione fallita', err.toString()));
         });
 
