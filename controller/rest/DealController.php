@@ -182,8 +182,46 @@ class DealController extends RestController {
 
     public function update(): Response {
 
+        $inputParams = $this->request->getInputParams();
+
+        $contactData = array_intersect_key($inputParams, array_flip([
+            'contact_type_id',
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'tax_code',
+            'address',
+            'city',
+            'zipcode',
+            'state',
+            'country',
+            'birth_date',
+            'birth_place',
+            'business_name',
+            'pec',
+            'contact_person',
+            'vat_number',
+            'privacy_standard',
+            'privacy_marketing',
+            'privacy_analysis'
+        ]));
+
+        if (!empty($contactData)) {
+            if (isset($contactData['email']) && !filter_var($contactData['email'], FILTER_VALIDATE_EMAIL)) {
+                return $this->returnErrorMessage('Indirizzo email formalmente non valido');
+            }
+
+            $contact = new Contact($this->deal->getContactId());
+            $contact->import((object)$contactData);
+
+            if ($contact->save() === false) {
+                return $this->returnErrorMessage('Impossibile salvare i dati anagrafici del contatto');
+            }
+        }
+
         $this->deal->import(
-            (object)$this->request->getInputParams()
+            (object)$inputParams
         )->save();
 
         return $this->returnResult([]);
