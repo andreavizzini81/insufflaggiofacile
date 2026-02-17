@@ -22,19 +22,32 @@
 
         const tableBody = document.querySelector('.calendar-activity-table tbody');
 
+        const escapeHtmlAttr = (value = '') => value
+            .split('&').join('&amp;')
+            .split('"').join('&quot;')
+            .split("'").join('&#39;')
+            .split('<').join('&lt;')
+            .split('>').join('&gt;');
+
         const loadActivityRows = () => {
             HttpRequest.get(`${res.absolutePath}api/calendar-activity/list`, response => {
                 if (response.status !== 1) {
                     throw response.message ?? 'Errore nel caricamento attività';
                 }
 
-                tableBody.innerHTML = response.result.list.map(item => {
+                const activityList = response.result && Array.isArray(response.result.list)
+                    ? response.result.list
+                    : [];
+
+                tableBody.innerHTML = activityList.map(item => {
+                    const activityLabel = (item.activity ?? '').toString();
+
                     return `<tr>
                         <td>${item.id}</td>
-                        <td>${item.activity}</td>
+                        <td>${activityLabel}</td>
                         <td>
                             <div class="d-flex">
-                                <button type="button" class="btn btn-success btn-square-small ml5 edit-calendar-activity" data-id="${item.id}" data-activity="${item.activity.split('"').join('&quot;')}">
+                                <button type="button" class="btn btn-success btn-square-small ml5 edit-calendar-activity" data-id="${item.id}" data-activity="${escapeHtmlAttr(activityLabel)}">
                                     <span class="fa fa-pencil"></span>
                                 </button>
                                 <button type="button" class="btn btn-danger btn-square-small ml5 delete-calendar-activity" data-id="${item.id}">
