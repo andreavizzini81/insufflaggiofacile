@@ -9,6 +9,7 @@ class CalendarActivity extends BaseComponent implements JsonSerializable {
 
     private ?int $id;
     private string $activity;
+    private int $sort;
 
     private const PROPERTIES_MAP = [
         'id' => [
@@ -20,6 +21,11 @@ class CalendarActivity extends BaseComponent implements JsonSerializable {
             'default' => '',
             'alias' => 'activity',
             'cast' => 'string'
+        ],
+        'sort' => [
+            'default' => 100,
+            'alias' => 'sort',
+            'cast' => 'int'
         ]
     ];
 
@@ -42,6 +48,15 @@ class CalendarActivity extends BaseComponent implements JsonSerializable {
 
     public function setActivity(string $activity): self {
         $this->activity = $activity;
+        return $this;
+    }
+
+    public function getSort(): int {
+        return $this->sort;
+    }
+
+    public function setSort(int $sort): self {
+        $this->sort = $sort;
         return $this;
     }
 

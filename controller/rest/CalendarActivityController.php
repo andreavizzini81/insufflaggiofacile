@@ -2,6 +2,28 @@
 
 class CalendarActivityController extends RestController {
 
+    public function setOrder(): Response {
+
+        $orderInfo = $this->request->getInputParam('ids');
+        if (!is_array($orderInfo) || count($orderInfo) === 0) {
+            return $this->returnErrorMessage('Nessuna informazione sul nuovo ordine da salvare.', 400);
+        }
+
+        foreach ($orderInfo as $sort => $id) {
+            $activity = new CalendarActivity((int)$id);
+            if (!$activity->exists()) {
+                return $this->returnErrorMessage(sprintf('Attività calendario con ID %d non trovata', (int)$id), 404);
+            }
+
+            $activity->setSort((int)$sort);
+            if ($activity->save() === false) {
+                return $this->returnErrorMessage(sprintf("Impossibile aggiornare l'ordinamento dell'attività %d", (int)$id));
+            }
+        }
+
+        return $this->returnResult(null);
+    }
+
     public function getList(): Response {
 
         $list = new CalendarActivityList($this->request->getQueryParams(), true, CalendarActivity::class);
