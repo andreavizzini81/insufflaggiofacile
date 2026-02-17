@@ -1,0 +1,101 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="widget">
+    <div class="content">
+        <div class="table-responsive">
+            <table class="bordered hover w100 calendar-activity-table">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">ID</th>
+                        <th>Attività</th>
+                        <th style="width: 140px;"></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const tableBody = document.querySelector('.calendar-activity-table tbody');
+
+        const loadActivityRows = () => {
+            HttpRequest.get(`${res.absolutePath}api/calendar-activity/list`, response => {
+                if (response.status !== 1) {
+                    throw response.message ?? 'Errore nel caricamento attività';
+                }
+
+                tableBody.innerHTML = response.result.list.map(item => {
+                    return `<tr>
+                        <td>${item.id}</td>
+                        <td>${item.activity}</td>
+                        <td>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-success btn-square-small ml5 edit-calendar-activity" data-id="${item.id}" data-activity="${item.activity.split('"').join('&quot;')}">
+                                    <span class="fa fa-pencil"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-square-small ml5 delete-calendar-activity" data-id="${item.id}">
+                                    <span class="fa fa-times"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+            }, err => void resAlert.error('Operazione fallita', err.toString()));
+        };
+
+        loadActivityRows();
+
+        const saveActivity = (id = null, defaultValue = '') => {
+            const label = prompt('Inserisci il nome attività', defaultValue);
+            if (label === null) {
+                return;
+            }
+
+            const payload = {
+                activity: label.trim()
+            };
+
+            if (id !== null) {
+                payload.id = parseInt(id);
+            }
+
+            HttpRequest.post(`${res.absolutePath}api/calendar-activity`, payload, response => {
+                if (response.status !== 1) {
+                    throw response.message ?? 'Errore nel salvataggio attività';
+                }
+
+                void new resAlert('Operazione completata', 'Attività salvata correttamente', {autoclose:true});
+                loadActivityRows();
+            }, err => void resAlert.error('Operazione fallita', err.toString()));
+        };
+
+        Delegate(document).on('click', '.create-calendar-activity', function() {
+            saveActivity();
+        });
+
+        Delegate(document).on('click', '.edit-calendar-activity', function() {
+            saveActivity(this.dataset.id, this.dataset.activity);
+        });
+
+        Delegate(document).on('click', '.delete-calendar-activity', function() {
+            if (!confirm('Eliminare l\'attività selezionata?')) {
+                return;
+            }
+
+            HttpRequest.delete(`${res.absolutePath}api/calendar-activity/${this.dataset.id}`, null, response => {
+                if (response.status !== 1) {
+                    throw response.message ?? 'Errore nella cancellazione attività';
+                }
+
+                void new resAlert('Operazione completata', 'Attività eliminata correttamente', {autoclose:true});
+                loadActivityRows();
+            }, err => void resAlert.error('Operazione fallita', err.toString()));
+        });
+
+    });
+</script>
+{% endblock content %}

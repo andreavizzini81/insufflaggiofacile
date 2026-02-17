@@ -15,6 +15,16 @@ class AdminCalendarPageController extends BackendController {
         ]);
 
         $this->data['responsible_id'] = $this->user->getId();
+        $this->data['actions'] = [
+            new TopbarAction([
+                'attributes' => [
+                    'href' => sprintf('%scalendar-activity', $this->path),
+                    'class' => 'info'
+                ],
+                'label' => 'GESTISCI ATTIVITÀ',
+                'icon' => 'list'
+            ])
+        ];
 
         return $this->render();
     }

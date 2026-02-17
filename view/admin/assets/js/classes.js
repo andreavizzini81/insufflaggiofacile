@@ -2694,7 +2694,7 @@ class CalendarEventModal {
 
     colors = ['yellow', 'green', 'blue', 'orange', 'red', 'grey'];
     timeSlots = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'];
-    activityTypes = ['Seleziona un&rsquo;opzione...', 'Primo appuntamento telefonico', 'Chiamata richiesta planimetria', 'Chiamata discussione preventivo', 'Sopralluogo', 'Lavoro in cantiere']; 
+    activityTypes = ['Seleziona un&rsquo;opzione...']; 
  
 
     constructor(id = null, options = {}) {
@@ -2716,6 +2716,14 @@ class CalendarEventModal {
         const siblingsListResponse = await HttpRequest.get(`${res.absolutePath}api/me/siblings`);
         this.siblings = siblingsListResponse.result.list;
         this.selfId = siblingsListResponse.result.selfId;
+
+        const activityListResponse = await HttpRequest.get(`${res.absolutePath}api/calendar-activity/list`);
+        if (activityListResponse.status === 1 && Array.isArray(activityListResponse.result.list)) {
+            this.activityTypes = [
+                'Seleziona un&rsquo;opzione...',
+                ...activityListResponse.result.list.map(item => item.activity).filter(item => item)
+            ];
+        }
 
         if (this.id) {
             const response = await HttpRequest.get(this.endpoint);
