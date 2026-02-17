@@ -149,6 +149,8 @@ class FacebookLeadFormsGatewayController extends RestController {
 				'{{DEAL_CONTACT_NAME}}' => sprintf('%s %s', $contact->getFirstName(), $contact->getLastName()),
 				'{{DEAL_CONTACT_PHONE}}' => str_replace('+39','+39 ',$contact->getPhone()),
 			];
+
+			$this->validateRequiredMailEnvConfiguration();
 			
 			$mail = new PHPMailer(true);
 			try {
@@ -205,6 +207,55 @@ class FacebookLeadFormsGatewayController extends RestController {
 		
 		return $response;
 		
+	}
+
+
+	private function validateRequiredMailEnvConfiguration(): void {
+
+		$requiredEnvKeys = [
+			'MAIL_ENCRYPTION',
+			'MAIL_SMTP_HOST',
+			'MAIL_INFO_USERNAME',
+			'MAIL_INFO_PASSWORD',
+			'MAIL_SMTP_PORT',
+		];
+
+		$missingKeys = [];
+		foreach ($requiredEnvKeys as $envKey) {
+			$value = $_ENV[$envKey] ?? null;
+			if ($value === null || trim((string)$value) === '') {
+				$missingKeys[] = $envKey;
+			}
+		}
+
+		if (!empty($missingKeys)) {
+			error_log(sprintf(
+				'[FacebookLeadFormsGatewayController] Configurazione SMTP incompleta. Chiavi mancanti/vuote: %s. Stato chiavi richieste: %s',
+				implode(', ', $missingKeys),
+				json_encode($this->buildMailEnvSnapshot($requiredEnvKeys))
+			));
+
+			throw new Exception(sprintf(
+				'Errore di configurazione email: variabili ENV mancanti o vuote (%s)',
+				implode(', ', $missingKeys)
+			));
+		}
+
+	}
+
+
+	private function buildMailEnvSnapshot(array $requiredEnvKeys): array {
+
+		$snapshot = [];
+		foreach ($requiredEnvKeys as $envKey) {
+			$value = $_ENV[$envKey] ?? null;
+			$snapshot[$envKey] = ($value === null || trim((string)$value) === '')
+				? 'missing_or_empty'
+				: 'configured';
+		}
+
+		return $snapshot;
+
 	}
 
 
