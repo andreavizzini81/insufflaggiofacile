@@ -780,6 +780,13 @@ select option,
 	box-shadow: 0 1px 8px 0px rgba(0, 0, 0, 0.1);
 }
 
+select:focus,
+select.form-control:focus {
+	outline: none;
+	border-color: #e6ecef;
+	box-shadow: 0 1px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
 select:focus-visible,
 select.form-control:focus-visible {
 	border-color: #e6ecef;
