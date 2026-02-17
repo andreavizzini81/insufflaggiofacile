@@ -163,7 +163,12 @@ class FacebookLeadFormsGatewayController extends RestController {
 				$mail->Password   = $_ENV['MAIL_INFO_PASSWORD'];
 				$mail->Port       = $_ENV['MAIL_SMTP_PORT'];
 				$mail->setFrom($_ENV['MAIL_INFO_USERNAME'], $_ENV['SW_PRODUCT_NAME']);
-                $mail->addAddress($contact->getEmail());
+				$contactEmail = trim((string)$contact->getEmail());
+				if (filter_var($contactEmail, FILTER_VALIDATE_EMAIL) !== false) {
+					$mail->addAddress($contactEmail);
+				} else {
+					error_log(sprintf('[FacebookLeadFormsGatewayController] Invalid contact email skipped: "%s"', $contactEmail));
+				}
 				$mail->addAddress("andrea.vizzini81@gmail.com");
 				$mail->isHTML(false);
 				$mail->Subject = 'Coibenta la Tua Casa con l\'Insufflaggio';
