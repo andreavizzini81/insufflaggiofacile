@@ -194,7 +194,7 @@
             const contactId = contactWrapper.dataset.contactId;
             const data = FormSerializer.for(contactWrapper).serialize();
 
-            data.id = contactId;
+            data.contact_id = data.contact_id ?? contactId;
 
             this.classList.add('loading');
 

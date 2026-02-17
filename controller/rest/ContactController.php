@@ -15,13 +15,14 @@ class ContactController extends RestController {
     public function setData(): Response {
 
         $contactData = $this->request->getInputParams();
+        $contactId = $contactData['contact_id'] ?? $contactData['id'] ?? null;
 
         if (!filter_var($contactData['email'], FILTER_VALIDATE_EMAIL)) {
             return $this->returnErrorMessage('Indirizzo email formalmente non valido');
         }
 
         $emailAvailability = $this->checkEmailAvailability(
-            $contactData['id'] ?? null,
+            $contactId,
             $contactData['email']
         );
 
@@ -32,7 +33,9 @@ class ContactController extends RestController {
             return $this->returnErrorMessage('L\'indirizzo email specificato risulta gi&agrave; registrato.');
         }
         
-        $contact = new Contact($contactData['id'] ?? null);
+        $contactData['id'] = $contactId;
+
+        $contact = new Contact($contactId);
         $contact->import((object)$contactData);
         $contactId = $contact->save();
         if ($contactId === false) {
