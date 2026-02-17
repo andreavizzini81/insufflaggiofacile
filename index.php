@@ -218,6 +218,9 @@ $app->router->group('/admin', function(&$group) {
 
     $group->get('\/calendar\/?')
         ->setController('AdminCalendarPage');
+
+    $group->get('\/calendar\-activity\/?')
+        ->setController('AdminCalendarActivityPage');
     
     /* UTILITY ENDPOINTS */
 
@@ -573,6 +576,24 @@ $app->router->group('/api', function(&$group) {
     $group->get('\/calendar\/?')
         ->setController('Calendar')
         ->setAction('getEvents');
+
+    $group->get('\/calendar\-activity\/list\/?')
+        ->setController('CalendarActivity')
+        ->setAction('getList');
+
+    $group->get('\/calendar\-activity\/?(\d+)?\/?')
+        ->setController('CalendarActivity')
+        ->setAction('getData')
+        ->setParams(['id' => '@1']);
+
+    $group->post('\/calendar\-activity\/?')
+        ->setController('CalendarActivity')
+        ->setAction('setData');
+
+    $group->delete('\/calendar\-activity\/(\d+)\/?')
+        ->setController('CalendarActivity')
+        ->setAction('delete')
+        ->setParams(['id' => '@1']);
 
     $group->get('\/calendar\/link\/?')
         ->setController('Calendar')
