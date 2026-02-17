@@ -22,28 +22,34 @@ class FacebookLeadFormsGatewayController extends RestController {
 
             $dealData = $this->requestData;
 
-            $cityInput = $dealData['citta'] ?? $dealData['comune_immobile'] ?? $dealData['comune'] ?? '';
+            $cityInput = $this->getFirstAvailableValue($dealData, ['citta', 'comune_immobile', 'comune', 'city']);
 
-            $provinceInput = $dealData['provincia_immobile'] ?? $dealData['provincia'] ?? '';
-            $normalizedPhone = $this->normalizePhone((string)($dealData['telefono'] ?? ''));
+            $provinceInput = $this->getFirstAvailableValue($dealData, ['provincia_immobile', 'provincia', 'state']);
+            $normalizedPhone = $this->normalizePhone((string)$this->getFirstAvailableValue($dealData, ['telefono', 'phone']));
             if (!$this->isPhoneValid($normalizedPhone)) {
                 throw new Exception('Numero di telefono non valido');
             }
             $dealData['telefono'] = $normalizedPhone;
 
+            $normalizedLocation = $this->normalizeLocationFromCappario($cityInput, $provinceInput);
+
+            $firstName = $this->getFirstAvailableValue($dealData, ['first_name', 'nome_cognome', 'nome']);
+            $lastName = $this->getFirstAvailableValue($dealData, ['last_name', 'cognome']);
+            $email = $this->getFirstAvailableValue($dealData, ['email']);
+
             $contactDeal = (array)[
 
-                'first_name' => (array_key_exists('nome_cognome', $dealData)) ? $dealData['nome_cognome'] : $dealData['nome'],
+                'first_name' => $firstName,
 
-                'last_name' => (array_key_exists('cognome', $dealData)) ? $dealData['cognome'] : '',
+                'last_name' => $lastName,
 
-                'email' => (array_key_exists('email', $dealData)) ? $dealData['email'] : '',
+                'email' => $email,
 
                 'phone' => $normalizedPhone,
 
-                'city' => $cityInput,
+                'city' => $normalizedLocation['city'],
 
-                'state' => $this->getProvinceCode($provinceInput),
+                'state' => $normalizedLocation['state'],
 
             ];
 
@@ -68,6 +74,8 @@ class FacebookLeadFormsGatewayController extends RestController {
 
             /**/
 
+            $platform = $this->getFirstAvailableValue($dealData, ['piattaforma', 'platform'], 'Facebook');
+
             $dealImportObject = (object)[
 
                 'contact_id' => $contact->getId(),
@@ -76,7 +84,7 @@ class FacebookLeadFormsGatewayController extends RestController {
 
                 'message'   => $dealMessage,
 
-                'title'      => sprintf("%s %s [%s]", $contactDeal['first_name'], $contactDeal['last_name'], $dealData['piattaforma']),
+                'title'      => sprintf("%s %s [%s]", $contactDeal['first_name'], $contactDeal['last_name'], $platform),
 				
 				'metadata'   => json_encode($dealMetadata)
 
@@ -91,7 +99,7 @@ class FacebookLeadFormsGatewayController extends RestController {
 			
 			$calendarEventImportObject = (object)[
 
-                'subject' => sprintf("%s %s [%s]", $contactDeal['first_name'], $contactDeal['last_name'], $dealData['piattaforma']),
+                'subject' => sprintf("%s %s [%s]", $contactDeal['first_name'], $contactDeal['last_name'], $platform),
 
                 'activity'  => 'Primo appuntamento telefonico',
 				
@@ -236,7 +244,12 @@ class FacebookLeadFormsGatewayController extends RestController {
         }
 
         if (strlen($provinceInput) === 2) {
-            return strtoupper($provinceInput);
+            $row = $this->db->getRow(sprintf(
+                "SELECT provincia FROM cappario WHERE LOWER(provincia) = '%s' LIMIT 1",
+                $this->db->escape(strtolower($provinceInput))
+            ));
+
+            return ($row && isset($row->provincia)) ? strtoupper(trim($row->provincia)) : strtoupper($provinceInput);
         }
 
         $row = $this->db->getRow(sprintf(
@@ -244,7 +257,153 @@ class FacebookLeadFormsGatewayController extends RestController {
             $this->db->escape(strtolower($provinceInput))
         ));
 
-        return ($row && isset($row->provincia)) ? strtoupper(trim($row->provincia)) : '';
+        if ($row && isset($row->provincia)) {
+            return strtoupper(trim($row->provincia));
+        }
+
+        $candidateRows = $this->db->getResults("SELECT DISTINCT provincia, nome_provincia FROM cappario");
+
+        if (!$candidateRows || !is_array($candidateRows)) {
+            return '';
+        }
+
+        $searchTerm = $this->normalizeStringForSimilarity($provinceInput);
+        $bestDistance = null;
+        $bestProvince = '';
+
+        foreach ($candidateRows as $candidateRow) {
+            if (!isset($candidateRow->provincia, $candidateRow->nome_provincia)) {
+                continue;
+            }
+
+            $candidateNames = [
+                $candidateRow->provincia,
+                $candidateRow->nome_provincia,
+            ];
+
+            foreach ($candidateNames as $candidateName) {
+                $candidateTerm = $this->normalizeStringForSimilarity((string)$candidateName);
+
+                if ($candidateTerm === '') {
+                    continue;
+                }
+
+                $distance = levenshtein($searchTerm, $candidateTerm);
+
+                if ($bestDistance === null || $distance < $bestDistance) {
+                    $bestDistance = $distance;
+                    $bestProvince = strtoupper(trim((string)$candidateRow->provincia));
+                }
+            }
+        }
+
+        return $bestProvince;
+
+    }
+
+
+    private function normalizeLocationFromCappario(string $cityInput, string $stateInput): array {
+
+        $cityInput = trim($cityInput);
+        $stateInput = trim($stateInput);
+
+        $stateCode = $this->getProvinceCode($stateInput);
+
+        if ($cityInput === '') {
+            return ['city' => '', 'state' => $stateCode];
+        }
+
+        $exactWhere = sprintf("LOWER(localita) = '%s'", $this->db->escape(strtolower($cityInput)));
+
+        if ($stateCode !== '') {
+            $exactWhere .= sprintf(" AND LOWER(provincia) = '%s'", $this->db->escape(strtolower($stateCode)));
+        }
+
+        $exactMatch = $this->db->getRow(sprintf(
+            "SELECT localita, provincia FROM cappario WHERE %s LIMIT 1",
+            $exactWhere
+        ));
+
+        if ($exactMatch && isset($exactMatch->localita, $exactMatch->provincia)) {
+            return [
+                'city' => trim((string)$exactMatch->localita),
+                'state' => strtoupper(trim((string)$exactMatch->provincia)),
+            ];
+        }
+
+        $candidateWhere = '';
+        if ($stateCode !== '') {
+            $candidateWhere = sprintf("WHERE LOWER(provincia) = '%s'", $this->db->escape(strtolower($stateCode)));
+        }
+
+        $candidateRows = $this->db->getResults(sprintf(
+            "SELECT localita, provincia FROM cappario %s GROUP BY localita, provincia",
+            $candidateWhere
+        ));
+
+        if (!$candidateRows || !is_array($candidateRows)) {
+            return ['city' => $cityInput, 'state' => $stateCode];
+        }
+
+        $searchTerm = $this->normalizeStringForSimilarity($cityInput);
+        $bestDistance = null;
+        $bestCity = $cityInput;
+        $bestState = $stateCode;
+
+        foreach ($candidateRows as $candidateRow) {
+            if (!isset($candidateRow->localita, $candidateRow->provincia)) {
+                continue;
+            }
+
+            $candidateCity = trim((string)$candidateRow->localita);
+            $candidateTerm = $this->normalizeStringForSimilarity($candidateCity);
+
+            if ($candidateTerm === '') {
+                continue;
+            }
+
+            $distance = levenshtein($searchTerm, $candidateTerm);
+
+            if ($bestDistance === null || $distance < $bestDistance) {
+                $bestDistance = $distance;
+                $bestCity = $candidateCity;
+                $bestState = strtoupper(trim((string)$candidateRow->provincia));
+            }
+        }
+
+        return ['city' => $bestCity, 'state' => $bestState];
+
+    }
+
+
+    private function normalizeStringForSimilarity(string $value): string {
+
+        $normalized = strtolower(trim($value));
+        $transliterated = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $normalized);
+
+        if ($transliterated !== false) {
+            $normalized = $transliterated;
+        }
+
+        return preg_replace('/[^a-z0-9]/', '', $normalized) ?? '';
+
+    }
+
+
+    private function getFirstAvailableValue(array $data, array $keys, string $default = ''): string {
+
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $data)) {
+                continue;
+            }
+
+            $value = trim((string)$data[$key]);
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        return $default;
 
     }
 
