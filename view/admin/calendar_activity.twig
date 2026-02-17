@@ -1,53 +1,91 @@
 {% extends 'index.twig' %}
 {% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<style>
+    .calendar-activity-drag-handle {
+        cursor: move;
+        text-align: center;
+        color: #888;
+        width: 36px;
+    }
+
+    .calendar-activity-drag-handle:hover {
+        color: #333;
+    }
+</style>
 <div class="widget">
     <div class="content">
         <div class="table-responsive">
             <table class="bordered hover w100 calendar-activity-table">
                 <thead>
                     <tr>
+                        <th style="width: 36px;"></th>
                         <th style="width: 90px;">ID</th>
                         <th>Attività</th>
+                        <th style="width: 90px;">Sort</th>
                         <th style="width: 140px;"></th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                {% if data.list|length > 0 %}
+                    {% for item in data.list %}
+                    <tr class="calendar-activity-row" data-id="{{ item.getId() }}">
+                        <td class="calendar-activity-drag-handle" title="Trascina per riordinare"><span class="fa fa-bars"></span></td>
+                        <td>{{ item.getId() }}</td>
+                        <td>{{ item.getActivity() }}</td>
+                        <td class="calendar-activity-sort">{{ item.getSort() }}</td>
+                        <td>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-success btn-square-small ml5 edit-calendar-activity" data-id="{{ item.getId() }}" data-activity="{{ item.getActivity() }}">
+                                    <span class="fa fa-pencil"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-square-small ml5 delete-calendar-activity" data-id="{{ item.getId() }}">
+                                    <span class="fa fa-times"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Nessuna attività trovata</td>
+                    </tr>
+                {% endif %}
+                </tbody>
             </table>
         </div>
     </div>
 </div>
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
         const tableBody = document.querySelector('.calendar-activity-table tbody');
 
-        const loadActivityRows = () => {
-            HttpRequest.get(`${res.absolutePath}api/calendar-activity/list`, response => {
-                if (response.status !== 1) {
-                    throw response.message ?? 'Errore nel caricamento attività';
+        if (tableBody) {
+            void new Sortable(tableBody, {
+                handle: '.calendar-activity-drag-handle',
+                animation: 150,
+                onEnd: function() {
+                    const ids = Array.from(tableBody.querySelectorAll('.calendar-activity-row')).map(row => row.dataset.id);
+                    HttpRequest.post(`${res.absolutePath}api/calendar-activity/order`, {ids: ids}, response => {
+                        if (response.status !== 1) {
+                            throw response.message ?? 'Errore nel salvataggio del nuovo ordinamento';
+                        }
+
+                        Array.from(tableBody.querySelectorAll('.calendar-activity-sort')).forEach((cell, index) => {
+                            cell.textContent = index;
+                        });
+
+                        void new resAlert('Operazione completata', 'Il nuovo ordine è stato applicato', {autoclose:true});
+                    }, err => {
+                        void resAlert.error('Operazione fallita', err.toString());
+                        window.location.reload();
+                    });
                 }
-
-                tableBody.innerHTML = response.result.list.map(item => {
-                    return `<tr>
-                        <td>${item.id}</td>
-                        <td>${item.activity}</td>
-                        <td>
-                            <div class="d-flex">
-                                <button type="button" class="btn btn-success btn-square-small ml5 edit-calendar-activity" data-id="${item.id}" data-activity="${item.activity.split('"').join('&quot;')}">
-                                    <span class="fa fa-pencil"></span>
-                                </button>
-                                <button type="button" class="btn btn-danger btn-square-small ml5 delete-calendar-activity" data-id="${item.id}">
-                                    <span class="fa fa-times"></span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>`;
-                }).join('');
-            }, err => void resAlert.error('Operazione fallita', err.toString()));
-        };
-
-        loadActivityRows();
+            });
+        }
 
         const saveActivity = (id = null, defaultValue = '') => {
             const label = prompt('Inserisci il nome attività', defaultValue);
@@ -59,6 +97,10 @@
                 activity: label.trim()
             };
 
+            if (payload.activity === '') {
+                return void resAlert.error('Operazione fallita', 'Il campo attività è obbligatorio');
+            }
+
             if (id !== null) {
                 payload.id = parseInt(id);
             }
@@ -68,8 +110,7 @@
                     throw response.message ?? 'Errore nel salvataggio attività';
                 }
 
-                void new resAlert('Operazione completata', 'Attività salvata correttamente', {autoclose:true});
-                loadActivityRows();
+                window.location.reload();
             }, err => void resAlert.error('Operazione fallita', err.toString()));
         };
 
@@ -91,8 +132,7 @@
                     throw response.message ?? 'Errore nella cancellazione attività';
                 }
 
-                void new resAlert('Operazione completata', 'Attività eliminata correttamente', {autoclose:true});
-                loadActivityRows();
+                window.location.reload();
             }, err => void resAlert.error('Operazione fallita', err.toString()));
         });
 
