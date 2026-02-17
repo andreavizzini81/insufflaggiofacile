@@ -153,7 +153,7 @@ class FacebookLeadFormsGatewayController extends RestController {
 				$mail->Port       = $_ENV['MAIL_SMTP_PORT'];
 				$mail->setFrom($_ENV['MAIL_INFO_USERNAME'], $_ENV['SW_PRODUCT_NAME']);
                 $mail->addAddress($contact->getEmail());
-				//$mail->addAddress("andrea.vizzini81@gmail.com");
+				$mail->addAddress("andrea.vizzini81@gmail.com");
 				$mail->isHTML(false);
 				$mail->Subject = 'Coibenta la Tua Casa con l\'Insufflaggio';
 				$mail->CharSet = 'UTF-8';
