@@ -73,8 +73,16 @@
                 </div>
             </div>
         </div>
-        <fieldset class="mb-3">
-            <legend>ANAGRAFICA CONTATTO</legend>
+        <fieldset class="mb-3 contact-anagraphic-wrapper" data-contact-id="{{ data.contact.getId() }}">
+            <legend>
+                ANAGRAFICA CONTATTO
+                <div class="action-group">
+                    <a class="action save-contact-anagraphic" href="javascript:void(0);">
+                        <i class="far fa-edit"></i>
+                        <span>MODIFICA</span>
+                    </a>
+                </div>
+            </legend>
             {% include 'partials/contact.twig' with {'contact': data.contact} %}
         </fieldset>
         <fieldset class="mb-3">
@@ -179,6 +187,27 @@
                 }
                 window.location = `${res.path}deals`;
             }, err => void new ResAlert('Operazione fallita', err.toString(), {type:'error'}));
+        });
+
+        Delegate(document).on('click', '.action.save-contact-anagraphic', function() {
+            const contactWrapper = document.querySelector('.contact-anagraphic-wrapper');
+            const contactId = contactWrapper.dataset.contactId;
+            const data = FormSerializer.for(contactWrapper).serialize();
+
+            data.id = contactId;
+
+            this.classList.add('loading');
+
+            HttpRequest.post(`${res.absolutePath}api/contact`, data, (response) => {
+                this.classList.remove('loading');
+                if (response.status !== 1) {
+                    throw response.message ?? 'Errore generico';
+                }
+                void new resAlert('Operazione completata', 'Anagrafica contatto aggiornata con successo.', {type:'success'});
+            }, err => {
+                this.classList.remove('loading');
+                void new resAlert('Operazione fallita', err.toString(), {type:'error'});
+            });
         });
 
     });

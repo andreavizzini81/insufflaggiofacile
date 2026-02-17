@@ -1,10 +1,12 @@
 <div class="row">
+    <input type="hidden" name="id" value="{{ contact.getId() }}">
     <div class="col-md-2">
         <div class="form-group">
             <label>Tipo</label>
+            <input type="hidden" name="contact_type_id" value="{{ contact.getTypeId() }}">
             <select class="form-control" disabled>
-                <option value="0">Privato</option>
-                <option value="1">Azienda</option>
+                <option value="0" {{ setOption(0, contact.getTypeId()) }}>Privato</option>
+                <option value="1" {{ setOption(1, contact.getTypeId()) }}>Azienda</option>
             </select>
         </div>                    
     </div>
@@ -12,31 +14,31 @@
     <div class="col-md-3">
         <div class="form-group">
             <label>Nome</label>
-            <input type="text" class="form-control" value="{{ contact.getFirstName() }}" readonly>
+            <input type="text" class="form-control" name="first_name" value="{{ contact.getFirstName() }}">
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group">
             <label>Cognome</label>
-            <input type="text" class="form-control" value="{{ contact.getLastName() }}" readonly>
+            <input type="text" class="form-control" name="last_name" value="{{ contact.getLastName() }}">
         </div>                        
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label>Data di nascita</label>
-            <input type="text" class="form-control" value="{{ contact.getBirthDate() is not null ? contact.getBirthDate()|date('d/m/Y') : '' }}" readonly>
+            <input type="text" class="form-control" name="birth_date" value="{{ contact.getBirthDate() is not null ? contact.getBirthDate()|date('d/m/Y') : '' }}">
         </div> 
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label>Luogo di nascita</label>
-            <input type="text" class="form-control" value="{{ contact.getBirthPlace() }}" readonly>
+            <input type="text" class="form-control" name="birth_place" value="{{ contact.getBirthPlace() }}">
         </div>                        
     </div>
     <div class="col-md-3">
         <div class="form-group">
             <label>Codice fiscale</label>
-            <input type="text" class="form-control" value="{{ contact.getTaxCode() }}" readonly>
+            <input type="text" class="form-control" name="tax_code" value="{{ contact.getTaxCode() }}">
         </div>                        
     </div>
     {% endif %}
@@ -44,38 +46,38 @@
     <div class="col-md-3">
         <div class="form-group">
             <label>Rag. sociale</label>
-            <input type="text" class="form-control" value="{{ contact.getBusinessName() }}" readonly>
+            <input type="text" class="form-control" name="business_name" value="{{ contact.getBusinessName() }}">
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label>Partita IVA</label>
-            <input type="text" class="form-control" value="{{ contact.getVatNumber() }}" readonly>
+            <input type="text" class="form-control" name="vat_number" value="{{ contact.getVatNumber() }}">
         </div>                        
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label>PEC/SDI</label>
-            <input type="text" class="form-control" value="{{ contact.getPec() }}" readonly>
+            <input type="text" class="form-control" name="pec" value="{{ contact.getPec() }}">
         </div>                        
     </div>
     <div class="col-md-3">
         <div class="form-group">
             <label>Referente</label>
-            <input type="text" class="form-control" value="{{ contact.getContactPerson() }}" readonly>
+            <input type="text" class="form-control" name="contact_person" value="{{ contact.getContactPerson() }}">
         </div>                        
     </div>
     {% endif %}
     <div class="col-md-4">
         <div class="form-group">
             <label>Email</label>
-            <input type="text" class="form-control" value="{{ contact.getEmail() }}" readonly>
+            <input type="email" class="form-control" name="email" value="{{ contact.getEmail() }}">
         </div>                        
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Telefono</label>
-            <input type="text" class="form-control" value="{{ contact.getPhone() }}" readonly>
+            <input type="text" class="form-control" name="phone" value="{{ contact.getPhone() }}">
         </div>
     </div>        
 </div>
@@ -83,31 +85,31 @@
     <div class="col-md-5">
         <div class="form-group">
             <label>Indirizzo</label>
-            <input type="text" class="form-control" value="{{ contact.getAddress() }}" readonly>
+            <input type="text" class="form-control" name="address" value="{{ contact.getAddress() }}">
         </div>                    
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label>Provincia</label>
-            <input type="text" class="form-control" value="{{ contact.getState() }}" readonly>
+            <input type="text" class="form-control" name="state" value="{{ contact.getState() }}">
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group">
             <label>Città</label>
-            <input type="text" class="form-control" value="{{ contact.getCity() }}" readonly>
+            <input type="text" class="form-control" name="city" value="{{ contact.getCity() }}">
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label>CAP</label>
-            <input type="text" class="form-control" value="{{ contact.getZipcode() }}" readonly>
+            <input type="text" class="form-control" name="zipcode" value="{{ contact.getZipcode() }}">
         </div>                        
     </div>        
     <div class="col-md-3">
         <div class="form-group">
             <label>Nazione</label>
-            <input type="text" class="form-control" value="{{ getDefinition('COUNTRIES', contact.getCountry()) }}" readonly>
+            <input type="text" class="form-control" name="country" value="{{ contact.getCountry() }}">
         </div>                        
     </div>
     <div class="col-md-9">
@@ -115,13 +117,16 @@
             <label>Consensi privacy</label>
             <div class="checkbox mt5">
                 <label class="checkbox-inline">
-                    <input type="checkbox" class="field" {{ setCheckbox(true, contact.getPrivacyStandard()) }} readonly>Trattamento dati personali UE2016/679
+                    <input type="hidden" name="privacy_standard" value="0">
+                    <input type="checkbox" class="field" name="privacy_standard" value="1" {{ setCheckbox(true, contact.getPrivacyStandard()) }}>Trattamento dati personali UE2016/679
                 </label>
                 <label class="checkbox-inline">
-                    <input type="checkbox" class="field" {{ setCheckbox(true, contact.getPrivacyMarketing()) }} readonly>Finalit&agrave; di marketing
+                    <input type="hidden" name="privacy_marketing" value="0">
+                    <input type="checkbox" class="field" name="privacy_marketing" value="1" {{ setCheckbox(true, contact.getPrivacyMarketing()) }}>Finalit&agrave; di marketing
                 </label>
                 <label class="checkbox-inline">
-                    <input type="checkbox" class="field" {{ setCheckbox(true, contact.getPrivacyAnalysis()) }} readonly>Analisi del traffico
+                    <input type="hidden" name="privacy_analysis" value="0">
+                    <input type="checkbox" class="field" name="privacy_analysis" value="1" {{ setCheckbox(true, contact.getPrivacyAnalysis()) }}>Analisi del traffico
                 </label>            
             </div>
         </div>    
