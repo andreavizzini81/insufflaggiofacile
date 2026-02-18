@@ -12,6 +12,8 @@ class GoogleCalendarService extends BaseComponent {
     private const DATE_TIME_FORMAT = 'Y-m-d\\TH:i:sP';
 
     private const SYNC_ERROR_MAX_LENGTH = 180;
+    private const MIN_REMINDER_MINUTES = 0;
+    private const MAX_REMINDER_MINUTES = 40320;
 
     public function getAuthUrl(int $userId): string {
         $this->assertEnvironment();
@@ -456,9 +458,20 @@ class GoogleCalendarService extends BaseComponent {
     }
 
     private function buildGoogleEventPayload(CalendarEvent $event): array {
+        $reminderMinutes = $this->normalizeReminderMinutes($event->getReminderMinutes());
+
         $payload = [
             'summary' => $event->getSubject(),
             'description' => $event->getNote() ?? '',
+            'reminders' => [
+                'useDefault' => false,
+                'overrides' => is_null($reminderMinutes)
+                    ? []
+                    : [[
+                        'method' => 'popup',
+                        'minutes' => $reminderMinutes
+                    ]]
+            ],
             'extendedProperties' => [
                 'private' => [
                     'sw_event_id' => (string)$event->getId(),
@@ -491,6 +504,23 @@ class GoogleCalendarService extends BaseComponent {
         ];
 
         return $payload;
+    }
+
+    private function normalizeReminderMinutes(?int $reminderMinutes): ?int {
+        if (is_null($reminderMinutes)) {
+            return null;
+        }
+
+        if ($reminderMinutes < self::MIN_REMINDER_MINUTES || $reminderMinutes > self::MAX_REMINDER_MINUTES) {
+            throw new InvalidArgumentException(sprintf(
+                'Reminder non valido (%d). Intervallo supportato: %d-%d minuti.',
+                $reminderMinutes,
+                self::MIN_REMINDER_MINUTES,
+                self::MAX_REMINDER_MINUTES
+            ));
+        }
+
+        return $reminderMinutes;
     }
 
     private function buildAuthHeaders(object $connection): array {
