@@ -3010,6 +3010,9 @@ class CalendarEventModal {
         const method = this.data.id == null ? 'post' : 'patch';
         const payload = FormSerializer.for(this.form).serialize();
 
+        // Ensure unchecked checkbox state is explicitly persisted as false (0)
+        payload.whole_day = this.binds.wholeDay.checked ? '1' : '0';
+
         console.log(payload);
 
         const startDatetime = moment(`${payload.starts_at} ${payload.time_from}`, 'DD/MM/YYYY HH:mm');
