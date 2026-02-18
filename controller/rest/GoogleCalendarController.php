@@ -124,6 +124,35 @@ class GoogleCalendarController extends RestController {
         }
     }
 
+    public function setReminderMinutes(): Response {
+        $rawMinutes = $this->request->getInputParam('reminder_minutes');
+        $minutes = null;
+
+        if (!is_null($rawMinutes) && trim((string)$rawMinutes) !== '') {
+            if (!is_numeric($rawMinutes)) {
+                return $this->returnErrorMessage('Il promemoria Google deve essere espresso in minuti numerici', 400);
+            }
+
+            $minutes = (int)$rawMinutes;
+            if ($minutes < 0) {
+                return $this->returnErrorMessage('Il promemoria Google non può essere negativo', 400);
+            }
+        }
+
+        try {
+            $connection = $this->service->setReminderMinutes($this->user->getId(), $minutes);
+
+            return $this->returnResult([
+                'connection' => $connection,
+                'message' => is_null($minutes)
+                    ? 'Promemoria Google ripristinato sulle impostazioni di default del calendario.'
+                    : 'Tempo promemoria Google aggiornato correttamente.'
+            ]);
+        } catch (Throwable $e) {
+            return $this->returnErrorMessage($e->getMessage(), 400);
+        }
+    }
+
     public function listCalendars(): Response {
         try {
             return $this->returnResult([

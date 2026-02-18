@@ -626,6 +626,10 @@ $app->router->group('/api', function(&$group) {
         ->setController('GoogleCalendar')
         ->setAction('setTargetCalendar');
 
+    $group->post('\/google-calendar\/reminder\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('setReminderMinutes');
+
     $group->get('\/google-calendar\/calendars\/?')
         ->setController('GoogleCalendar')
         ->setAction('listCalendars');
