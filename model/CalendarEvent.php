@@ -18,6 +18,7 @@ class CalendarEvent extends BaseComponent implements JsonSerializable {
     private string  $status;
     private string  $color;
     private ?string $note;
+    private ?int    $reminderMinutes;
     private ?string $googleCalendarEventId;
     private ?string $createdAt;
     private ?string $updatedAt;
@@ -82,6 +83,11 @@ class CalendarEvent extends BaseComponent implements JsonSerializable {
             'default' => null,
             'alias' => 'note',
             'cast' => 'string'
+        ],
+        'reminderMinutes' => [
+            'default' => null,
+            'alias' => 'reminder_minutes',
+            'cast' => 'int'
         ],
         'googleCalendarEventId' => [
             'default' => null,
@@ -208,6 +214,15 @@ class CalendarEvent extends BaseComponent implements JsonSerializable {
 
     public function setNote(?string $note): self {
         $this->note = $note;
+        return $this;
+    }
+
+    public function getReminderMinutes(): ?int {
+        return $this->reminderMinutes;
+    }
+
+    public function setReminderMinutes(?int $value): self {
+        $this->reminderMinutes = $value;
         return $this;
     }
 
