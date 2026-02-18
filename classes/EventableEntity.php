@@ -91,9 +91,48 @@ trait EventableEntity {
                 'delete' => $service->deleteEvent($event),
                 default => null
             };
+
+            $this->logGoogleSync('success', $action, $event);
         } catch (Throwable $e) {
-            error_log(sprintf('Google Calendar sync error (%s): %s', $action, $e->getMessage()));
+            $this->logGoogleSync('error', $action, $event, [
+                'message' => $e->getMessage()
+            ]);
+
+            $this->queueGoogleCalendarSyncRetry($action, $event);
         }
+    }
+
+    private function queueGoogleCalendarSyncRetry(string $action, CalendarEvent $event): void {
+        try {
+            (new BackgroundTask())
+                ->setClass('BackgroundGoogleCalendarSync')
+                ->setMethod('process')
+                ->setMetadata([
+                    'action' => $action,
+                    'eventId' => $event->getId(),
+                    'userId' => $event->getUserId(),
+                    'googleCalendarEventId' => $event->getGoogleCalendarEventId(),
+                    'retryCount' => 0
+                ])
+                ->save();
+
+            $this->logGoogleSync('retry_queued', $action, $event);
+        } catch (Throwable $e) {
+            $this->logGoogleSync('retry_queue_error', $action, $event, [
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    private function logGoogleSync(string $status, string $action, CalendarEvent $event, array $extra = []): void {
+        error_log(json_encode(array_merge([
+            'context' => 'google_calendar_sync',
+            'status' => $status,
+            'action' => $action,
+            'event_id' => $event->getId(),
+            'google_calendar_event_id' => $event->getGoogleCalendarEventId(),
+            'user_id' => $event->getUserId()
+        ], $extra), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 
 }

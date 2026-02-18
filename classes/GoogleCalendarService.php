@@ -192,6 +192,34 @@ class GoogleCalendarService extends BaseComponent {
         return true;
     }
 
+    public function deleteEventByGoogleId(int $userId, string $googleCalendarEventId): bool {
+        if (trim($googleCalendarEventId) === '') {
+            return false;
+        }
+
+        $connection = $this->getConnectionData($userId);
+        if (!(bool)($connection->syncEnabled ?? false)) {
+            return false;
+        }
+
+        $connection = $this->refreshAccessTokenIfNeeded($userId);
+        $calendarId = $connection->targetCalendarId ?? 'primary';
+
+        $this->sendJsonRequest(
+            sprintf(
+                '%s/calendars/%s/events/%s',
+                self::CALENDAR_API_BASE,
+                rawurlencode($calendarId),
+                rawurlencode($googleCalendarEventId)
+            ),
+            HttpMethodEnum::DELETE,
+            null,
+            $this->buildAuthHeaders($connection)
+        );
+
+        return true;
+    }
+
     public function listCalendars(int $userId): array {
         $connection = $this->refreshAccessTokenIfNeeded($userId);
         $response = $this->sendJsonRequest(
