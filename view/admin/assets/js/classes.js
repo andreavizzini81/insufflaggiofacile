@@ -3247,6 +3247,7 @@ class CalendarLinkModal {
                         <h4 class="modal-title">LINK CALENDARIO</h4>
                     </div>
                     <div class="modal-body">
+                        <p class="text-muted mb15">Sottoscrizione in sola lettura (feed iCal)</p>
                         <form class="form-horizontal" action="javascript:void(0);" method="POST">
                             <div class="form-group">
                                 <label class="control-label col-md-2">Tipo:</label>
@@ -3341,8 +3342,7 @@ class CalendarLinkModal {
             if (data.status !== 1) {
                 return resAlert.error('Operazione fallita', data.message ?? 'Errore generico');
             }
-            const timestamp = Math.floor(new Date().getTime() / 1000);
-            this.input.value = `${res.absolutePath}ical/${data.result.token}?v=${timestamp}`;
+            this.input.value = `${res.absolutePath}ical/${data.result.token}`;
         }, err => resAlert.error('Operazione fallita', err.toString()));
     }
 
