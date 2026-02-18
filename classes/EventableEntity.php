@@ -5,6 +5,10 @@ trait EventableEntity {
 
     public function createEvent(array $eventData, int $userId): CalendarEvent|false {
 
+        if (!isset($eventData['note']) && isset($eventData['comment'])) {
+            $eventData['note'] = $eventData['comment'];
+        }
+
         $event = (new CalendarEvent())->import((object)$eventData);
         $event->setEntity(self::ENTITY_TABLE)->setEntityId($this->id)->setUserId($userId);
 
@@ -44,6 +48,10 @@ trait EventableEntity {
         if (is_null($event)) {
             return false;
         }
+        if (!isset($data['note']) && isset($data['comment'])) {
+            $data['note'] = $data['comment'];
+        }
+
         $event->import((object)$data);
 
         if (!$event->save()) {
