@@ -1,5 +1,37 @@
 {% extends 'index.twig' %}
 {% block content %}
+<div class="google-calendar-sync mb-4 p-3 border rounded">
+    <h5 class="mb-3">Google Calendar Sync</h5>
+    <p class="mb-2">
+        Stato connessione:
+        {% if data.google_calendar_connection.accessToken %}
+            <strong class="text-success">connesso</strong>
+        {% else %}
+            <strong class="text-danger">non connesso</strong>
+        {% endif %}
+    </p>
+
+    {% if data.google_calendar_connection.lastError %}
+        <div class="alert alert-warning" role="alert">
+            {{ data.google_calendar_connection.lastError }}
+        </div>
+    {% endif %}
+
+    <div class="d-flex gap-2 flex-wrap mb-3">
+        <button type="button" class="btn btn-primary" data-google-action="connect">Connetti / Riconnetti OAuth</button>
+        <button type="button" class="btn btn-success" data-google-action="enable-sync">Abilita sync</button>
+        <button type="button" class="btn btn-outline-danger" data-google-action="disable-sync">Disabilita sync e revoca</button>
+    </div>
+
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+        <select class="form-control" style="max-width: 360px;" data-google-calendar-select>
+            <option value="primary">Calendario principale (primary)</option>
+        </select>
+        <button type="button" class="btn btn-outline-primary" data-google-action="save-calendar">Salva calendario target</button>
+        <small class="text-muted">Dopo la connessione puoi scegliere il calendario Google su cui sincronizzare gli eventi.</small>
+    </div>
+</div>
+
 <div class="calendar-wrapper"></div>
 
 <style>
@@ -21,6 +53,108 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        const googleSyncWrapper = document.querySelector('.google-calendar-sync');
+        const googleCalendarSelect = googleSyncWrapper.querySelector('[data-google-calendar-select]');
+
+        const showGoogleAlert = (message, type = 'info') => {
+            const cls = {
+                info: 'alert-info',
+                success: 'alert-success',
+                warning: 'alert-warning',
+                error: 'alert-danger'
+            }[type] ?? 'alert-info';
+
+            const oldAlert = googleSyncWrapper.querySelector('.google-runtime-alert');
+            if (oldAlert) {
+                oldAlert.remove();
+            }
+
+            const alertNode = document.createElement('div');
+            alertNode.className = `alert ${cls} google-runtime-alert mt-3 mb-0`;
+            alertNode.setAttribute('role', 'alert');
+            alertNode.textContent = message;
+            googleSyncWrapper.appendChild(alertNode);
+        };
+
+        const loadGoogleCalendars = () => {
+            HttpRequest.get(`${res.absolutePath}api/google-calendar/calendars`, (data) => {
+                if (data.status !== 1) {
+                    showGoogleAlert(data.message ?? 'Impossibile caricare i calendari Google', 'warning');
+                    return;
+                }
+
+                googleCalendarSelect.innerHTML = '';
+                (data.result.list ?? []).forEach((calendar) => {
+                    const option = document.createElement('option');
+                    option.value = calendar.id;
+                    option.textContent = calendar.primary ? `${calendar.summary} (primary)` : calendar.summary;
+                    googleCalendarSelect.appendChild(option);
+                });
+
+                HttpRequest.get(`${res.absolutePath}api/google-calendar/status`, (statusRes) => {
+                    const currentTarget = statusRes?.result?.connection?.targetCalendarId ?? 'primary';
+                    googleCalendarSelect.value = currentTarget;
+                });
+            });
+        };
+
+        googleSyncWrapper.querySelector('[data-google-action="connect"]').addEventListener('click', () => {
+            HttpRequest.get(`${res.absolutePath}api/google-calendar/auth-url`, (data) => {
+                if (data.status !== 1 || !data?.result?.url) {
+                    showGoogleAlert(data.message ?? 'Impossibile avviare il collegamento OAuth', 'error');
+                    return;
+                }
+                window.location.href = data.result.url;
+            });
+        });
+
+        googleSyncWrapper.querySelector('[data-google-action="enable-sync"]').addEventListener('click', () => {
+            HttpRequest.post(`${res.absolutePath}api/google-calendar/sync-status`, { enabled: 1 }, (data) => {
+                if (data.status !== 1) {
+                    showGoogleAlert(data.message ?? 'Abilitazione sync non riuscita', 'error');
+                    return;
+                }
+                showGoogleAlert(data.result.message ?? 'Sincronizzazione abilitata', 'success');
+            });
+        });
+
+        googleSyncWrapper.querySelector('[data-google-action="disable-sync"]').addEventListener('click', () => {
+            HttpRequest.post(`${res.absolutePath}api/google-calendar/sync-status`, { enabled: 0 }, (data) => {
+                if (data.status !== 1) {
+                    showGoogleAlert(data.message ?? 'Disabilitazione sync non riuscita', 'error');
+                    return;
+                }
+                showGoogleAlert(data.result.message ?? 'Sincronizzazione disabilitata e token revocati', 'warning');
+            });
+        });
+
+        googleSyncWrapper.querySelector('[data-google-action="save-calendar"]').addEventListener('click', () => {
+            HttpRequest.post(`${res.absolutePath}api/google-calendar/target-calendar`, {
+                calendar_id: googleCalendarSelect.value
+            }, (data) => {
+                if (data.status !== 1) {
+                    showGoogleAlert(data.message ?? 'Salvataggio calendario non riuscito', 'error');
+                    return;
+                }
+                showGoogleAlert(data.result.message ?? 'Calendario target aggiornato', 'success');
+            });
+        });
+
+        if (window.location.pathname.endsWith('/google-calendar/oauth-callback')) {
+            const callbackUrl = `${res.absolutePath}api/google-calendar/oauth-callback${window.location.search}`;
+            HttpRequest.get(callbackUrl, (data) => {
+                if (data.status !== 1) {
+                    showGoogleAlert(data.message ?? 'Errore durante callback OAuth', 'error');
+                    return;
+                }
+                showGoogleAlert(data.result.message ?? 'Connessione Google completata', 'success');
+                window.history.replaceState({}, document.title, `${res.absolutePath}admin/calendar`);
+                loadGoogleCalendars();
+            });
+        } else {
+            loadGoogleCalendars();
+        }
 
         const filter = new ToolbarFilter(document.querySelector('.page-toolbar .filter-wrapper'), {
             onSubmit: () => {
@@ -87,7 +221,6 @@
                 queryParams.set('to', toDate);
 
                 let url = `${res.absolutePath}api/calendar?${queryParams.toString()}`;
-				//let url = `${res.absolutePath}api/calendar`;
 
                 HttpRequest.get(url, (data, response) => {
                     if (data.status !== 1) {

@@ -14,7 +14,10 @@ class AdminCalendarPageController extends BackendController {
             'src' => 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/it.global.js'
         ]);
 
+        $googleCalendarService = new GoogleCalendarService();
+
         $this->data['responsible_id'] = $this->user->getId();
+        $this->data['google_calendar_connection'] = $googleCalendarService->getConnectionData($this->user->getId());
         $this->data['actions'] = [
             new TopbarAction([
                 'attributes' => [

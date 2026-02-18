@@ -9,6 +9,7 @@ trait EventableEntity {
         $event->setEntity(self::ENTITY_TABLE)->setEntityId($this->id)->setUserId($userId);
 
         if ($event->save()) {
+            $this->syncGoogleCalendarAction('create', $event);
             return $event;
         }
 
@@ -45,7 +46,13 @@ trait EventableEntity {
         }
         $event->import((object)$data);
 
-        return ($event->save()) ? $event : false;
+        if (!$event->save()) {
+            return false;
+        }
+
+        $this->syncGoogleCalendarAction('update', $event);
+
+        return $event;
     }
 
     public function getEventsCount(): int {
@@ -71,7 +78,22 @@ trait EventableEntity {
             return false;
         }
 
+        $this->syncGoogleCalendarAction('delete', $event);
         return $event->delete();
+    }
+
+    private function syncGoogleCalendarAction(string $action, CalendarEvent $event): void {
+        try {
+            $service = new GoogleCalendarService();
+            match($action) {
+                'create' => $service->createEvent($event),
+                'update' => $service->updateEvent($event),
+                'delete' => $service->deleteEvent($event),
+                default => null
+            };
+        } catch (Throwable $e) {
+            error_log(sprintf('Google Calendar sync error (%s): %s', $action, $e->getMessage()));
+        }
     }
 
 }
