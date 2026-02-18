@@ -2641,6 +2641,17 @@ class CalendarEventModal {
         );
         const timeSlotOptions = this.timeSlots.map(slot => `<option value="${slot}"></option>`);
         const activityTypeOptions = this.activityTypes.map(type => `<option value="${type == 'Seleziona un&rsquo;opzione...' ? '' : type}" ${dataActivity == type ? 'selected' : ''}>${type}</option>`);
+        const reminderMinutes = this.data.reminderMinutes ?? this.data.reminder_minutes ?? '';
+        const reminderOptions = [
+            { value: '', label: 'Nessun promemoria' },
+            { value: '5', label: '5 minuti prima' },
+            { value: '10', label: '10 minuti prima' },
+            { value: '15', label: '15 minuti prima' },
+            { value: '30', label: '30 minuti prima' },
+            { value: '60', label: '1 ora prima' },
+            { value: '120', label: '2 ore prima' },
+            { value: '1440', label: '1 giorno prima' }
+        ].map(option => `<option value="${option.value}" ${String(reminderMinutes) == option.value ? 'selected' : ''}>${option.label}</option>`);
         const activityTypeMkp = `<div class="form-group mb-3">
             <label class="form-label">Attivit&agrave;</label>
             <select class="form-select" data-bind="taskTypeId" name="activity" required>${activityTypeOptions.join('')}</select>
@@ -2736,6 +2747,10 @@ class CalendarEventModal {
 							<label class="form-label">Data</label>
 							<input type="text" name="starts_at" class="form-control dtpicker" value="${startsAtDate}" data-bind="date" readonly required>
 						</div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Promemoria</label>
+                            <select class="form-select" name="reminder_minutes" data-bind="reminderMinutes">${reminderOptions.join('')}</select>
+                        </div>
                         <div class="form-group mb-3">
                             <label class="form-label">Colore</label>
                             <div>${colorsItems.join('')}</div>
