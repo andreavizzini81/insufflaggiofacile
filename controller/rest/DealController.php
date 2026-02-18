@@ -358,9 +358,9 @@ class DealController extends RestController {
         );        
 
         if ($event) {
-            $output = ['event' => $event];
+            $output = ['event' => $this->normalizeEventResponse($event)];
             if ($this->request->hasInputParam('with_updated_list')) {
-                $output['list'] = $this->deal->getEvents();
+                $output['list'] = $this->normalizeEventListResponse($this->deal->getEvents());
             }
             return $this->returnResult($output);
         } else {
@@ -377,9 +377,9 @@ class DealController extends RestController {
 
 
         if ($event) {
-            $output = ['event' => $event];
+            $output = ['event' => $this->normalizeEventResponse($event)];
             if ($this->request->hasInputParam('with_updated_list')) {
-                $output['list'] = $this->deal->getEvents();
+                $output['list'] = $this->normalizeEventListResponse($this->deal->getEvents());
             }
             return $this->returnResult($output);
         } else {
@@ -394,13 +394,13 @@ class DealController extends RestController {
 
         return (is_null($event)) ?
             $this->returnErrorMessage('Attivit&agrave; non trovata') :
-            $this->returnResult(['event' => $event]);
+            $this->returnResult(['event' => $this->normalizeEventResponse($event)]);
     }
 
     public function getEvents(): Response {
 
         return $this->returnResult([
-            'list' => $this->deal->getEvents()
+            'list' => $this->normalizeEventListResponse($this->deal->getEvents())
         ]);
     }
 
@@ -411,6 +411,14 @@ class DealController extends RestController {
         return $this->deal->deleteEvent($eventId) ? 
             $this->returnResult(null) : 
             $this->returnErrorMessage('Si &egrave; verificato un errore durante l&rsquo;eliminazione dell&rsquo;attivit&agrave;');  
+    }
+
+    private function normalizeEventResponse(CalendarEvent $event): array {
+        return $event->export();
+    }
+
+    private function normalizeEventListResponse(array $list): array {
+        return array_map(fn($event) => $event instanceof CalendarEvent ? $this->normalizeEventResponse($event) : $event, $list);
     }
 
 	public function getStageName(int $stageId): string {

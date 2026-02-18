@@ -23,6 +23,8 @@ class CalendarEvent extends BaseComponent implements JsonSerializable {
     private ?string $createdAt;
     private ?string $updatedAt;
 
+    private const ALLOWED_REMINDER_MINUTES = [5, 10, 15, 30, 60, 120, 1440];
+
     private const PROPERTIES_MAP = [
         'id' => [
             'default' => null,
@@ -222,8 +224,26 @@ class CalendarEvent extends BaseComponent implements JsonSerializable {
     }
 
     public function setReminderMinutes(?int $value): self {
-        $this->reminderMinutes = $value;
+        $this->reminderMinutes = self::normalizeReminderMinutes($value);
         return $this;
+    }
+
+    public static function normalizeReminderMinutes(mixed $value): ?int {
+        if ($value === '' || is_null($value)) {
+            return null;
+        }
+
+        if (!is_numeric($value)) {
+            return null;
+        }
+
+        $value = (int)$value;
+
+        if ($value === 0 || !in_array($value, self::ALLOWED_REMINDER_MINUTES, true)) {
+            return null;
+        }
+
+        return $value;
     }
 
     public function getGoogleCalendarEventId(): ?string {
@@ -336,6 +356,8 @@ class CalendarEvent extends BaseComponent implements JsonSerializable {
 
     private function beforeSave(array &$data) {
 
+        $this->reminderMinutes = self::normalizeReminderMinutes($this->reminderMinutes);
+
         // Creation date
         if (is_null($this->createdAt) && !$this->exists) {
             $this->createdAt = date('Y-m-d H:i:s');
@@ -349,9 +371,17 @@ class CalendarEvent extends BaseComponent implements JsonSerializable {
 	
 
     private function beforeExport(array &$data){
+        $this->reminderMinutes = self::normalizeReminderMinutes($this->reminderMinutes);
+
         if ($this->userId) {
             $data['userName'] = (new User($this->userId))->getFullName();
         }
+
+        $data['reminder_minutes'] = $this->reminderMinutes;
+    }
+
+    private function afterImport(object $data): void {
+        $this->reminderMinutes = self::normalizeReminderMinutes($this->reminderMinutes);
     }
 
 }
