@@ -614,6 +614,10 @@ $app->router->group('/api', function(&$group) {
         ->setController('GoogleCalendar')
         ->setAction('oauthCallback');
 
+    $group->post('\/google-calendar\/sync-preferences\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('saveSyncPreferences');
+
     $group->post('\/google-calendar\/sync-status\/?')
         ->setController('GoogleCalendar')
         ->setAction('setSyncStatus');

@@ -10,10 +10,28 @@ class GoogleCalendarController extends RestController {
     }
 
     public function getConnectionStatus(): Response {
-        $connection = $this->service->getConnectionData($this->user->getId());
-        return $this->returnResult([
-            'connection' => $connection
-        ]);
+        return $this->returnResult($this->service->getSyncPreferences($this->user->getId()));
+    }
+
+    public function saveSyncPreferences(): Response {
+        $enabledRaw = $this->request->getInputParam('enabled');
+        $enabled = in_array($enabledRaw, [true, 1, '1', 'true', 'on'], true);
+        $calendarId = $this->request->getInputParam('calendar_id');
+
+        try {
+            $connection = $this->service->saveSyncPreferences(
+                $this->user->getId(),
+                $enabled,
+                is_null($calendarId) ? null : (string)$calendarId
+            );
+
+            return $this->returnResult([
+                'connection' => $connection,
+                'message' => 'Preferenze sincronizzazione Google salvate correttamente.'
+            ]);
+        } catch (Throwable $e) {
+            return $this->returnErrorMessage($e->getMessage(), 400);
+        }
     }
 
     public function getAuthUrl(): Response {
