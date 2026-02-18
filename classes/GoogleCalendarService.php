@@ -13,8 +13,6 @@ class GoogleCalendarService extends BaseComponent {
 
     private const SYNC_ERROR_MAX_LENGTH = 180;
 
-    private const MAX_REMINDER_MINUTES = 40320;
-
     public function getAuthUrl(int $userId): string {
         $this->assertEnvironment();
 
@@ -342,13 +340,6 @@ class GoogleCalendarService extends BaseComponent {
         return $connection;
     }
 
-    public function setReminderMinutes(int $userId, ?int $minutes): object {
-        $connection = $this->getConnectionData($userId);
-        $connection->reminderMinutes = $this->normalizeReminderMinutes($minutes);
-        $this->saveConnectionData($userId, $connection);
-        return $connection;
-    }
-
     public function revokeConnection(int $userId): object {
         $connection = $this->getConnectionData($userId);
 
@@ -394,8 +385,7 @@ class GoogleCalendarService extends BaseComponent {
                 'lastError' => null,
                 'lastSyncAt' => null,
                 'lastSyncStatus' => null,
-                'lastSyncError' => null,
-                'reminderMinutes' => null
+                'lastSyncError' => null
             ];
         }
 
@@ -466,12 +456,6 @@ class GoogleCalendarService extends BaseComponent {
     }
 
     private function buildGoogleEventPayload(CalendarEvent $event): array {
-        $connection = $this->getConnectionData((int)$event->getUserId());
-        $rawReminderMinutes = $connection->reminderMinutes ?? null;
-        $reminderMinutes = is_numeric($rawReminderMinutes)
-            ? $this->normalizeReminderMinutes((int)$rawReminderMinutes)
-            : null;
-
         $payload = [
             'summary' => $event->getSubject(),
             'description' => $event->getNote() ?? '',
@@ -483,18 +467,6 @@ class GoogleCalendarService extends BaseComponent {
                 ]
             ]
         ];
-
-        if (!is_null($reminderMinutes)) {
-            $payload['reminders'] = [
-                'useDefault' => false,
-                'overrides' => [
-                    [
-                        'method' => 'popup',
-                        'minutes' => $reminderMinutes
-                    ]
-                ]
-            ];
-        }
 
         if ($event->isWholeDay()) {
             $payload['start'] = [
@@ -519,14 +491,6 @@ class GoogleCalendarService extends BaseComponent {
         ];
 
         return $payload;
-    }
-
-    private function normalizeReminderMinutes(?int $minutes): ?int {
-        if (is_null($minutes) || $minutes < 0) {
-            return null;
-        }
-
-        return min($minutes, self::MAX_REMINDER_MINUTES);
     }
 
     private function buildAuthHeaders(object $connection): array {
