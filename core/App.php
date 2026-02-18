@@ -23,6 +23,7 @@ class App {
         $this->environment = PHP_SAPI;
         $dotenv = Dotenv\Dotenv::createImmutable(ROOT);
         $dotenv->safeLoad();
+        $this->validateRequiredEnvironment();
         $this->middlewareQueue = [];
         $this->request = RequestFactory::fromGlobals();
         $this->path = sprintf("%s://%s/", $this->request->getScheme(), $this->request->gethost());        
@@ -41,6 +42,32 @@ class App {
         Container::set('Request', $this->request);
 
         $this->router = new Router($this->request);
+    }
+
+
+    private function validateRequiredEnvironment(): void {
+        $requiredEnvVars = [
+            'DB_HOSTNAME',
+            'DB_USERNAME',
+            'DB_PASSWORD',
+            'DB_DATABASE',
+            'GOOGLE_CLIENT_ID',
+            'GOOGLE_CLIENT_SECRET',
+            'GOOGLE_REDIRECT_URI'
+        ];
+
+        $missingEnvVars = [];
+        foreach($requiredEnvVars as $envVar) {
+            if (!isset($_ENV[$envVar]) || trim((string)$_ENV[$envVar]) === '') {
+                $missingEnvVars[] = $envVar;
+            }
+        }
+
+        if (!empty($missingEnvVars)) {
+            throw new RuntimeException(
+                sprintf('Variabili ambiente mancanti: %s', implode(', ', $missingEnvVars))
+            );
+        }
     }
 
     private function getCliArgs(): object {

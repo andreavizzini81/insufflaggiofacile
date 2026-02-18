@@ -219,6 +219,9 @@ $app->router->group('/admin', function(&$group) {
     $group->get('\/calendar\/?')
         ->setController('AdminCalendarPage');
 
+    $group->get('\/google-calendar\/oauth-callback\/?')
+        ->setController('AdminCalendarPage');
+
     $group->get('\/calendar\-activity\/?')
         ->setController('AdminCalendarActivityPage');
     
@@ -598,6 +601,30 @@ $app->router->group('/api', function(&$group) {
     $group->get('\/calendar\/link\/?')
         ->setController('Calendar')
         ->setAction('getLink');
+
+    $group->get('\/google-calendar\/status\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('getConnectionStatus');
+
+    $group->get('\/google-calendar\/auth-url\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('getAuthUrl');
+
+    $group->get('\/google-calendar\/oauth-callback\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('oauthCallback');
+
+    $group->post('\/google-calendar\/sync-status\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('setSyncStatus');
+
+    $group->post('\/google-calendar\/target-calendar\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('setTargetCalendar');
+
+    $group->get('\/google-calendar\/calendars\/?')
+        ->setController('GoogleCalendar')
+        ->setAction('listCalendars');
 
     $group->post('\/email\/?')
         ->setController('Email')
