@@ -62,31 +62,13 @@ class GoogleLeadFormsGatewayController extends RestController {
             $deal->save();
 			
 			
-			$calendarEventImportObject = (object)[
-
-                'subject' => sprintf("%s %s [%s]", $contactDeal['first_name'], $contactDeal['last_name'], $registration_channel),
-
+			$calendarEvent = $deal->createEvent([
+                'subject' => sprintf("%s %s [%s]", $contactDeal['first_name'], $contactDeal['last_name'], 'Google'),
                 'activity'  => 'Primo appuntamento telefonico',
-				
-				'entity'  => 'deal',
-				
-				'entity_id'  => $deal->getId(),
-				
 				'starts_at' => date('Y-m-d 09:00:00', strtotime('+1 day')),
-				
 				'ends_at' => date('Y-m-d 20:30:00', strtotime('+1 day')),
-				
-				'user_id' => 4,
-				
 				'status' => 'pending'
-
-            ];
-			
-			$calendarEvent = new CalendarEvent();
-			
-			$calendarEvent->import($calendarEventImportObject);            
-
-            $calendarEvent->save();
+            ], 4);
 			
 			
 			$contactGoogle = $this->registerContactGoogle($contactDeal);
