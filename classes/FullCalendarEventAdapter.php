@@ -16,7 +16,8 @@ class FullCalendarEventAdapter extends CalendarEvent implements JsonSerializable
                 'entity' => $this->getEntity(),
                 'entityId' => $this->getEntityId(),
                 'eventId' => $this->getId(),
-                'userId' => $this->getUserId()
+                'userId' => $this->getUserId(),
+                'note' => $this->getNote()
             ]
         ];
     }

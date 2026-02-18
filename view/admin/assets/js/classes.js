@@ -2853,7 +2853,7 @@ class CalendarEventModal {
                         </div>
                         <div class="form-group mb-3">
                             <label class="form-label">Commento</label>
-                            <textarea class="form-control" name="comment" rows="4" placeholder="Inserisci ulteriori informazioni..."></textarea>
+                            <textarea class="form-control" name="note" rows="4" placeholder="Inserisci ulteriori informazioni...">${this.data.note ?? ''}</textarea>
                         </div>
                         <div class="form-group mb-3">  
 							<div class="d-flex justify-content-start align-items-center">

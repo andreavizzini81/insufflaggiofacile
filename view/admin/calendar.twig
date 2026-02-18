@@ -210,6 +210,14 @@
                     }
                 });
             },
+            eventDidMount: function(info) {
+                const note = info.event.extendedProps?.note;
+                if (!note) {
+                    return;
+                }
+
+                info.el.setAttribute('title', note);
+            },
 
             events: function(info, success, failure) {
                 const fromDate = moment(info.start).format('YYYY-MM-DD');
