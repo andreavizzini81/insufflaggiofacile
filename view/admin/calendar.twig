@@ -30,12 +30,6 @@
         <button type="button" class="btn btn-outline-primary" data-google-action="save-calendar">Salva calendario target</button>
         <small class="text-muted">Dopo la connessione puoi scegliere il calendario Google su cui sincronizzare gli eventi.</small>
     </div>
-
-    <div class="d-flex gap-2 align-items-center flex-wrap mt-3">
-        <input type="number" class="form-control" style="max-width: 220px;" min="0" max="40320" step="1" placeholder="Default Google" data-google-reminder-input>
-        <button type="button" class="btn btn-outline-primary" data-google-action="save-reminder">Salva promemoria</button>
-        <small class="text-muted">Promemoria in minuti per i nuovi eventi sincronizzati su Google Calendar. Lascia vuoto per usare il default del calendario.</small>
-    </div>
 </div>
 
 <div class="calendar-wrapper"></div>
@@ -62,7 +56,6 @@
 
         const googleSyncWrapper = document.querySelector('.google-calendar-sync');
         const googleCalendarSelect = googleSyncWrapper.querySelector('[data-google-calendar-select]');
-        const googleReminderInput = googleSyncWrapper.querySelector('[data-google-reminder-input]');
 
         const showGoogleAlert = (message, type = 'info') => {
             const cls = {
@@ -100,12 +93,8 @@
                 });
 
                 HttpRequest.get(`${res.absolutePath}api/google-calendar/status`, (statusRes) => {
-                    const connection = statusRes?.result?.connection ?? {};
-                    const currentTarget = connection.targetCalendarId ?? 'primary';
+                    const currentTarget = statusRes?.result?.connection?.targetCalendarId ?? 'primary';
                     googleCalendarSelect.value = currentTarget;
-                    googleReminderInput.value = Number.isInteger(connection.reminderMinutes)
-                        ? connection.reminderMinutes
-                        : '';
                 });
             });
         };
@@ -149,19 +138,6 @@
                     return;
                 }
                 showGoogleAlert(data.result.message ?? 'Calendario target aggiornato', 'success');
-            });
-        });
-
-        googleSyncWrapper.querySelector('[data-google-action="save-reminder"]').addEventListener('click', () => {
-            const reminderMinutes = googleReminderInput.value.trim();
-            HttpRequest.post(`${res.absolutePath}api/google-calendar/reminder`, {
-                reminder_minutes: reminderMinutes
-            }, (data) => {
-                if (data.status !== 1) {
-                    showGoogleAlert(data.message ?? 'Salvataggio promemoria non riuscito', 'error');
-                    return;
-                }
-                showGoogleAlert(data.result.message ?? 'Promemoria Google aggiornato', 'success');
             });
         });
 
