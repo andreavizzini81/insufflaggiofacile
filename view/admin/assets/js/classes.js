@@ -3216,6 +3216,8 @@ class CalendarLinkModal {
     agency;
     form;
     input;
+    googlePanel;
+    isSavingPreferences = false;
 
     constructor(options = {}) {
         this.options = options;
@@ -3238,45 +3240,86 @@ class CalendarLinkModal {
             return `<option value="${agency.id}">${agency.description}</option>`;
         });
         let markup = `<div class="modal fade ${this.constructor.name}" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title">LINK CALENDARIO</h4>
+                        <h4 class="modal-title">LINK CALENDARIO E GOOGLE SYNC</h4>
                     </div>
                     <div class="modal-body">
-                        <p class="text-muted mb15">Sottoscrizione in sola lettura (feed iCal)</p>
-                        <form class="form-horizontal" action="javascript:void(0);" method="POST">
-                            <div class="form-group">
-                                <label class="control-label col-md-2">Tipo:</label>
-                                <div class="col-md-10">
-                                    <label class="radio-inline">
-                                    <input type="radio" name="role" value="agency">AGENZIA</label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="role" value="user" checked>PERSONALE 
-                                    </label>
-                                </div>
+                        <div class="panel panel-default mb20">
+                            <div class="panel-body">
+                                <h5 class="mt0 mb10">Feed ICS (sola lettura)</h5>
+                                <p class="text-muted mb15">Usa questo link iCal per consultare gli appuntamenti in sola lettura su qualsiasi calendario esterno.</p>
+                                <form class="form-horizontal" action="javascript:void(0);" method="POST" data-bind="icsForm">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Tipo:</label>
+                                        <div class="col-md-10">
+                                            <label class="radio-inline">
+                                            <input type="radio" name="role" value="agency">AGENZIA</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="role" value="user" checked>PERSONALE 
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group hidden">
+                                        <label class="control-label col-md-2">Agenzia:</label>
+                                        <div class="col-md-7">
+                                            <select class="form-control" name="agency_id" disabled>${agenciesListMarkup.join('')}</select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">URL:</label>
+                                        <div class="col-md-10">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="calendar-link" readonly>
+                                                <span class="input-group-addon cursor-pointer copy-group-text">
+                                                    <span class="fa fa-copy text-primary"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group hidden">
-                                <label class="control-label col-md-2">Agenzia:</label>
-                                <div class="col-md-7">
-                                    <select class="form-control" name="agency_id" disabled>${agenciesListMarkup.join('')}</select>
+                        </div>
+
+                        <div class="panel panel-default" data-bind="googlePanel">
+                            <div class="panel-body">
+                                <h5 class="mt0 mb10">Google Calendar API (sync push bidirezionale)</h5>
+                                <p class="text-muted mb15">Con la API Google gli eventi vengono sincronizzati attivamente tra piattaforma e Google Calendar (creazione/aggiornamento/eliminazione).</p>
+                                <div class="mb15">
+                                    <span class="label label-default" data-bind="connectionStatus">Non connesso</span>
+                                    <button type="button" class="btn btn-primary btn-sm ml10" data-bind="connectGoogle">Connetti Google</button>
+                                    <button type="button" class="btn btn-warning btn-sm ml10 hidden" data-bind="reconnectGoogle">Riconnetti</button>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-2">URL:</label>
-                                <div class="col-md-10">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="calendar-link" readonly>
-                                        <span class="input-group-addon cursor-pointer copy-group-text">
-                                            <span class="fa fa-copy text-primary"></span>
-                                        </span>
+                                <div class="form-horizontal">
+                                    <div class="form-group mb10">
+                                        <label class="control-label col-md-4">Sync attiva:</label>
+                                        <div class="col-md-8">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" data-bind="syncEnabled"> Abilita sincronizzazione Google
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb10">
+                                        <label class="control-label col-md-4">Calendario Google:</label>
+                                        <div class="col-md-8">
+                                            <select class="form-control" data-bind="targetCalendar" disabled>
+                                                <option value="">Seleziona un calendario</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb0">
+                                        <label class="control-label col-md-4">Ultimo esito sync:</label>
+                                        <div class="col-md-8">
+                                            <p class="form-control-static" data-bind="lastSyncResult">Nessuna sincronizzazione disponibile</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3286,9 +3329,10 @@ class CalendarLinkModal {
         this.modal = new Modal({
             el: this.wrapper
         });
-        this.form = this.wrapper.querySelector('form');
+        this.form = this.wrapper.querySelector('form[data-bind="icsForm"]');
         this.input = this.wrapper.querySelector('#calendar-link');
         this.agency = this.wrapper.querySelector('select[name="agency_id"]');
+        this.googlePanel = this.wrapper.querySelector('[data-bind="googlePanel"]');
         this.modal.show();
     }
 
@@ -3301,6 +3345,7 @@ class CalendarLinkModal {
 
         this.modal.on('shown', () => {
             this.getLink();
+            this.loadGoogleSyncPanel();
             if (typeof this.options.onOpen == 'function') {
                 this.options.onOpen();
             }
@@ -3317,8 +3362,8 @@ class CalendarLinkModal {
                 if (!itm.checked) {
                     return;
                 }
-                this.agency.closest('.form-group').classList.toggle('hidden', itm.value == 'admin');
-                this.agency.disabled = itm.value == 'admin';
+                this.agency.closest('.form-group').classList.toggle('hidden', itm.value != 'agency');
+                this.agency.disabled = itm.value != 'agency';
                 this.getLink();
             });           
         });
@@ -3326,6 +3371,150 @@ class CalendarLinkModal {
         this.agency.addEventListener('change', () => {
             this.getLink();
         });
+
+        this.googlePanel.querySelector('[data-bind="connectGoogle"]').addEventListener('click', () => {
+            this.openGoogleAuthFlow();
+        });
+
+        this.googlePanel.querySelector('[data-bind="reconnectGoogle"]').addEventListener('click', () => {
+            this.openGoogleAuthFlow();
+        });
+
+        this.googlePanel.querySelector('[data-bind="syncEnabled"]').addEventListener('change', () => {
+            this.saveGooglePreferences();
+        });
+
+        this.googlePanel.querySelector('[data-bind="targetCalendar"]').addEventListener('change', () => {
+            this.saveGooglePreferences();
+        });
+    }
+
+    async loadGoogleSyncPanel() {
+        this.googlePanel.classList.add('loading');
+        try {
+            const data = await HttpRequest.get(`${res.absolutePath}api/google-calendar/status`);
+            if (data.status !== 1) {
+                throw (data.message ?? 'Errore generico');
+            }
+
+            this.updateGoogleConnectionState(data.result);
+            await this.loadGoogleCalendars();
+        } catch (error) {
+            resAlert.error('Google Calendar', error.toString());
+        } finally {
+            this.googlePanel.classList.remove('loading');
+        }
+    }
+
+    updateGoogleConnectionState(payload = {}) {
+        const connection = payload.connection ?? {};
+        const isConnected = payload.isConnected === true;
+        const needsReconnect = payload.needsReconnect === true;
+
+        const connectionStatus = this.googlePanel.querySelector('[data-bind="connectionStatus"]');
+        connectionStatus.classList.toggle('label-success', isConnected);
+        connectionStatus.classList.toggle('label-danger', !isConnected);
+        connectionStatus.classList.remove('label-default');
+        connectionStatus.innerText = isConnected ? 'Connesso' : 'Non connesso';
+
+        this.googlePanel.querySelector('[data-bind="connectGoogle"]').classList.toggle('hidden', isConnected && !needsReconnect);
+        this.googlePanel.querySelector('[data-bind="reconnectGoogle"]').classList.toggle('hidden', !needsReconnect);
+
+        const syncEnabled = this.googlePanel.querySelector('[data-bind="syncEnabled"]');
+        syncEnabled.checked = (connection.syncEnabled === true);
+        syncEnabled.disabled = !isConnected;
+
+        const select = this.googlePanel.querySelector('[data-bind="targetCalendar"]');
+        const selectedCalendarId = connection.targetCalendarId ?? 'primary';
+        select.dataset.selectedCalendarId = selectedCalendarId;
+        select.disabled = !isConnected;
+
+        this.renderLastSync(connection);
+    }
+
+    renderLastSync(connection = {}) {
+        const lastSyncNode = this.googlePanel.querySelector('[data-bind="lastSyncResult"]');
+        if (!connection.lastSyncAt) {
+            lastSyncNode.innerText = 'Nessuna sincronizzazione disponibile';
+            return;
+        }
+
+        let message = `${connection.lastSyncAt}`;
+        if (connection.lastSyncStatus === 'success') {
+            message += ' · OK';
+        }
+
+        if (connection.lastSyncStatus === 'error') {
+            const errorText = connection.lastSyncError ? ` · Errore: ${connection.lastSyncError}` : ' · Errore';
+            message += errorText;
+        }
+
+        lastSyncNode.innerText = message;
+    }
+
+    async loadGoogleCalendars() {
+        const select = this.googlePanel.querySelector('[data-bind="targetCalendar"]');
+        if (select.disabled) {
+            return;
+        }
+
+        select.innerHTML = '<option value="">Seleziona un calendario</option>';
+        const data = await HttpRequest.get(`${res.absolutePath}api/google-calendar/calendars`);
+        if (data.status !== 1) {
+            throw (data.message ?? 'Impossibile recuperare i calendari Google');
+        }
+
+        const list = data.result.list ?? [];
+        list.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = item.primary ? `${item.summary} (predefinito)` : item.summary;
+            select.appendChild(option);
+        });
+
+        const current = select.dataset.selectedCalendarId ?? 'primary';
+        select.value = current;
+        if (!select.value && list.length > 0) {
+            select.value = list[0].id;
+        }
+    }
+
+    async openGoogleAuthFlow() {
+        try {
+            const data = await HttpRequest.get(`${res.absolutePath}api/google-calendar/auth-url`);
+            if (data.status !== 1 || !data.result.url) {
+                throw (data.message ?? 'Impossibile avviare OAuth Google');
+            }
+            window.open(data.result.url, '_blank', 'noopener');
+        } catch (error) {
+            resAlert.error('Google Calendar', error.toString());
+        }
+    }
+
+    async saveGooglePreferences() {
+        if (this.isSavingPreferences) {
+            return;
+        }
+
+        const syncEnabled = this.googlePanel.querySelector('[data-bind="syncEnabled"]').checked;
+        const calendarId = this.googlePanel.querySelector('[data-bind="targetCalendar"]').value;
+
+        this.isSavingPreferences = true;
+        try {
+            const response = await HttpRequest.post(`${res.absolutePath}api/google-calendar/sync-preferences`, {
+                enabled: syncEnabled ? 1 : 0,
+                calendar_id: calendarId
+            });
+            if (response.status !== 1) {
+                throw (response.message ?? 'Errore salvataggio preferenze');
+            }
+            this.renderLastSync(response.result.connection ?? {});
+            resAlert.success('Google Calendar', response.result.message ?? 'Preferenze sincronizzazione aggiornate');
+        } catch (error) {
+            resAlert.error('Google Calendar', error.toString());
+        } finally {
+            this.isSavingPreferences = false;
+        }
     }
 
     getLink() {

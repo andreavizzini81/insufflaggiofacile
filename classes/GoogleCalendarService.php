@@ -11,6 +11,8 @@ class GoogleCalendarService extends BaseComponent {
 
     private const DATE_TIME_FORMAT = 'Y-m-d\\TH:i:sP';
 
+    private const SYNC_ERROR_MAX_LENGTH = 180;
+
     public function getAuthUrl(int $userId): string {
         $this->assertEnvironment();
 
@@ -118,24 +120,31 @@ class GoogleCalendarService extends BaseComponent {
             return null;
         }
 
-        $connection = $this->refreshAccessTokenIfNeeded((int)$event->getUserId());
-        $calendarId = $connection->targetCalendarId ?? 'primary';
+        $userId = (int)$event->getUserId();
+        try {
+            $connection = $this->refreshAccessTokenIfNeeded($userId);
+            $calendarId = $connection->targetCalendarId ?? 'primary';
 
-        $response = $this->sendJsonRequest(
-            sprintf('%s/calendars/%s/events', self::CALENDAR_API_BASE, rawurlencode($calendarId)),
-            HttpMethodEnum::POST,
-            $this->buildGoogleEventPayload($event),
-            $this->buildAuthHeaders($connection)
-        );
+            $response = $this->sendJsonRequest(
+                sprintf('%s/calendars/%s/events', self::CALENDAR_API_BASE, rawurlencode($calendarId)),
+                HttpMethodEnum::POST,
+                $this->buildGoogleEventPayload($event),
+                $this->buildAuthHeaders($connection)
+            );
 
-        if (!isset($response->id)) {
-            throw new RuntimeException('Creazione evento su Google Calendar non riuscita');
+            if (!isset($response->id)) {
+                throw new RuntimeException('Creazione evento su Google Calendar non riuscita');
+            }
+
+            $event->setGoogleCalendarEventId($response->id);
+            $event->save();
+            $this->markSyncResult($userId, true);
+
+            return $response->id;
+        } catch (Throwable $e) {
+            $this->markSyncResult($userId, false, $e->getMessage());
+            throw $e;
         }
-
-        $event->setGoogleCalendarEventId($response->id);
-        $event->save();
-
-        return $response->id;
     }
 
     public function updateEvent(CalendarEvent $event): bool {
@@ -143,27 +152,34 @@ class GoogleCalendarService extends BaseComponent {
             return false;
         }
 
-        $connection = $this->refreshAccessTokenIfNeeded((int)$event->getUserId());
-        $calendarId = $connection->targetCalendarId ?? 'primary';
+        $userId = (int)$event->getUserId();
+        try {
+            $connection = $this->refreshAccessTokenIfNeeded($userId);
+            $calendarId = $connection->targetCalendarId ?? 'primary';
 
-        if (!$event->getGoogleCalendarEventId()) {
-            $this->createEvent($event);
+            if (!$event->getGoogleCalendarEventId()) {
+                $this->createEvent($event);
+                return true;
+            }
+
+            $this->sendJsonRequest(
+                sprintf(
+                    '%s/calendars/%s/events/%s',
+                    self::CALENDAR_API_BASE,
+                    rawurlencode($calendarId),
+                    rawurlencode($event->getGoogleCalendarEventId())
+                ),
+                HttpMethodEnum::PUT,
+                $this->buildGoogleEventPayload($event),
+                $this->buildAuthHeaders($connection)
+            );
+
+            $this->markSyncResult($userId, true);
             return true;
+        } catch (Throwable $e) {
+            $this->markSyncResult($userId, false, $e->getMessage());
+            throw $e;
         }
-
-        $this->sendJsonRequest(
-            sprintf(
-                '%s/calendars/%s/events/%s',
-                self::CALENDAR_API_BASE,
-                rawurlencode($calendarId),
-                rawurlencode($event->getGoogleCalendarEventId())
-            ),
-            HttpMethodEnum::PUT,
-            $this->buildGoogleEventPayload($event),
-            $this->buildAuthHeaders($connection)
-        );
-
-        return true;
     }
 
     public function deleteEvent(CalendarEvent $event): bool {
@@ -171,25 +187,32 @@ class GoogleCalendarService extends BaseComponent {
             return false;
         }
 
-        $connection = $this->refreshAccessTokenIfNeeded((int)$event->getUserId());
-        $calendarId = $connection->targetCalendarId ?? 'primary';
+        $userId = (int)$event->getUserId();
+        try {
+            $connection = $this->refreshAccessTokenIfNeeded($userId);
+            $calendarId = $connection->targetCalendarId ?? 'primary';
 
-        $this->sendJsonRequest(
-            sprintf(
-                '%s/calendars/%s/events/%s',
-                self::CALENDAR_API_BASE,
-                rawurlencode($calendarId),
-                rawurlencode($event->getGoogleCalendarEventId())
-            ),
-            HttpMethodEnum::DELETE,
-            null,
-            $this->buildAuthHeaders($connection)
-        );
+            $this->sendJsonRequest(
+                sprintf(
+                    '%s/calendars/%s/events/%s',
+                    self::CALENDAR_API_BASE,
+                    rawurlencode($calendarId),
+                    rawurlencode($event->getGoogleCalendarEventId())
+                ),
+                HttpMethodEnum::DELETE,
+                null,
+                $this->buildAuthHeaders($connection)
+            );
 
-        $event->setGoogleCalendarEventId(null);
-        $event->save();
+            $event->setGoogleCalendarEventId(null);
+            $event->save();
+            $this->markSyncResult($userId, true);
 
-        return true;
+            return true;
+        } catch (Throwable $e) {
+            $this->markSyncResult($userId, false, $e->getMessage());
+            throw $e;
+        }
     }
 
     public function deleteEventByGoogleId(int $userId, string $googleCalendarEventId): bool {
@@ -202,22 +225,80 @@ class GoogleCalendarService extends BaseComponent {
             return false;
         }
 
-        $connection = $this->refreshAccessTokenIfNeeded($userId);
-        $calendarId = $connection->targetCalendarId ?? 'primary';
+        try {
+            $connection = $this->refreshAccessTokenIfNeeded($userId);
+            $calendarId = $connection->targetCalendarId ?? 'primary';
 
-        $this->sendJsonRequest(
-            sprintf(
-                '%s/calendars/%s/events/%s',
-                self::CALENDAR_API_BASE,
-                rawurlencode($calendarId),
-                rawurlencode($googleCalendarEventId)
-            ),
-            HttpMethodEnum::DELETE,
-            null,
-            $this->buildAuthHeaders($connection)
-        );
+            $this->sendJsonRequest(
+                sprintf(
+                    '%s/calendars/%s/events/%s',
+                    self::CALENDAR_API_BASE,
+                    rawurlencode($calendarId),
+                    rawurlencode($googleCalendarEventId)
+                ),
+                HttpMethodEnum::DELETE,
+                null,
+                $this->buildAuthHeaders($connection)
+            );
 
-        return true;
+            $this->markSyncResult($userId, true);
+            return true;
+        } catch (Throwable $e) {
+            $this->markSyncResult($userId, false, $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function getSyncPreferences(int $userId): array {
+        $connection = $this->getConnectionData($userId);
+        $hasToken = !empty($connection->refreshToken) || !empty($connection->accessToken);
+        $lastError = trim((string)($connection->lastError ?? ''));
+        $invalidTokenErrors = ['invalid_grant', 'invalid_token', 'token expired', 'unauthorized'];
+        $needsReconnect = !$hasToken;
+
+        if ($lastError !== '') {
+            foreach($invalidTokenErrors as $needle) {
+                if (stripos($lastError, $needle) !== false) {
+                    $needsReconnect = true;
+                    break;
+                }
+            }
+        }
+
+        return [
+            'connection' => $connection,
+            'isConnected' => $hasToken,
+            'needsReconnect' => $needsReconnect
+        ];
+    }
+
+    public function saveSyncPreferences(int $userId, bool $enabled, ?string $calendarId = null): object {
+        $current = $this->getConnectionData($userId);
+        if ($enabled && empty($current->refreshToken) && empty($current->accessToken)) {
+            throw new RuntimeException('Google Calendar non connesso: completa prima la procedura OAuth.');
+        }
+
+        $connection = $this->setSyncEnabled($userId, $enabled);
+
+        if (!is_null($calendarId) && trim($calendarId) !== '') {
+            $connection = $this->setTargetCalendar($userId, trim($calendarId));
+        }
+
+        return $connection;
+    }
+
+    public function markSyncResult(int $userId, bool $success, ?string $errorMessage = null): object {
+        $connection = $this->getConnectionData($userId);
+        $connection->lastSyncAt = date('Y-m-d H:i:s');
+        $connection->lastSyncStatus = $success ? 'success' : 'error';
+        $connection->lastSyncError = $success ? null : $this->normalizeSyncError($errorMessage);
+        if ($success) {
+            $connection->lastError = null;
+        } elseif (!is_null($connection->lastSyncError)) {
+            $connection->lastError = $connection->lastSyncError;
+        }
+        $this->saveConnectionData($userId, $connection);
+        return $connection;
     }
 
     public function listCalendars(int $userId): array {
@@ -301,7 +382,10 @@ class GoogleCalendarService extends BaseComponent {
                 'connectedAt' => null,
                 'oauthState' => null,
                 'oauthStateCreatedAt' => null,
-                'lastError' => null
+                'lastError' => null,
+                'lastSyncAt' => null,
+                'lastSyncStatus' => null,
+                'lastSyncError' => null
             ];
         }
 
@@ -356,6 +440,19 @@ class GoogleCalendarService extends BaseComponent {
 
     private function getSettingName(int $userId): string {
         return sprintf('google_calendar_connection_user_%d', $userId);
+    }
+
+    private function normalizeSyncError(?string $message): ?string {
+        $clean = trim(preg_replace('/\s+/', ' ', (string)$message));
+        if ($clean === '') {
+            return null;
+        }
+
+        if (strlen($clean) > self::SYNC_ERROR_MAX_LENGTH) {
+            return sprintf('%s…', substr($clean, 0, self::SYNC_ERROR_MAX_LENGTH));
+        }
+
+        return $clean;
     }
 
     private function buildGoogleEventPayload(CalendarEvent $event): array {
