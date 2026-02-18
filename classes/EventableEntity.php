@@ -9,6 +9,8 @@ trait EventableEntity {
             $eventData['note'] = $eventData['comment'];
         }
 
+        $eventData = $this->normalizeEventData($eventData);
+
         $event = (new CalendarEvent())->import((object)$eventData);
         $event->setEntity(self::ENTITY_TABLE)->setEntityId($this->id)->setUserId($userId);
 
@@ -51,6 +53,8 @@ trait EventableEntity {
         if (!isset($data['note']) && isset($data['comment'])) {
             $data['note'] = $data['comment'];
         }
+
+        $data = $this->normalizeEventData($data);
 
         $event->import((object)$data);
 
@@ -141,6 +145,18 @@ trait EventableEntity {
             'google_calendar_event_id' => $event->getGoogleCalendarEventId(),
             'user_id' => $event->getUserId()
         ], $extra), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    }
+
+    private function normalizeEventData(array $eventData): array {
+        if (array_key_exists('reminder_minutes', $eventData)) {
+            $eventData['reminder_minutes'] = CalendarEvent::normalizeReminderMinutes($eventData['reminder_minutes']);
+        }
+
+        if (array_key_exists('reminderMinutes', $eventData)) {
+            $eventData['reminderMinutes'] = CalendarEvent::normalizeReminderMinutes($eventData['reminderMinutes']);
+        }
+
+        return $eventData;
     }
 
 }
