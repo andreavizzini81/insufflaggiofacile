@@ -64,8 +64,12 @@ class GoogleCalendarController extends RestController {
             return $this->returnErrorMessage('Callback OAuth non valida: utente non corrispondente', 403);
         }
 
-        if (!$this->service->validateState($userId, $state)) {
-            return $this->returnErrorMessage('Callback OAuth non valida: stato scaduto o non valido', 400);
+        $stateValidationError = null;
+        if (!$this->service->validateState($userId, $state, $stateValidationError)) {
+            $message = $stateValidationError === 'expired'
+                ? 'Callback OAuth non valida: stato scaduto'
+                : 'Callback OAuth non valida: stato non valido';
+            return $this->returnErrorMessage($message, 400);
         }
 
         try {
