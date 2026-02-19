@@ -371,27 +371,28 @@ class GoogleCalendarService extends BaseComponent {
     }
 
     public function getConnectionData(int $userId): object {
-        $setting = new Setting($this->getSettingName($userId));
-        if (!$setting->exists()) {
-            return (object)[
-                'syncEnabled' => false,
-                'targetCalendarId' => 'primary',
-                'accessToken' => null,
-                'refreshToken' => null,
-                'expiresAt' => null,
-                'tokenType' => null,
-                'scope' => null,
-                'connectedAt' => null,
-                'oauthState' => null,
-                'oauthStateCreatedAt' => null,
-                'lastError' => null,
-                'lastSyncAt' => null,
-                'lastSyncStatus' => null,
-                'lastSyncError' => null
-            ];
+        $record = new UserGoogleCalendar($userId);
+        if (!$record->exists()) {
+            return (object)$this->defaultConnectionData();
         }
 
-        return is_object($setting->getValue()) ? $setting->getValue() : (object)[];
+        $data = $record->export();
+        return (object)[
+            'syncEnabled' => (bool)($data['syncEnabled'] ?? false),
+            'targetCalendarId' => $data['googleCalendarId'] ?? 'primary',
+            'accessToken' => $data['accessToken'] ?? null,
+            'refreshToken' => $data['refreshToken'] ?? null,
+            'expiresAt' => $data['tokenExpiresAt'] ?? null,
+            'tokenType' => $data['tokenType'] ?? null,
+            'scope' => $data['scope'] ?? null,
+            'connectedAt' => $data['connectedAt'] ?? null,
+            'oauthState' => $data['oauthState'] ?? null,
+            'oauthStateCreatedAt' => $data['oauthStateCreatedAt'] ?? null,
+            'lastError' => $data['lastError'] ?? null,
+            'lastSyncAt' => $data['lastSyncAt'] ?? null,
+            'lastSyncStatus' => $data['lastSyncStatus'] ?? null,
+            'lastSyncError' => $data['lastSyncError'] ?? null
+        ];
     }
 
     public function validateState(int $userId, string $state): bool {
@@ -430,18 +431,45 @@ class GoogleCalendarService extends BaseComponent {
     }
 
     private function saveConnectionData(int $userId, object $value): void {
-        $setting = new Setting($this->getSettingName($userId));
-        $setting
-            ->setName($this->getSettingName($userId))
-            ->setCategory('google_calendar')
-            ->setLabel(sprintf('Google Calendar Sync User #%d', $userId))
-            ->setParseAs('json')
-            ->setValue($value)
-            ->save();
+        $defaults = $this->defaultConnectionData();
+        $record = new UserGoogleCalendar($userId);
+        $record->importFromDump((object)[
+            'userId' => $userId,
+            'googleCalendarId' => $value->targetCalendarId ?? $defaults['targetCalendarId'],
+            'accessToken' => $value->accessToken ?? $defaults['accessToken'],
+            'refreshToken' => $value->refreshToken ?? $defaults['refreshToken'],
+            'tokenExpiresAt' => $value->expiresAt ?? $defaults['expiresAt'],
+            'syncEnabled' => (bool)($value->syncEnabled ?? $defaults['syncEnabled']),
+            'lastSyncAt' => $value->lastSyncAt ?? $defaults['lastSyncAt'],
+            'lastSyncStatus' => $value->lastSyncStatus ?? $defaults['lastSyncStatus'],
+            'lastSyncError' => $value->lastSyncError ?? $defaults['lastSyncError'],
+            'oauthState' => $value->oauthState ?? $defaults['oauthState'],
+            'oauthStateCreatedAt' => $value->oauthStateCreatedAt ?? $defaults['oauthStateCreatedAt'],
+            'tokenType' => $value->tokenType ?? $defaults['tokenType'],
+            'scope' => $value->scope ?? $defaults['scope'],
+            'connectedAt' => $value->connectedAt ?? $defaults['connectedAt'],
+            'lastError' => $value->lastError ?? $defaults['lastError']
+        ]);
+        $record->save();
     }
 
-    private function getSettingName(int $userId): string {
-        return sprintf('google_calendar_connection_user_%d', $userId);
+    private function defaultConnectionData(): array {
+        return [
+            'syncEnabled' => false,
+            'targetCalendarId' => 'primary',
+            'accessToken' => null,
+            'refreshToken' => null,
+            'expiresAt' => null,
+            'tokenType' => null,
+            'scope' => null,
+            'connectedAt' => null,
+            'oauthState' => null,
+            'oauthStateCreatedAt' => null,
+            'lastError' => null,
+            'lastSyncAt' => null,
+            'lastSyncStatus' => null,
+            'lastSyncError' => null
+        ];
     }
 
     private function normalizeSyncError(?string $message): ?string {
