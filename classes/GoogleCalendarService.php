@@ -8,6 +8,7 @@ class GoogleCalendarService extends BaseComponent {
     private const CALENDAR_API_BASE = 'https://www.googleapis.com/calendar/v3';
 
     private const OAUTH_SCOPE = 'https://www.googleapis.com/auth/calendar';
+    private const OAUTH_STATE_TTL_SECONDS = 600;
 
     private const DATE_TIME_FORMAT = 'Y-m-d\\TH:i:sP';
 
@@ -68,6 +69,7 @@ class GoogleCalendarService extends BaseComponent {
         $connection->connectedAt = date('Y-m-d H:i:s');
         $connection->syncEnabled = true;
         $connection->oauthState = null;
+        $connection->oauthStateCreatedAt = null;
         $connection->lastError = null;
         $this->saveConnectionData($userId, $connection);
 
@@ -395,9 +397,27 @@ class GoogleCalendarService extends BaseComponent {
         ];
     }
 
-    public function validateState(int $userId, string $state): bool {
+    public function validateState(int $userId, string $state, ?string &$failureReason = null): bool {
         $connection = $this->getConnectionData($userId);
-        return isset($connection->oauthState) && hash_equals((string)$connection->oauthState, $state);
+
+        if (!isset($connection->oauthState) || !hash_equals((string)$connection->oauthState, $state)) {
+            $failureReason = 'invalid';
+            return false;
+        }
+
+        $createdAt = strtotime((string)($connection->oauthStateCreatedAt ?? ''));
+        if ($createdAt === false) {
+            $failureReason = 'invalid';
+            return false;
+        }
+
+        if (($createdAt + self::OAUTH_STATE_TTL_SECONDS) < time()) {
+            $failureReason = 'expired';
+            return false;
+        }
+
+        $failureReason = null;
+        return true;
     }
 
     public function assertEnvironment(): void {
