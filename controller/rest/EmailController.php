@@ -65,6 +65,12 @@ class EmailController extends RestController {
             }
         }
 
+        $smtpUsername = trim((string) $agency->getSmtpUsername());
+        $smtpPassword = trim((string) $agency->getSmtpPassword());
+        if ($smtpUsername === '' || $smtpPassword === '') {
+            return $this->returnErrorMessage('Credenziali SMTP agenzia mancanti o non valide.');
+        }
+
         $handler = new PHPMailer(true);
         try {
             $handler->isSMTP();
@@ -72,14 +78,14 @@ class EmailController extends RestController {
             $handler->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
             $handler->Host       = $_ENV['MAIL_SMTP_HOST'];
             $handler->Port       = $_ENV['MAIL_SMTP_PORT'];
-            $handler->Username   = $agency->getSmtpUsername();
-            $handler->Password   = $agency->getSmtpPassword();
+            $handler->Username   = $smtpUsername;
+            $handler->Password   = $smtpPassword;
             $handler->CharSet    = 'UTF-8';
             $handler->isHTML(false);
             $handler->Subject = $subject;
             $handler->Body = $body;
             $handler->setFrom(
-                $agency->getSmtpUsername(), 
+                $smtpUsername, 
                 $agency->getDescription()
             );
             foreach($sanitizedRecipients as $recipient) {

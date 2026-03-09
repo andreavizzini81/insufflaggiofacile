@@ -457,7 +457,7 @@ class Agency extends BaseComponent implements JsonSerializable {
 
     public function setSmtpUsername(?string $smtpUsername): self {
         if (is_string($smtpUsername) && trim($smtpUsername) != '') {
-            $this->smtpUsername = $smtpUsername;
+            $this->smtpUsername = trim($smtpUsername);
         }
         return $this;
     }
@@ -468,7 +468,7 @@ class Agency extends BaseComponent implements JsonSerializable {
 
     public function setSmtpPassword(?string $smtpPassword): self {
         if (is_string($smtpPassword) && trim($smtpPassword) != '') {
-            $this->smtpPassword = $smtpPassword;
+            $this->smtpPassword = trim($smtpPassword);
         }
         return $this;
     }
