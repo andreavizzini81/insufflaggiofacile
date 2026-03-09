@@ -18,11 +18,6 @@ class EmailController extends RestController {
             return $this->returnErrorMessage('Riferimento agenzia non valido. ['.$agencyId.']');
         }
 
-        if (!$agency->smtpIsEnabled()) {
-            return $this->returnErrorMessage(
-                sprintf('L&rsquo;agenzia %s non &egrave; abilitata all&rsquo;invio delle mail.', $agency->getDescription())
-            );
-        }
 
         $subject = $this->request->getInputParam('subject');
         if (!is_string($subject) || trim($subject) == '') {
@@ -65,10 +60,10 @@ class EmailController extends RestController {
             }
         }
 
-        $smtpUsername = trim((string) $agency->getSmtpUsername());
-        $smtpPassword = trim((string) $agency->getSmtpPassword());
+        $smtpUsername = trim((string) ($_ENV['MAIL_NOREPLY_USERNAME'] ?? ''));
+        $smtpPassword = trim((string) ($_ENV['MAIL_NOREPLY_PASSWORD'] ?? ''));
         if ($smtpUsername === '' || $smtpPassword === '') {
-            return $this->returnErrorMessage('Credenziali SMTP agenzia mancanti o non valide.');
+            return $this->returnErrorMessage('Credenziali SMTP di sistema mancanti o non valide.');
         }
 
         $handler = new PHPMailer(true);
@@ -85,9 +80,12 @@ class EmailController extends RestController {
             $handler->Subject = $subject;
             $handler->Body = $body;
             $handler->setFrom(
-                $smtpUsername, 
-                $agency->getDescription()
+                $smtpUsername,
+                $_ENV['SW_PRODUCT_NAME']
             );
+            if (filter_var($agency->getEmail(), FILTER_VALIDATE_EMAIL)) {
+                $handler->addReplyTo($agency->getEmail(), $agency->getDescription());
+            }
             foreach($sanitizedRecipients as $recipient) {
                 $handler->addAddress($recipient);
             }
