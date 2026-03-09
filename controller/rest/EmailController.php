@@ -18,11 +18,6 @@ class EmailController extends RestController {
             return $this->returnErrorMessage('Riferimento agenzia non valido. ['.$agencyId.']');
         }
 
-        if (!$agency->smtpIsEnabled()) {
-            return $this->returnErrorMessage(
-                sprintf('L&rsquo;agenzia %s non &egrave; abilitata all&rsquo;invio delle mail.', $agency->getDescription())
-            );
-        }
 
         $subject = $this->request->getInputParam('subject');
         if (!is_string($subject) || trim($subject) == '') {
@@ -65,6 +60,12 @@ class EmailController extends RestController {
             }
         }
 
+        $smtpUsername = trim((string) ($_ENV['MAIL_NOREPLY_USERNAME'] ?? ''));
+        $smtpPassword = trim((string) ($_ENV['MAIL_NOREPLY_PASSWORD'] ?? ''));
+        if ($smtpUsername === '' || $smtpPassword === '') {
+            return $this->returnErrorMessage('Credenziali SMTP di sistema mancanti o non valide.');
+        }
+
         $handler = new PHPMailer(true);
         try {
             $handler->isSMTP();
@@ -72,16 +73,19 @@ class EmailController extends RestController {
             $handler->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
             $handler->Host       = $_ENV['MAIL_SMTP_HOST'];
             $handler->Port       = $_ENV['MAIL_SMTP_PORT'];
-            $handler->Username   = $agency->getSmtpUsername();
-            $handler->Password   = $agency->getSmtpPassword();
+            $handler->Username   = $smtpUsername;
+            $handler->Password   = $smtpPassword;
             $handler->CharSet    = 'UTF-8';
             $handler->isHTML(false);
             $handler->Subject = $subject;
             $handler->Body = $body;
             $handler->setFrom(
-                $agency->getSmtpUsername(), 
-                $agency->getDescription()
+                $smtpUsername,
+                $_ENV['SW_PRODUCT_NAME']
             );
+            if (filter_var($agency->getEmail(), FILTER_VALIDATE_EMAIL)) {
+                $handler->addReplyTo($agency->getEmail(), $agency->getDescription());
+            }
             foreach($sanitizedRecipients as $recipient) {
                 $handler->addAddress($recipient);
             }
