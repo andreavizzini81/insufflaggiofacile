@@ -849,7 +849,7 @@ $app->router->group('', function(&$group) {
 	        ->setController('GenericPage')
 	        ->setParams([
 	            'language' => 'it',
-	            'uri' => 'faq'
+	            'uri' => 'home-catania'
 	        ]);
     
     $group->get('\/ok\/?')
