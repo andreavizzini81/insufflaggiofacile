@@ -849,7 +849,7 @@ $app->router->group('', function(&$group) {
 	        ->setController('GenericPage')
 	        ->setParams([
 	            'language' => 'it',
-	            'uri' => 'home-catania'
+	            'uri' => 'insufflaggio-cellulosa-catania'
 	        ]);
     
     $group->get('\/ok\/?')
