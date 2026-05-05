@@ -832,6 +832,13 @@ $app->router->group('', function(&$group) {
             'language' => 'it',
             'uri' => 'home'
         ]); 
+
+	$group->get('\/home-catania\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'home-catania'
+        ]);
     
     $group->get('\/ok\/?')
         ->setController('GenericPage')
