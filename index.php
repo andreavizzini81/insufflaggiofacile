@@ -839,7 +839,7 @@ $app->router->group('', function(&$group) {
             'destination' => 'insufflaggio-cellulosa-catania'
         ]);
 
-	$group->get('\/insufflaggio-cellulosa-catania\/?')
+	$group->get('\/insufflaggio-catania\/?')
         ->setController('GenericPage')
         ->setParams([
             'language' => 'it',
