@@ -5,87 +5,53 @@ use \Icamys\SitemapGenerator\SitemapGenerator;
 
 class SitemapController extends CliController {
 
+    private const SITE_URL = 'https://www.insufflaggiofacile.it';
+
     private Config           $config;
     private SitemapGenerator $generator;
+
+    private array $excludedPaths = [
+        '/home',
+        '/index',
+        '/index.html',
+        '/index.php',
+        '/privacy',
+        '/cookie-policy',
+        '/thank-you',
+        '/admin',
+        '/preview',
+        '/test',
+        '/bozza',
+        '/staging'
+    ];
 
     public function generateSitemap() {
 
         Cli::print('Sitemap generation has started...');
 
         $this->config = (new Config())
-            ->setBaseURL('https://www.rentalness.com/')
+            ->setBaseURL(self::SITE_URL)
             ->setSaveDirectory($this->app->root);
 
         $this->generator = (new SitemapGenerator($this->config))
             ->setMaxURLsPerSitemap(50000)
-            ->setSitemapFileName("sitemap.xml")
-            ->setSitemapIndexFileName("sitemap-index.xml");
+            ->setSitemapFileName('sitemap.xml')
+            ->setSitemapIndexFileName('sitemap-index.xml');
+
+        $indexedUrls = [];
 
         Cli::print("\t--> Generating pages entries");
-        // Home
-        $this->generator->addURL(
-            '/', 
-            new DateTime(), 
-            'always', 
-            0.5
-        );
 
-        // Pagine
+        $this->addPathToSitemap('/', $indexedUrls, 1.0);
+
         $pageList = new PageList([
             'in_sitemap' => 1
         ], true, Page::class);
 
-        foreach($pageList->getAll() as $page) {
-            $this->generator->addURL(
-                sprintf('/%s', $page->getUri()), 
-                new DateTime(), 
-                'always', 
-                0.7
-            );
-        }
-
-        Cli::print("\t--> Generating blog entries");
-        // Categorie blog
-        $blogCategoryList = new BlogCategoryList(
-            [], true, BlogCategory::class
-        );
-
-        foreach($blogCategoryList->getAll() as $blogCategory) {
-            $this->generator->addURL(
-                sprintf('/%s', $blogCategory->getPermalink()), 
-                new DateTime(), 
-                'always', 
-                0.5
-            );
-        }
-
-        // Articoli blog
-        $blogArticleList = new BlogArticleList(
-            [], true, BlogArticle::class
-        );
-
-        foreach($blogArticleList->getAll() as $blogArticle) {
-            $this->generator->addURL(
-                sprintf('/%s', $blogArticle->getPermalink()), 
-                new DateTime(), 
-                'always', 
-                0.5
-            );
-        }
-
-        Cli::print("\t--> Generating vehicles entries");
-        // Veicoli
-        $vehicleList = new VehicleList([
-            'active' => 1
-        ], true, Vehicle::class);
-
-        foreach($vehicleList->getAll() as $vehicle) {
-            $this->generator->addURL(
-                sprintf('/%s', $vehicle->getURI()), 
-                new DateTime(), 
-                'always', 
-                0.5
-            );
+        foreach ($pageList->getAll() as $page) {
+            if (method_exists($page, 'getUri')) {
+                $this->addPathToSitemap((string)$page->getUri(), $indexedUrls, 0.7);
+            }
         }
 
         $this->generator->flush();
@@ -95,4 +61,68 @@ class SitemapController extends CliController {
         Cli::print('Sitemap generation completed', true, 'green');
     }
 
+    private function normalizeSitemapPath(string $path): string {
+        $trimmedPath = trim($path);
+
+        if ($trimmedPath === '' || $trimmedPath === '/' || $trimmedPath === '/home' || $trimmedPath === '/index') {
+            return '/';
+        }
+
+        $cleanPath = explode('?', $trimmedPath)[0];
+        $cleanPath = explode('#', $cleanPath)[0];
+        $cleanPath = preg_replace('/\/+$/', '', $cleanPath) ?? '';
+
+        if ($cleanPath === '') {
+            return '/';
+        }
+
+        return str_starts_with($cleanPath, '/') ? $cleanPath : sprintf('/%s', $cleanPath);
+    }
+
+    private function toAbsoluteUrl(string $path): string {
+        $normalizedPath = $this->normalizeSitemapPath($path);
+
+        if ($normalizedPath === '/') {
+            return self::SITE_URL . '/';
+        }
+
+        return self::SITE_URL . $normalizedPath;
+    }
+
+    private function isIndexablePath(string $path): bool {
+        $normalizedPath = $this->normalizeSitemapPath($path);
+
+        if (in_array($normalizedPath, $this->excludedPaths, true)) {
+            return false;
+        }
+
+        foreach (['/admin', '/preview', '/test', '/thank-you', '/bozza', '/staging'] as $excludedFragment) {
+            if (str_contains($normalizedPath, $excludedFragment)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function addPathToSitemap(string $path, array &$indexedUrls, float $priority): void {
+        if (!$this->isIndexablePath($path)) {
+            return;
+        }
+
+        $absoluteUrl = $this->toAbsoluteUrl($path);
+
+        if (isset($indexedUrls[$absoluteUrl])) {
+            return;
+        }
+
+        $indexedUrls[$absoluteUrl] = true;
+
+        $this->generator->addURL(
+            str_replace(self::SITE_URL, '', $absoluteUrl),
+            new DateTime(),
+            'always',
+            $priority
+        );
+    }
 }
