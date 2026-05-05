@@ -44,4 +44,7 @@
   src="https://www.facebook.com/tr?id=987200226523357&ev=PageView&noscript=1"
   /></noscript> 
   <!-- End Meta Pixel Code -->
+    {% if structuredDataJsonLd is defined and structuredDataJsonLd %}
+    <script type="application/ld+json">{{ structuredDataJsonLd|raw }}</script>
+    {% endif %}
 </head>

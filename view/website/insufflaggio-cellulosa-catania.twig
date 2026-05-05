@@ -1,6 +1,85 @@
 {% set title = 'Insufflaggio cellulosa Catania | Isolamento casa senza lavori invasivi' %}
 {% set description = 'Insufflaggio di cellulosa a Catania e provincia per isolare casa senza demolizioni. Intervento rapido, comfort termico e preventivo gratuito.' %}
 {% set canonicalUrl = 'https://www.insufflaggiofacile.it/insufflaggio-cellulosa-catania' %}
+{% set structuredDataJsonLd %}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HomeAndConstructionBusiness",
+      "@id": "https://www.insufflaggiofacile.it/#localbusiness",
+      "name": "Insufflaggio Facile",
+      "url": "https://www.insufflaggiofacile.it",
+      "telephone": "+39 351 896 4605",
+      "areaServed": [
+        {"@type": "AdministrativeArea", "name": "Catania e provincia"},
+        {"@type": "City", "name": "Catania"},
+        {"@type": "City", "name": "Acireale"},
+        {"@type": "City", "name": "Giarre"},
+        {"@type": "City", "name": "Misterbianco"},
+        {"@type": "City", "name": "Paternò"},
+        {"@type": "City", "name": "Adrano"},
+        {"@type": "City", "name": "Biancavilla"},
+        {"@type": "City", "name": "Gravina di Catania"},
+        {"@type": "City", "name": "San Giovanni la Punta"},
+        {"@type": "City", "name": "Aci Castello"},
+        {"@type": "City", "name": "Aci Catena"},
+        {"@type": "City", "name": "Mascalucia"},
+        {"@type": "City", "name": "Tremestieri Etneo"},
+        {"@type": "City", "name": "Belpasso"},
+        {"@type": "City", "name": "Randazzo"}
+      ],
+      "description": "Insufflaggio di cellulosa e isolamento termico per abitazioni a Catania e provincia."
+    },
+    {
+      "@type": "Service",
+      "@id": "https://www.insufflaggiofacile.it/insufflaggio-cellulosa-catania#service",
+      "name": "Insufflaggio di cellulosa a Catania",
+      "serviceType": "Insufflaggio di cellulosa e isolamento termico",
+      "url": "https://www.insufflaggiofacile.it/insufflaggio-cellulosa-catania",
+      "provider": {"@id": "https://www.insufflaggiofacile.it/#localbusiness"},
+      "areaServed": {"@type": "AdministrativeArea", "name": "Catania e provincia"},
+      "description": "Servizio di insufflaggio di cellulosa a Catania e provincia per migliorare l'isolamento termico senza lavori invasivi."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.insufflaggiofacile.it/insufflaggio-cellulosa-catania#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quanto costa l’insufflaggio di cellulosa a Catania?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Il prezzo dipende da metratura, intercapedini, accessibilità e complessità dell’intervento. Per un importo affidabile consigliamo una valutazione personalizzata con preventivo gratuito."}
+        },
+        {
+          "@type": "Question",
+          "name": "L’insufflaggio è adatto alle case in provincia di Catania?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Sì, è indicato per molte abitazioni con intercapedini in città e nei comuni limitrofi. La verifica tecnica iniziale conferma la fattibilità del lavoro."}
+        },
+        {
+          "@type": "Question",
+          "name": "Serve demolire le pareti?",
+          "acceptedAnswer": {"@type": "Answer", "text": "No, l'intervento avviene con fori tecnici mirati e senza demolizioni importanti."}
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto dura un intervento?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Nella maggior parte dei casi l’intervento è rapido e organizzato per ridurre i disagi domestici. I tempi esatti dipendono da metratura e configurazione delle pareti."}
+        },
+        {
+          "@type": "Question",
+          "name": "In quali comuni della provincia operate?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Operiamo a Catania, Acireale, Giarre, Misterbianco, Paternò, Adrano, Biancavilla, Gravina di Catania, San Giovanni la Punta, Aci Castello, Aci Catena, Mascalucia, Tremestieri Etneo, Belpasso e Randazzo."}
+        },
+        {
+          "@type": "Question",
+          "name": "Come capisco se la mia casa è adatta all’insufflaggio?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Serve una verifica preliminare su stratigrafia, intercapedini e accessibilità delle pareti. Dopo il controllo ti indichiamo se l’insufflaggio è la soluzione più adatta."}
+        }
+      ]
+    }
+  ]
+}
+{% endset %}
 {% extends "index.twig" %}
 {% block content %}
 <section class="page_title ds s-pt-115 s-pb-65 s-pb-lg-85 s-pt-lg-145 bg-auto page_title s-parallax s-overlay">
@@ -96,5 +175,5 @@
   <div class="d-flex justify-content-center flex-column flex-sm-row c-gutter-15"><a href="/richiedi-preventivo" class="btn btn-maincolor btn-big" style="margin-right:20px;">Richiedi preventivo gratuito</a><a href="https://wa.me/393331234567" class="btn btn-outline-maincolor btn-big">Scrivici su WhatsApp</a></div>
 </div></section>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","name":"Insufflaggio Facile","url":"https://www.insufflaggiofacile.it/insufflaggio-cellulosa-catania","telephone":"3518964605","areaServed":"Catania e provincia"},{"@type":"Service","name":"Insufflaggio di cellulosa e isolamento termico","serviceType":"Insufflaggio di cellulosa e isolamento termico","provider":{"@type":"LocalBusiness","name":"Insufflaggio Facile"},"areaServed":"Catania e provincia","url":"https://www.insufflaggiofacile.it/insufflaggio-cellulosa-catania"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Quanto costa l’insufflaggio di cellulosa a Catania?","acceptedAnswer":{"@type":"Answer","text":"Il prezzo dipende da metratura, intercapedini, accessibilità e complessità dell’intervento. Per un importo affidabile consigliamo una valutazione personalizzata con preventivo gratuito."}},{"@type":"Question","name":"L’insufflaggio è adatto alle case in provincia di Catania?","acceptedAnswer":{"@type":"Answer","text":"Sì, è indicato per molte abitazioni con intercapedini in città e nei comuni limitrofi. La verifica tecnica iniziale conferma la fattibilità del lavoro."}},{"@type":"Question","name":"Serve demolire le pareti?","acceptedAnswer":{"@type":"Answer","text":"No, l’intervento avviene con fori tecnici mirati e senza demolizioni importanti."}},{"@type":"Question","name":"Quanto dura un intervento?","acceptedAnswer":{"@type":"Answer","text":"Nella maggior parte dei casi l’intervento è rapido e organizzato per ridurre i disagi domestici. I tempi esatti dipendono da metratura e configurazione delle pareti."}},{"@type":"Question","name":"In quali comuni della provincia operate?","acceptedAnswer":{"@type":"Answer","text":"Operiamo a Catania, Acireale, Giarre, Misterbianco, Paternò, Adrano, Biancavilla, Gravina di Catania, San Giovanni la Punta, Aci Castello, Aci Catena, Mascalucia, Tremestieri Etneo, Belpasso e Randazzo."}},{"@type":"Question","name":"Come capisco se la mia casa è adatta all’insufflaggio?","acceptedAnswer":{"@type":"Answer","text":"Serve una verifica preliminare su stratigrafia, intercapedini e accessibilità delle pareti. Dopo il controllo ti indichiamo se l’insufflaggio è la soluzione più adatta."}}]}]}</script>
+
 {% endblock %}
