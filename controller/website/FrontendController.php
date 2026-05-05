@@ -100,6 +100,7 @@ abstract class FrontendController {
                     'page' => $this->page,
                     'title' => is_null($this->page->getTitle()) ? $this->title : $this->page->getTitle(),
                     'description' => is_null($this->page->getMetaDescription()) ? $this->description : $this->page->getMetaDescription(),
+                    'canonicalUrl' => $this->getCanonicalUrl(),
                     'f_nav' => (new GetFrontendNav())(),
                     'links' => $this->links,
                     'scripts' => $this->scripts,
@@ -108,6 +109,31 @@ abstract class FrontendController {
             )
         );
         return $this->response;
+    }
+
+    protected function getCanonicalUrl() :string {
+        $baseUrl = 'https://www.insufflaggiofacile.it';
+        $path = $this->request->getPath() ?? '/';
+
+        if (trim($path) === '') {
+            $path = '/';
+        }
+
+        $path = parse_url($path, PHP_URL_PATH) ?? '/';
+        $path = preg_replace('#/+#', '/', $path);
+
+        if (in_array(strtolower($path), ['/home', '/index'])) {
+            return $baseUrl.'/';
+        }
+
+        if ($path !== '/') {
+            $path = rtrim($path, '/');
+            if ($path === '') {
+                $path = '/';
+            }
+        }
+
+        return ($path === '/') ? $baseUrl.'/' : $baseUrl.$path;
     }
 
     protected function addLink(object $attributes, string $position = 'head') {
