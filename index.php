@@ -834,6 +834,12 @@ $app->router->group('', function(&$group) {
         ]); 
 
 	$group->get('\/home-catania\/?')
+        ->setController('Redirector')
+        ->setParams([
+            'destination' => 'insufflaggio-cellulosa-catania'
+        ]);
+
+	$group->get('\/insufflaggio-cellulosa-catania\/?')
         ->setController('GenericPage')
         ->setParams([
             'language' => 'it',

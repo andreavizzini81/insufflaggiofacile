@@ -126,6 +126,10 @@ abstract class FrontendController {
             return $baseUrl.'/';
         }
 
+        if (in_array(strtolower($path), ['/home-catania', '/insufflaggio-cellulosa-catania'])) {
+            return $baseUrl.'/insufflaggio-cellulosa-catania';
+        }
+
         if ($path !== '/') {
             $path = rtrim($path, '/');
             if ($path === '') {
