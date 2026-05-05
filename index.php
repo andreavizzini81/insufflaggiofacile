@@ -852,7 +852,65 @@ $app->router->group('', function(&$group) {
 	            'uri' => 'insufflaggio-cellulosa-catania'
 	        ]);
     
-    $group->get('\/ok\/?')
+    
+
+	$group->get('\/insufflaggio-cellulosa-messina\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-messina'
+        ]);
+
+	$group->get('\/insufflaggio-cellulosa-palermo\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-palermo'
+        ]);
+
+	$group->get('\/insufflaggio-cellulosa-siracusa\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-siracusa'
+        ]);
+
+	$group->get('\/insufflaggio-cellulosa-ragusa\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-ragusa'
+        ]);
+
+	$group->get('\/insufflaggio-cellulosa-trapani\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-trapani'
+        ]);
+
+
+	$group->get('\/insufflaggio-cellulosa-agrigento\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-agrigento'
+        ]);
+
+	$group->get('\/insufflaggio-cellulosa-caltanissetta\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-caltanissetta'
+        ]);
+
+	$group->get('\/insufflaggio-cellulosa-enna\/?')
+        ->setController('GenericPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'insufflaggio-cellulosa-enna'
+        ]);
+$group->get('\/ok\/?')
         ->setController('GenericPage')
         ->setParams([
             'language' => 'it',
