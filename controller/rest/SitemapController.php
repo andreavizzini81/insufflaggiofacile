@@ -54,6 +54,12 @@ class SitemapController extends CliController {
             }
         }
 
+        Cli::print("\t--> Generating products entries");
+        $this->addProductEntries($indexedUrls);
+
+        Cli::print("\t--> Generating insufflaggio entries");
+        $this->addInsufflaggioEntries($indexedUrls);
+
         $this->generator->flush();
         $this->generator->finalize();
         $this->generator->updateRobots();
@@ -124,5 +130,49 @@ class SitemapController extends CliController {
             'always',
             $priority
         );
+    }
+
+    private function addProductEntries(array &$indexedUrls): void {
+        $productList = new ProductList([], true, Product::class);
+
+        foreach ($productList->getAll() as $product) {
+            if (!method_exists($product, 'getId')) {
+                continue;
+            }
+
+            $productId = (int)$product->getId();
+            if ($productId <= 0) {
+                continue;
+            }
+
+            $this->addPathToSitemap(sprintf('/scheda-prodotto/%d', $productId), $indexedUrls, 0.7);
+        }
+    }
+
+    private function addInsufflaggioEntries(array &$indexedUrls): void {
+        $staticPageList = new StaticPageList([], true, StaticPage::class);
+
+        foreach ($staticPageList->getAll() as $staticPage) {
+            if (!method_exists($staticPage, 'getId') || !method_exists($staticPage, 'getTitle')) {
+                continue;
+            }
+
+            $staticPageId = (int)$staticPage->getId();
+            if ($staticPageId <= 0) {
+                continue;
+            }
+
+            $this->addPathToSitemap(
+                $this->buildInsufflaggioPath((string)$staticPage->getTitle(), $staticPageId),
+                $indexedUrls,
+                0.7
+            );
+        }
+    }
+
+    private function buildInsufflaggioPath(string $title, int $id): string {
+        $title = trim($title);
+        $encodedTitle = rawurlencode($title !== '' ? $title : 'pagina');
+        return sprintf('/insufflaggio/%s/%d', $encodedTitle, $id);
     }
 }
