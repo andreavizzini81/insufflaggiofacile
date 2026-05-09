@@ -21,7 +21,135 @@
 
 <section class="ls s-pt-60 s-pb-60 s-pt-lg-90 s-pb-lg-90"><div class="container"><div class="row c-gutter-40"><div class="col-12 col-lg-6"><h2 class="mb-3">Quando conviene l’insufflaggio a {{ city }}</h2><p>{{ when_conviene_intro }}</p><ul class="list-styled color-darkgrey"><li>{{ when_conviene_1 }}</li><li>{{ when_conviene_2 }}</li><li>{{ when_conviene_3 }}</li><li>{{ when_conviene_4 }}</li></ul></div><div class="col-12 col-lg-6 mt-4 mt-lg-0"><h2 class="mb-3">Zone servite nella provincia di {{ city }}</h2><p class="mb-25">{{ comuni_text }}</p><a href="/richiedi-preventivo" class="btn btn-outline-maincolor">Verifica se la tua casa è adatta all'insufflaggio</a></div></div></div></section>
 
-<section class="ls ms s-pt-60 s-pb-60"><div class="container"><div class="row"><div class="col-12 col-lg-10 offset-lg-1"><h2 class="text-center color-main mb-4">Domande frequenti</h2><div id="faq-{{ city_slug }}" class="collapse-wrapper"><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a data-toggle="collapse" href="#{{ city_slug }}One" aria-expanded="true">Quanto costa l’insufflaggio a {{ city }}?</a></h3></div><div id="{{ city_slug }}One" class="collapse show" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_1 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Two">Operate nella provincia di {{ city }}?</a></h3></div><div id="{{ city_slug }}Two" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_2 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Three">Conviene davvero?</a></h3></div><div id="{{ city_slug }}Three" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_3 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Four">Quanto dura l’intervento?</a></h3></div><div id="{{ city_slug }}Four" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_4 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Five">Serve demolire?</a></h3></div><div id="{{ city_slug }}Five" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_5 }}</div></div></div><div class="card"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Six">L’insufflaggio di cellulosa a {{ city }} è efficace?</a></h3></div><div id="{{ city_slug }}Six" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_6 }}</div></div></div></div></div></div></div></section>
+<!-- <section class="ls ms s-pt-60 s-pb-60"><div class="container"><div class="row"><div class="col-12 col-lg-10 offset-lg-1"><h2 class="text-center color-main mb-4">Domande frequenti</h2><div id="faq-{{ city_slug }}" class="collapse-wrapper"><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a data-toggle="collapse" href="#{{ city_slug }}One" aria-expanded="true">Quanto costa l’insufflaggio a {{ city }}?</a></h3></div><div id="{{ city_slug }}One" class="collapse show" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_1 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Two">Operate nella provincia di {{ city }}?</a></h3></div><div id="{{ city_slug }}Two" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_2 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Three">Conviene davvero?</a></h3></div><div id="{{ city_slug }}Three" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_3 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Four">Quanto dura l’intervento?</a></h3></div><div id="{{ city_slug }}Four" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_4 }}</div></div></div><div class="card mb-2"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Five">Serve demolire?</a></h3></div><div id="{{ city_slug }}Five" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_5 }}</div></div></div><div class="card"><div class="card-header"><h3 class="h6 mb-0"><a class="collapsed" data-toggle="collapse" href="#{{ city_slug }}Six">L’insufflaggio di cellulosa a {{ city }} è efficace?</a></h3></div><div id="{{ city_slug }}Six" class="collapse" data-parent="#faq-{{ city_slug }}"><div class="card-body">{{ faq_6 }}</div></div></div></div></div></div></div></section> -->
+
+<section class="ls ms s-pt-60 s-pb-60">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-lg-10 offset-lg-1">
+
+				<h2 class="text-center color-main mb-4">
+					Domande frequenti
+				</h2>
+
+				<div class="tab-pane fade active show" id="tab_pane_{{ city_slug }}" role="tabpanel" aria-labelledby="tab_{{ city_slug }}">
+					<div class="accordion" id="accordion-{{ city_slug }}" role="tablist">
+
+						<div class="card">
+							<div class="card-header" role="tab" id="faq_{{ city_slug }}_costo_header">
+								<h6>
+									<a class="collapsed" href="#faq_{{ city_slug }}_costo" data-toggle="collapse" aria-expanded="false" aria-controls="faq_{{ city_slug }}_costo">
+										Quanto costa l’insufflaggio a {{ city }}?
+									</a>
+								</h6>
+							</div>
+
+							<div class="collapse" id="faq_{{ city_slug }}_costo" role="tabpanel" aria-labelledby="faq_{{ city_slug }}_costo_header" data-parent="#accordion-{{ city_slug }}">
+								<div class="card-body">
+									<p>
+										{{ faq_1 }}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header" role="tab" id="faq_{{ city_slug }}_provincia_header">
+								<h6>
+									<a class="collapsed" href="#faq_{{ city_slug }}_provincia" data-toggle="collapse" aria-expanded="false" aria-controls="faq_{{ city_slug }}_provincia">
+										Operate nella provincia di {{ city }}?
+									</a>
+								</h6>
+							</div>
+
+							<div class="collapse" id="faq_{{ city_slug }}_provincia" role="tabpanel" aria-labelledby="faq_{{ city_slug }}_provincia_header" data-parent="#accordion-{{ city_slug }}">
+								<div class="card-body">
+									<p>
+										{{ faq_2 }}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header" role="tab" id="faq_{{ city_slug }}_conviene_header">
+								<h6>
+									<a class="collapsed" href="#faq_{{ city_slug }}_conviene" data-toggle="collapse" aria-expanded="false" aria-controls="faq_{{ city_slug }}_conviene">
+										Conviene davvero?
+									</a>
+								</h6>
+							</div>
+
+							<div class="collapse" id="faq_{{ city_slug }}_conviene" role="tabpanel" aria-labelledby="faq_{{ city_slug }}_conviene_header" data-parent="#accordion-{{ city_slug }}">
+								<div class="card-body">
+									<p>
+										{{ faq_3 }}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header" role="tab" id="faq_{{ city_slug }}_durata_header">
+								<h6>
+									<a class="collapsed" href="#faq_{{ city_slug }}_durata" data-toggle="collapse" aria-expanded="false" aria-controls="faq_{{ city_slug }}_durata">
+										Quanto dura l’intervento?
+									</a>
+								</h6>
+							</div>
+
+							<div class="collapse" id="faq_{{ city_slug }}_durata" role="tabpanel" aria-labelledby="faq_{{ city_slug }}_durata_header" data-parent="#accordion-{{ city_slug }}">
+								<div class="card-body">
+									<p>
+										{{ faq_4 }}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header" role="tab" id="faq_{{ city_slug }}_demolire_header">
+								<h6>
+									<a class="collapsed" href="#faq_{{ city_slug }}_demolire" data-toggle="collapse" aria-expanded="false" aria-controls="faq_{{ city_slug }}_demolire">
+										Serve demolire?
+									</a>
+								</h6>
+							</div>
+
+							<div class="collapse" id="faq_{{ city_slug }}_demolire" role="tabpanel" aria-labelledby="faq_{{ city_slug }}_demolire_header" data-parent="#accordion-{{ city_slug }}">
+								<div class="card-body">
+									<p>
+										{{ faq_5 }}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header" role="tab" id="faq_{{ city_slug }}_efficace_header">
+								<h6>
+									<a class="collapsed" href="#faq_{{ city_slug }}_efficace" data-toggle="collapse" aria-expanded="false" aria-controls="faq_{{ city_slug }}_efficace">
+										L’insufflaggio di cellulosa a {{ city }} è efficace?
+									</a>
+								</h6>
+							</div>
+
+							<div class="collapse" id="faq_{{ city_slug }}_efficace" role="tabpanel" aria-labelledby="faq_{{ city_slug }}_efficace_header" data-parent="#accordion-{{ city_slug }}">
+								<div class="card-body">
+									<p>
+										{{ faq_6 }}
+									</p>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
 
 <section class="cs s-py-60 s-py-lg-80 text-center"><div class="container"><h2 class="mb-3">Richiedi il tuo preventivo gratuito per {{ city }} e provincia</h2><p class="mb-4">Operiamo in tutta la Sicilia: <a href="/insufflaggio-cellulosa-palermo" class="text-white">Palermo</a>, <a href="/insufflaggio-cellulosa-messina" class="text-white">Messina</a>, <a href="/insufflaggio-cellulosa-siracusa" class="text-white">Siracusa</a>, <a href="/insufflaggio-cellulosa-ragusa" class="text-white">Ragusa</a>, <a href="/insufflaggio-cellulosa-agrigento" class="text-white">Agrigento</a>, <a href="/insufflaggio-cellulosa-trapani" class="text-white">Trapani</a>, <a href="/insufflaggio-cellulosa-enna" class="text-white">Enna</a> e <a href="/insufflaggio-cellulosa-caltanissetta" class="text-white">Caltanissetta</a>.</p><div class="d-flex justify-content-center flex-column flex-sm-row c-gutter-15"><a href="/richiedi-preventivo" class="btn btn-maincolor btn-big" style="margin-right:20px;">Richiedi preventivo gratuito</a><a href="https://wa.me/393331234567" class="btn btn-outline-maincolor btn-big">Scrivici su WhatsApp</a></div></div></section>
 
