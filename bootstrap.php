@@ -12,9 +12,14 @@ DEFINE('DEBUG', true);
 DEFINE('DEBUG_LEVEL', 2);
 
 spl_autoload_register(function($className) {
-    foreach(['core', 'controller/admin', 'controller/frontend', 'controller/rest', 'controller/cli', 'controller/var', 'controller/website', 'classes', 'model', 'model/list', 'middleware'] as $path) {
-        $fileName = sprintf('%s/%s/%s.php', __DIR__, $path, $className);
-        (is_file($fileName) && (require $fileName));
+    $classFile = str_replace('\\', '/', $className).'.php';
+
+    foreach(['', 'core', 'controller/admin', 'controller/frontend', 'controller/rest', 'controller/cli', 'controller/var', 'controller/website', 'controller', 'classes', 'model', 'model/list', 'middleware'] as $path) {
+        $fileName = sprintf('%s/%s%s', __DIR__, ($path ? $path.'/' : ''), $classFile);
+        if (is_file($fileName)) {
+            require $fileName;
+            return;
+        }
     }
 });
 
