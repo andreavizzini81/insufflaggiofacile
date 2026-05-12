@@ -1,6 +1,8 @@
 <?php
 
-class SeoLandingPageController extends RestController {
+namespace Controller\Rest;
+
+class SeoLandingPageController extends \RestController {
 
     public function setData(): Response {
         $data = $this->request->getInputParams();

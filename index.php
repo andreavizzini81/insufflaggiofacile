@@ -549,11 +549,11 @@ $app->router->group('/api', function(&$group) {
         ->setAction('setData');
 
     $group->post('\/seo\-landing\/?')
-        ->setController('SeoLandingPage')
+        ->setController('Controller\\Rest\\SeoLandingPageController')
         ->setAction('setData');
 
     $group->delete('\/seo\-landing\/(\d+)\/?')
-        ->setController('SeoLandingPage')
+        ->setController('Controller\\Rest\\SeoLandingPageController')
         ->setAction('delete')
         ->setParams(['id' => '@1']);
     
@@ -1072,7 +1072,7 @@ $group->get('\/ok\/?')
     
 
     $group->get('\/(insufflaggio-cellulosa|isolamento-cellulosa|fibra-di-cellulosa-isolante|isolamento-termico-casa|isolamento-termico-interno|insufflaggio-pareti|isolamento-acustico-pareti|umidita-casa-muffa-pareti|materiale-isolante-termico)\/?')
-        ->setController('SeoLandingPage')
+        ->setController('Controller\\Website\\SeoLandingPageController')
         ->setParams(['slug' => '@1','language'=>'it','uri'=>'home']);
 
     $group->get('\/([a-z0-9-]+)\/?')
