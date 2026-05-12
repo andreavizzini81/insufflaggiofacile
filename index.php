@@ -159,6 +159,13 @@ $app->router->group('/admin', function(&$group) {
     $group->get('\/insufflaggio\-list\/?')
         ->setController('AdminInsufflaggioListPage');
 
+    $group->get('\/seo\-landing\/?(\d+)?')
+        ->setParams(['id' => '@1'])
+        ->setController('AdminSeoLandingPage');
+
+    $group->get('\/seo\-landing\-list\/?')
+        ->setController('AdminSeoLandingListPage');
+
     $group->get('\/user\-manager\/?(\d+)?\/?')
         ->setParams(['id' => '@1'])
         ->setController('AdminUserPage');
@@ -540,6 +547,15 @@ $app->router->group('/api', function(&$group) {
     $group->post('\/product\/?')
         ->setController('Product')
         ->setAction('setData');
+
+    $group->post('\/seo\-landing\/?')
+        ->setController('SeoLandingPage')
+        ->setAction('setData');
+
+    $group->delete('\/seo\-landing\/(\d+)\/?')
+        ->setController('SeoLandingPage')
+        ->setAction('delete')
+        ->setParams(['id' => '@1']);
     
     $group->get('\/product\/(\d+)\/attachment\/?')
         ->setController('Product')
@@ -1054,6 +1070,11 @@ $group->get('\/ok\/?')
             'uri' => 'test'
         ]);
     
+
+    $group->get('\/(insufflaggio-cellulosa|isolamento-cellulosa|fibra-di-cellulosa-isolante|isolamento-termico-casa|isolamento-termico-interno|insufflaggio-pareti|isolamento-acustico-pareti|umidita-casa-muffa-pareti|materiale-isolante-termico)\/?')
+        ->setController('SeoLandingPage')
+        ->setParams(['slug' => '@1','language'=>'it','uri'=>'home']);
+
     $group->get('\/([a-z0-9-]+)\/?')
         ->setController('FrontendHomePage')
         ->setParams([
