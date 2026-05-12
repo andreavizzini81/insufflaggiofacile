@@ -1,0 +1,22 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="widget"><div class="content"><form class="form-horizontal linked-fields landing-form" action="javascript:void(0);" method="POST" autocomplete="off">
+{% if data.landing.getId() is not null %}<input type="hidden" name="id" value="{{ data.landing.getId() }}">{% endif %}
+<div class="form-group"><label class="control-label col-md-3">Slug</label><div class="col-md-9"><input type="text" class="form-control" name="slug" value="{{ data.landing.getSlug() }}" required></div></div>
+<div class="form-group"><label class="control-label col-md-3">Title</label><div class="col-md-9"><input type="text" class="form-control" name="title" value="{{ data.landing.getTitle() }}" required></div></div>
+<div class="form-group"><label class="control-label col-md-3">Meta title</label><div class="col-md-9"><input type="text" class="form-control" name="meta_title" value="{{ data.landing.getMetaTitle() }}"></div></div>
+<div class="form-group"><label class="control-label col-md-3">Meta description</label><div class="col-md-9"><textarea class="form-control" name="meta_description">{{ data.landing.getMetaDescription() }}</textarea></div></div>
+<div class="form-group"><label class="control-label col-md-3">H1</label><div class="col-md-9"><input type="text" class="form-control" name="h1" value="{{ data.landing.getH1() }}"></div></div>
+<div class="form-group"><label class="control-label col-md-3">Intro</label><div class="col-md-9"><textarea class="form-control" name="intro_text">{{ data.landing.getIntroText() }}</textarea></div></div>
+<div class="form-group"><label class="control-label col-md-3">Main content</label><div class="col-md-9"><textarea class="form-control" name="main_content">{{ data.landing.getMainContent() }}</textarea></div></div>
+<div class="form-group"><label class="control-label col-md-3">Sections JSON</label><div class="col-md-9"><textarea class="form-control" name="sections_json">{{ data.landing.getSectionsJson() }}</textarea></div></div>
+<div class="form-group"><label class="control-label col-md-3">FAQ JSON</label><div class="col-md-9"><textarea class="form-control" name="faq_json">{{ data.landing.getFaqJson() }}</textarea></div></div>
+<div class="form-group"><label class="control-label col-md-3">Structured data JSON</label><div class="col-md-9"><textarea class="form-control" name="structured_data_json">{{ data.landing.getStructuredDataJson() }}</textarea></div></div>
+<div class="form-group"><label class="control-label col-md-3">Visibile</label><div class="col-md-9"><input type="checkbox" name="is_visible" value="1" {{ data.landing.getIsVisible() ? 'checked' : '' }}></div></div>
+<div class="form-group"><label class="control-label col-md-3">In sitemap</label><div class="col-md-9"><input type="checkbox" name="in_sitemap" value="1" {{ data.landing.getInSitemap() ? 'checked' : '' }}></div></div>
+</form></div></div>
+<script>
+ClassicEditor.create(document.querySelector('textarea[name="main_content"]'), {toolbar:{items:['undo','redo','|','bold','italic','|','bulletedList','numberedList','|','sourceEditing']},language:'it',sourceEditing:{allowCollaborationFeatures:true}}).then(editor => { window.editor = editor; });
+Delegate(document).on('click','.save-seo-landing', function(){ window.editor.updateSourceElement(); let frm=document.querySelector('.landing-form'); let data=(new FormSerializer(frm)).serialize(); this.classList.add('loading'); HttpRequest.post(`${res.absolutePath}api/seo-landing`, data, r => { this.classList.remove('loading'); if(r.status!=1){throw r.message ?? 'Errore';} window.location=`${res.path}seo-landing-list`; }, err => resAlert.error('Operazione fallita', err.toString())); });
+</script>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'index.twig' %}
+{% block content %}
+{% include 'partials/pagination.twig' with {'data':data.pagination} only %}
+<div class="table-responsive dashboard-stage mb15"><table class="bordered hover w100"><thead><tr><th>Slug</th><th>Titolo</th><th>Visibile</th><th></th></tr></thead><tbody>
+{% for landing in data.list %}
+<tr><td>{{ landing.slug }}</td><td>{{ landing.title }}</td><td>{{ landing.is_visible }}</td><td><button type="button" class="btn btn-success btn-square-small ml5 edit-seo-landing" data-id="{{ landing.getId() }}"><span class="fa fa-pencil"></span></button><button type="button" class="btn btn-danger btn-square-small ml5 delete-seo-landing" data-id="{{ landing.getId() }}"><span class="fa fa-times"></span></button></td></tr>
+{% endfor %}
+</tbody></table></div>
+<script>
+Delegate(document).on('click','.edit-seo-landing', function(){ window.location.href=`/admin/seo-landing/${this.dataset.id}`; });
+Delegate(document).on('click','.delete-seo-landing', function(){ if(!confirm('Eliminare la landing SEO selezionata?')) return; HttpRequest.delete(`/api/seo-landing/${this.dataset.id}`, null, r => { if(r.status!=1){throw r.message ?? 'Errore';} window.location.reload(); }, err => void new resAlert('Operazione fallita', err.toString(), {type:'error'})); });
+</script>
+{% endblock %}
