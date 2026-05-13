@@ -166,6 +166,13 @@ $app->router->group('/admin', function(&$group) {
     $group->get('\/seo\-landing\-list\/?')
         ->setController('AdminSeoLandingListPage');
 
+    $group->get('\/seo\-landing\-category\/?(\d+)?')
+        ->setParams(['id' => '@1'])
+        ->setController('AdminSeoLandingCategoryPage');
+
+    $group->get('\/seo\-landing\-category\-list\/?')
+        ->setController('AdminSeoLandingCategoryListPage');
+
     $group->get('\/user\-manager\/?(\d+)?\/?')
         ->setParams(['id' => '@1'])
         ->setController('AdminUserPage');
@@ -554,6 +561,15 @@ $app->router->group('/api', function(&$group) {
 
     $group->delete('\/seo\-landing\/(\d+)\/?')
         ->setController('SeoLanding')
+        ->setAction('delete')
+        ->setParams(['id' => '@1']);
+
+    $group->post('\/seo\-landing\-category\/?')
+        ->setController('SeoLandingCategory')
+        ->setAction('setData');
+
+    $group->delete('\/seo\-landing\-category\/(\d+)\/?')
+        ->setController('SeoLandingCategory')
         ->setAction('delete')
         ->setParams(['id' => '@1']);
     
