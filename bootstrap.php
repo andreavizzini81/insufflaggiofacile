@@ -37,7 +37,7 @@ spl_autoload_register(function($className) {
         $fileName = sprintf('%s/%s/%s.php', __DIR__, $path, $className);
 
         if (is_file($fileName)) {
-            require_once $fileName;
+            require $fileName;
             return; // evita ricerche/caricamenti ulteriori
         }
     }
