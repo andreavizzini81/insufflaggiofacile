@@ -166,6 +166,13 @@ $app->router->group('/admin', function(&$group) {
     $group->get('\/seo\-landing\-list\/?')
         ->setController('AdminSeoLandingListPage');
 
+    $group->get('\/seo\-landing\-category\/?(\d+)?')
+        ->setParams(['id' => '@1'])
+        ->setController('AdminSeoLandingCategoryPage');
+
+    $group->get('\/seo\-landing\-category\-list\/?')
+        ->setController('AdminSeoLandingCategoryListPage');
+
     $group->get('\/user\-manager\/?(\d+)?\/?')
         ->setParams(['id' => '@1'])
         ->setController('AdminUserPage');
@@ -554,6 +561,15 @@ $app->router->group('/api', function(&$group) {
 
     $group->delete('\/seo\-landing\/(\d+)\/?')
         ->setController('SeoLanding')
+        ->setAction('delete')
+        ->setParams(['id' => '@1']);
+
+    $group->post('\/seo\-landing\-category\/?')
+        ->setController('SeoLandingCategory')
+        ->setAction('setData');
+
+    $group->delete('\/seo\-landing\-category\/(\d+)\/?')
+        ->setController('SeoLandingCategory')
         ->setAction('delete')
         ->setParams(['id' => '@1']);
     
@@ -1071,9 +1087,17 @@ $group->get('\/ok\/?')
         ]);
     
 
-    $group->get('\/(insufflaggio-cellulosa|isolamento-cellulosa|fibra-di-cellulosa-isolante|isolamento-termico-casa|isolamento-termico-interno|insufflaggio-pareti|isolamento-acustico-pareti|umidita-casa-muffa-pareti|materiale-isolante-termico)\/?')
-        ->setController('SeoLandingPage')
-        ->setParams(['slug' => '@1','language'=>'it','uri'=>'home']);
+        $seoLandingSlugs = (array)Container::Database()->getResults("SELECT slug FROM seo_landing_page WHERE is_visible = 1 ORDER BY id ASC");
+    $seoLandingSlugs = array_values(array_filter(array_map(function($row) {
+        $slug = is_array($row) ? ($row['slug'] ?? null) : ($row->slug ?? null);
+        return is_string($slug) && preg_match('/^[a-z0-9-]+$/', $slug) ? $slug : null;
+    }, $seoLandingSlugs)));
+
+    if (!empty($seoLandingSlugs)) {
+        $group->get('\/(' . implode('|', array_map('preg_quote', $seoLandingSlugs)) . ')\/?')
+            ->setController('SeoLandingPage')
+            ->setParams(['slug' => '@1','language'=>'it','uri'=>'home']);
+    }
 
     $group->get('\/([a-z0-9-]+)\/?')
         ->setController('FrontendHomePage')
