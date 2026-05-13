@@ -60,6 +60,9 @@ class SitemapController extends CliController {
         Cli::print("\t--> Generating insufflaggio entries");
         $this->addInsufflaggioEntries($indexedUrls);
 
+        Cli::print("\t--> Generating servizi entries");
+        $this->addSeoLandingEntries($indexedUrls);
+
         $this->generator->flush();
         $this->generator->finalize();
         $this->generator->updateRobots();
@@ -174,5 +177,26 @@ class SitemapController extends CliController {
         $title = trim($title);
         $encodedTitle = rawurlencode($title !== '' ? $title : 'pagina');
         return sprintf('/insufflaggio/%s/%d', $encodedTitle, $id);
+    }
+
+    private function addSeoLandingEntries(array &$indexedUrls): void {
+        $landingPages = new SeoLandingPageList([
+            'isVisible' => 1,
+            'showInServicesMenu' => 1,
+            'inSitemap' => 1
+        ], true, SeoLandingPage::class);
+
+        foreach ($landingPages->getAll() as $landingPage) {
+            if (!method_exists($landingPage, 'getSlug')) {
+                continue;
+            }
+
+            $slug = trim((string)$landingPage->getSlug());
+            if ($slug === '') {
+                continue;
+            }
+
+            $this->addPathToSitemap(sprintf('/%s', ltrim($slug, '/')), $indexedUrls, 0.7);
+        }
     }
 }
