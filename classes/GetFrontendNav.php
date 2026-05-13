@@ -9,9 +9,16 @@ class GetFrontendNav extends BaseComponent {
         $services = [];
         foreach ($categories as $category) {
             $cat = (array)$category;
-            $pages = (array)$this->db->getResults(sprintf("SELECT * FROM seo_landing_page WHERE category_id = %d AND is_visible = 1 AND show_in_services_menu = 1 ORDER BY sort ASC, id ASC", (int)$cat['id']));
+            $pagesList = new SeoLandingPageList([
+                'categoryId' => (int)$cat['id'],
+                'isVisible' => 1,
+                'showInServicesMenu' => 1
+            ], true, SeoLandingPage::class);
+            $firstPage = $pagesList->getFirst();
+            if (!$firstPage) { continue; }
+            $pages = $pagesList->getAll();
             if (count($pages) === 0) { continue; }
-            $services[] = ['category' => $cat, 'pages' => $pages];
+            $services[] = ['category' => $cat, 'categoryPage' => $firstPage, 'pages' => $pages];
         }
         $list['seoServicesMenu'] = $services;
         return $list;
