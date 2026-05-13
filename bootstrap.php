@@ -11,36 +11,12 @@ DEFINE('ROOT', sprintf('%s/', __DIR__));
 DEFINE('DEBUG', true);
 DEFINE('DEBUG_LEVEL', 2);
 
-/*spl_autoload_register(function($className) {
+spl_autoload_register(function($className) {
     foreach(['core', 'controller/admin', 'controller/frontend', 'controller/rest', 'controller/cli', 'controller/var', 'controller/website', 'classes', 'model', 'model/list', 'middleware'] as $path) {
         $fileName = sprintf('%s/%s/%s.php', __DIR__, $path, $className);
         (is_file($fileName) && (require $fileName));
     }
-});*/
-
-spl_autoload_register(function($className) {
-    static $paths = [
-        'core',
-        'controller/admin',
-        'controller/frontend',
-        'controller/rest',
-        'controller/cli',
-        'controller/var',
-        'controller/website',
-        'classes',
-        'model',
-        'model/list',
-        'middleware',
-    ];
-
-    foreach ($paths as $path) {
-        $fileName = sprintf('%s/%s/%s.php', __DIR__, $path, $className);
-
-        if (is_file($fileName)) {
-            require $fileName;
-            return; // evita ricerche/caricamenti ulteriori
-        }
-    }
 });
+
 
 require ROOT.'/classes/vendor/autoload.php';
