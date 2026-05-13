@@ -549,11 +549,11 @@ $app->router->group('/api', function(&$group) {
         ->setAction('setData');
 
     $group->post('\/seo\-landing\/?')
-        ->setController('SeoLandingPage')
+        ->setController('SeoLanding')
         ->setAction('setData');
 
     $group->delete('\/seo\-landing\/(\d+)\/?')
-        ->setController('SeoLandingPage')
+        ->setController('SeoLanding')
         ->setAction('delete')
         ->setParams(['id' => '@1']);
     
