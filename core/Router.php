@@ -24,7 +24,7 @@ class Router extends RouteCollector {
             (new Response(404, Container::App()->renderStaticFile('NotFound')))->flush();
         }
 
-        if (!preg_match("/^[A-Za-z_][A-Za-z0-9_\\]*(\\\\[A-Za-z_][A-Za-z0-9_]*)*$/", $match->route->getController())) {
+        if (!preg_match("/^[A-Za-z]\w+$/", $match->route->getController())) {
             throw new Exception("The requested controller is not valid", 500);
         }
 
