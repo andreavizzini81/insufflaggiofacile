@@ -11,7 +11,8 @@ class SeoLandingPageController extends FrontendController {
             return $this->response;
         }
 
-        $landing = new SeoLandingPage((int)$row['id']);
+        $id = is_array($row) ? (int)$row['id'] : (int)$row->id;
+        $landing = new SeoLandingPage($id);
         if ((int)$landing->getIsVisible() !== 1) {
             $this->response->setHeader('Location', '/404');
             return $this->response;
