@@ -165,37 +165,31 @@ h6 {
 }
 
 h1 {
-	font-size: 70px;
 	margin-bottom: 0.16em;
 	margin-top: 1.2em;
 }
 
 h2 {
-	font-size: 60px;
 	margin-bottom: 0.15em;
 	margin-top: 1.23em;
 }
 
 h3 {
-	font-size: 50px;
 	margin-bottom: 0.1em;
 	margin-top: 1.33em;
 }
 
 h4 {
-	font-size: 40px;
 	margin-bottom: 0.19em;
 	margin-top: 1.35em;
 }
 
 h5 {
-	font-size: 30px;
 	margin-bottom: 0.49em;
 	margin-top: 1.85em;
 }
 
 h6 {
-	font-size: 20px;
 	margin-bottom: 1em;
 	margin-top: 2.9em;
 }
