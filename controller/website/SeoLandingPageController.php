@@ -1,8 +1,6 @@
 <?php
 
-namespace Controller\Website;
-
-class SeoLandingPageController extends \FrontendController {
+class SeoLandingPageController extends FrontendController {
 
     public function __invoke(): Response {
         $slug = $this->request->getQueryParam('slug');

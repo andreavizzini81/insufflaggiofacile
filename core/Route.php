@@ -87,11 +87,6 @@ class Route {
         if (is_null($this->controller)) {
             return false;
         }
-
-        if (str_contains($this->controller, '\\') || str_ends_with($this->controller, 'Controller')) {
-            return $this->controller;
-        }
-
         return "{$this->controller}Controller";
     }
 
