@@ -20,4 +20,8 @@ class SeoLandingPageList extends EntityList {
     protected function _showInServicesMenuParam($value) {
         return sprintf('show_in_services_menu = %d', (int)$value);
     }
+
+    protected function _inSitemapParam($value) {
+        return sprintf('in_sitemap = %d', (int)$value);
+    }
 }
