@@ -19,6 +19,10 @@ class SeoLandingPageController extends FrontendController {
         }
 
         $this->data['landing'] = $landing;
+        $category = null;
+        if (!is_null($landing->getCategoryId())) { $category = new SeoLandingCategory((int)$landing->getCategoryId()); }
+        $this->data['seoLandingCategory'] = $category;
+        $this->data['relatedSeoLandingPages'] = !is_null($landing->getCategoryId()) ? SeoLandingPage::findVisibleByCategory((int)$landing->getCategoryId(), (int)$landing->getId()) : [];
         $this->data['faqItems'] = $landing->getFaqItems();
         $this->data['sections'] = $landing->getSections();
         $this->description = $landing->getMetaDescription() ?? '';

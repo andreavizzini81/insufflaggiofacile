@@ -1,0 +1,13 @@
+{% extends 'index.twig' %}
+{% block content %}
+<form class="seo-landing-category-form" action="javascript:void(0)">{% if data.category.getId() %}<input type="hidden" name="id" value="{{ data.category.getId() }}">{% endif %}
+<input name="name" value="{{ data.category.getName() }}" placeholder="Nome" class="form-control mb10" required>
+<input name="slug" value="{{ data.category.getSlug() }}" placeholder="Slug" class="form-control mb10" required>
+<input name="menu_label" value="{{ data.category.getMenuLabel() }}" placeholder="Menu label" class="form-control mb10">
+<textarea name="description" class="form-control mb10">{{ data.category.getDescription() }}</textarea>
+<input name="sort" value="{{ data.category.getSort() }}" class="form-control mb10" type="number">
+<label><input type="checkbox" name="is_visible" value="1" {{ data.category.getIsVisible() ? 'checked' : '' }}> Visibile</label>
+<label><input type="checkbox" name="show_in_services_menu" value="1" {{ data.category.getShowInServicesMenu() ? 'checked' : '' }}> Mostra nel menu servizi</label>
+<button class="btn btn-success save-cat">Salva</button></form>
+<script>Delegate(document).on('click','.save-cat',function(){let d=(new FormSerializer(document.querySelector('.seo-landing-category-form'))).serialize();HttpRequest.post('/api/seo-landing-category',d,()=>window.location='/admin/seo-landing-category-list');});</script>
+{% endblock %}

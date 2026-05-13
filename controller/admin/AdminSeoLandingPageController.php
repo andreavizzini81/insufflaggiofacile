@@ -15,6 +15,7 @@ class AdminSeoLandingPageController extends BackendController {
         }
 
         $this->data['landing'] = $landing;
+        $this->data['categories'] = SeoLandingCategory::findAllForAdmin();
         $this->data['actions'] = [
             new TopbarAction([
                 'attributes' => ['class' => 'save-seo-landing success'],

@@ -1,0 +1,7 @@
+{% extends 'index.twig' %}
+{% block content %}
+<div class="mb15"><a class="btn btn-info" href="/admin/seo-landing-category">Nuova categoria</a></div>
+<table class="bordered hover w100"><thead><tr><th>Nome</th><th>Slug</th><th>Sort</th><th></th></tr></thead><tbody>
+{% for c in data.list %}<tr><td>{{ c.name }}</td><td>{{ c.slug }}</td><td>{{ c.sort }}</td><td><a class="btn btn-success btn-square-small" href="/admin/seo-landing-category/{{ c.id }}"><span class="fa fa-pencil"></span></a></td></tr>{% endfor %}
+</tbody></table>
+{% endblock %}
