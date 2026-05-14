@@ -34,6 +34,24 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="control-label col-md-3">Sections JSON</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" name="sections_json" rows="6">{{ data.insufflaggio.getSectionsJson() }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">FAQ JSON</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" name="faq_json" rows="6">{{ data.insufflaggio.getFaqJson() }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Structured data JSON</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" name="structured_data_json" rows="6">{{ data.insufflaggio.getStructuredDataJson() }}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label col-md-3">Descrizione</label>
                             <div class="col-md-9">
                                 <textarea class="form-control" name="description" rows="8">{{ data.insufflaggio.getDescription() }}</textarea>

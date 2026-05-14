@@ -178,6 +178,32 @@
 
 </section>
 
+
+{% for section in data.sections %}
+<section class="ls s-py-50">
+	<div class="container">
+		{% if section.title is defined %}<h2>{{ section.title }}</h2>{% endif %}
+		<div>{{ section.content|default('')|raw }}</div>
+	</div>
+</section>
+{% endfor %}
+
+{% if data.faqItems|length > 0 %}
+<section class="ls s-py-60">
+	<div class="container">
+		<h2>Domande frequenti</h2>
+		<div class="accordion" id="accordion-staticpage-faq" role="tablist">
+			{% for faq in data.faqItems %}
+			<div class="card">
+				<div class="card-header" role="tab" id="staticpage_faq_{{ loop.index }}_header"><h6><a class="collapsed" href="#staticpage_faq_{{ loop.index }}" data-toggle="collapse">{{ faq.q }}</a></h6></div>
+				<div class="collapse" id="staticpage_faq_{{ loop.index }}" role="tabpanel" data-parent="#accordion-staticpage-faq"><div class="card-body"><p>{{ faq.a }}</p></div></div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+{% endif %}
+
 <script>
 
  document.addEventListener('DOMContentLoaded', function() {
