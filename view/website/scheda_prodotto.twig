@@ -19,56 +19,13 @@
 	</div>
 </section>
 
-<section class="ls s-pt-60 s-pb-10 s-py-lg-100 s-py-xl-150 c-gutter-60 c-mb-50 c-mb-lg-0">
+<section class="ls s-pt-60 s-pb-10 s-py-lg-50 s-py-xl-50 c-gutter-60 c-mb-50 c-mb-lg-0">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-7">
 
-				<h1>{{ data.product.title }}</h1>
-
 				{{ data.product.description | raw }}
-				<!--
-				<p class="excerpt">
-					Namber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat
-					facer possim assum.
-				</p>
 
-				<p>
-					Lorem idolorame conseetur sadipscing elitdiam nonumy eirmod tempor invidunt ut labore et dolore
-					magna aliquyam ersed diam voluptua vero eoet accusam et justo duo dolores et ea rebum. Stet clita
-					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet rem ipsum dolorsit amet
-					consetetur sadipscing elitr:
-				</p>
-				<p>
-					Lorem idolorame conseetur sadipscing elitdiam nonumy eirmod tempor invidunt ut labore et dolore
-					magna aliquyam ersed diam voluptua vero eoet accusam et justo duo dolores et ea rebum. Stet clita
-					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet rem ipsum dolorsit amet
-					consetetur sadipscing elitr:
-				</p>
-				<p>
-					Lorem idolorame conseetur sadipscing elitdiam nonumy eirmod tempor invidunt ut labore et dolore
-					magna aliquyam ersed diam voluptua vero eoet accusam et justo duo dolores et ea rebum. Stet clita
-					kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet rem ipsum dolorsit amet
-					consetetur sadipscing elitr:
-				</p>
-				<ul class="list-styled">
-					<li>
-						<a href="javascript:void(0);">Lorem ipsum dolor sit amet</a>
-					</li>
-					<li>
-						<a href="javascript:void(0);">Sint animi non ut sed</a>
-					</li>
-					<li>
-						<a href="javascript:void(0);">Eaque blanditiis nemo</a>
-					</li>
-					<li>
-						<a href="javascript:void(0);">Amet, consectetur adipisicing</a>
-					</li>
-					<li>
-						<a href="javascript:void(0);">Blanditiis nemo quaerat</a>
-					</li>
-				</ul>
-				-->
 			</div>
 
 			<div class="col-lg-5 service-tab">
@@ -176,14 +133,18 @@
 </section>
 
 
-{% for section in data.sections %}
-<section class="ls s-py-50">
+
+<section class="ds s-py-50 ms s-overlay s-parallax project-horizontal-section">
+	{% for section in data.sections %}
 	<div class="container">
 		{% if section.title is defined %}<h2>{{ section.title }}</h2>{% endif %}
 		<div>{{ section.content|default('')|raw }}</div>
 	</div>
+	{% endfor %}
+	<div class="mb-60 d-flex justify-content-center flex-column flex-sm-row c-gutter-15">
+		<a class="btn btn-maincolor btn-big mr-20" href="/richiedi-preventivo">Richiedi preventivo gratuito</a><a class="btn btn-maincolor btn-big" href="https://wa.me/393331234567">Scrivici su WhatsApp</a>
+	</div>
 </section>
-{% endfor %}
 
 {% if data.faqItems|length > 0 %}
 <section class="ls s-py-60">
