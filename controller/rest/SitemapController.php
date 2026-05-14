@@ -22,7 +22,9 @@ class SitemapController extends CliController {
         '/preview',
         '/test',
         '/bozza',
-        '/staging'
+        '/staging',
+        '/insufflaggio',
+        '/scheda-prodotto'
     ];
 
     public function generateSitemap() {
