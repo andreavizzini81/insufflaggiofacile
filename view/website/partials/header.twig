@@ -22,7 +22,7 @@
 									<ul>
 										{% for staticPage in f_nav['staticPage'] %}
 										<li>
-											<a href="{{ path }}insufflaggio/{{ staticPage.title | url_encode }}/{{ staticPage.id }}">{{ staticPage.title }}</a>
+											<a href="{{ path }}insufflaggio/{{ staticPage.slug | url_encode }}/{{ staticPage.id }}">{{ staticPage.title }}</a>
 										</li>
 										{% endfor %}
 									</ul></li><li><a href="javascript:void(0);">Servizi</a><ul>{% for serviceCategory in f_nav['seoServicesMenu'] %}<li><a href="/{{ serviceCategory.categoryPage.slug }}">{{ serviceCategory.category.menu_label ?: serviceCategory.category.name }}</a><ul>{% for servicePage in serviceCategory.pages %}<li><a href="/{{ servicePage.slug }}">{{ servicePage.menu_label ?: (servicePage.h1 ?: servicePage.title) }}</a></li>{% endfor %}</ul></li>{% endfor %}</ul></li>
