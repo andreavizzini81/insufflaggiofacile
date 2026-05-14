@@ -963,11 +963,19 @@ $group->get('\/ok\/?')
             'uri' => 'privacy'
         ]);
 		
-	$group->get('\/materiale\/([a-zA-Z0-9-]|%[0-9A-Fa-f]{2})+\/(\d+)\/?')
+	$group->get('\/scheda-prodotto\/(\d+)\/?')
         ->setController('ProductPage')
         ->setParams([
             'language' => 'it',
-            'uri' => 'materiale',
+            'uri' => 'scheda-prodotto',
+            'id' => '@1'
+        ]);
+    
+    $group->get('\/materiale\/([a-zA-Z0-9-]|%[0-9A-Fa-f]{2})+\/(\d+)\/?')
+        ->setController('ProductPage')
+        ->setParams([
+            'language' => 'it',
+            'uri' => 'scheda-prodotto',
             'id' => '@2'
         ]);
 
