@@ -179,14 +179,19 @@
 </section>
 
 
-{% for section in data.sections %}
-<section class="ls s-py-50">
+
+<section class="ds s-py-50">
+	{% for section in data.sections %}
 	<div class="container">
 		{% if section.title is defined %}<h2>{{ section.title }}</h2>{% endif %}
 		<div>{{ section.content|default('')|raw }}</div>
 	</div>
+	{% endfor %}
+	<div class="mb-60 d-flex justify-content-center flex-column flex-sm-row c-gutter-15">
+		<a class="btn btn-maincolor btn-big mr-20" href="/richiedi-preventivo">Richiedi preventivo gratuito</a><a class="btn btn-maincolor btn-big" href="https://wa.me/393331234567">Scrivici su WhatsApp</a>
+	</div>
 </section>
-{% endfor %}
+
 
 {% if data.faqItems|length > 0 %}
 <section class="ls s-py-60">
