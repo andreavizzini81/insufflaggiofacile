@@ -971,7 +971,7 @@ $group->get('\/ok\/?')
             'id' => '@1'
         ]);
 
-    $group->get('\/insufflaggio\/([a-zA-Z0-9]|%[0-9A-Fa-f]{2})+\/(\d+)\/?')
+    $group->get('/insufflaggio/([a-zA-Z0-9-]|%[0-9A-Fa-f]{2})+/(\d+)/?')
         ->setController('InsufflaggioPage')
         ->setParams([
             'language' => 'it',
