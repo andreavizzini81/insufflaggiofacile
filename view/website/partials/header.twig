@@ -32,7 +32,7 @@
 									<ul>
 										{% for product in f_nav['product'] %}
 										<li>
-											<a href="{{ path }}scheda-prodotto/{{ product.id }}">{{ product.title }}</a>
+											<a href="{{ path }}materiale/{{ product.slug | url_encode }}/{{ product.id }}">{{ product.title }}</a>
 										</li>
 										{% endfor %}
 									</ul>

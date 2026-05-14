@@ -10,6 +10,7 @@ class Product extends BaseComponent implements JsonSerializable {
     private ?string $title;
     private ?string $description;
     private ?string $metaDescription;
+    private ?string $slug;
 
     private const PROPERTIES_MAP = [
         'id' => [
@@ -30,6 +31,11 @@ class Product extends BaseComponent implements JsonSerializable {
         'metaDescription' => [
             'default' => '',
             'alias' => 'meta_description',
+            'cast' => 'string'
+        ],
+        'slug' => [
+            'default' => '',
+            'alias' => 'slug',
             'cast' => 'string'
         ]
     ];
@@ -76,6 +82,15 @@ class Product extends BaseComponent implements JsonSerializable {
 
     public function setMetaDescription($metaDescription){
         $this->metaDescription = $metaDescription;
+        return $this;
+    }
+
+    public function getSlug(){
+        return $this->slug;
+    }
+
+    public function setSlug($slug){
+        $this->slug = $slug;
         return $this;
     }
 
