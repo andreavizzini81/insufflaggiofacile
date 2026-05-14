@@ -148,15 +148,25 @@ class SitemapController extends CliController {
                 continue;
             }
 
-            $this->addPathToSitemap(sprintf('/scheda-prodotto/%d', $productId), $indexedUrls, 0.7);
+            $this->addPathToSitemap($this->buildProductPath($product), $indexedUrls, 0.7);
         }
+    }
+
+
+    private function buildProductPath(Product $product): string {
+        $slug = method_exists($product, 'getSlug') ? trim((string)$product->getSlug()) : '';
+        $id = (int)$product->getId();
+
+        $pathSlug = $slug !== '' ? rawurlencode($slug) : 'prodotto';
+
+        return sprintf('/materiale/%s/%d', $pathSlug, $id);
     }
 
     private function addInsufflaggioEntries(array &$indexedUrls): void {
         $staticPageList = new StaticPageList([], true, StaticPage::class);
 
         foreach ($staticPageList->getAll() as $staticPage) {
-            if (!method_exists($staticPage, 'getId') || !method_exists($staticPage, 'getTitle')) {
+            if (!method_exists($staticPage, 'getId')) {
                 continue;
             }
 
@@ -166,17 +176,20 @@ class SitemapController extends CliController {
             }
 
             $this->addPathToSitemap(
-                $this->buildInsufflaggioPath((string)$staticPage->getTitle(), $staticPageId),
+                $this->buildInsufflaggioPath($staticPage),
                 $indexedUrls,
                 0.7
             );
         }
     }
 
-    private function buildInsufflaggioPath(string $title, int $id): string {
-        $title = trim($title);
-        $encodedTitle = rawurlencode($title !== '' ? $title : 'pagina');
-        return sprintf('/insufflaggio/%s/%d', $encodedTitle, $id);
+    private function buildInsufflaggioPath(StaticPage $staticPage): string {
+        $slug = method_exists($staticPage, 'getSlug') ? trim((string)$staticPage->getSlug()) : '';
+        $id = (int)$staticPage->getId();
+
+        $pathSlug = $slug !== '' ? rawurlencode($slug) : 'pagina';
+
+        return sprintf('/insufflaggio/%s/%d', $pathSlug, $id);
     }
 
     private function addSeoLandingEntries(array &$indexedUrls): void {
