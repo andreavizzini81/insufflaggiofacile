@@ -11,6 +11,7 @@ class StaticPage extends BaseComponent implements JsonSerializable {
     private ?string $description;
     private ?string $metaDescription;
     private ?string $titleH1;
+    private ?string $slug;
 
     private const PROPERTIES_MAP = [
         'id' => [
@@ -36,6 +37,12 @@ class StaticPage extends BaseComponent implements JsonSerializable {
         'titleH1' => [
             'default' => '',
             'alias' => 'titolo_h1',
+            'cast' => 'string'
+        ]
+        ,
+        'slug' => [
+            'default' => '',
+            'alias' => 'slug',
             'cast' => 'string'
         ]
     ];
@@ -91,6 +98,15 @@ class StaticPage extends BaseComponent implements JsonSerializable {
 
     public function setTitleH1($titleH1){
         $this->titleH1 = $titleH1;
+        return $this;
+    }
+
+    public function getSlug(){
+        return $this->slug;
+    }
+
+    public function setSlug($slug){
+        $this->slug = $slug;
         return $this;
     }
     /*
