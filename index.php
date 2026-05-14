@@ -969,7 +969,7 @@ $group->get('\/ok\/?')
             'language' => 'it',
             'uri' => 'scheda-prodotto',
             'id' => '@1'
-        ]);
+        ]); 
     
     $group->get('\/materiale\/([a-zA-Z0-9-]|%[0-9A-Fa-f]{2})+\/(\d+)\/?')
         ->setController('ProductPage')
