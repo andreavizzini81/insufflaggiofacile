@@ -7,6 +7,8 @@ use PHPMailer\PHPMailer\Exception;
 class FacebookLeadFormsGatewayController extends RestController {
 
     private array  $requestData;
+    private const RECAPTCHA_SECRET_KEY = '6LfMg_EsAAAAAAcYLZdIZ4-6AKffl8-EzJwM5x7A';
+    private const RECAPTCHA_MIN_SCORE = 0.5;
 
     public function __construct(Request &$request, App &$app) {
 
@@ -19,6 +21,7 @@ class FacebookLeadFormsGatewayController extends RestController {
     public function registerLeadRequest() {
 
         try {
+            $this->verifyRecaptchaToken();
 
             $dealData = $this->requestData;
 
@@ -197,6 +200,39 @@ class FacebookLeadFormsGatewayController extends RestController {
 
         }
 
+    }
+
+    private function verifyRecaptchaToken(): void {
+        $token = trim((string)($this->requestData['g-recaptcha-response'] ?? ''));
+        if ($token === '') {
+            throw new Exception('Verifica reCAPTCHA mancante');
+        }
+
+        $payload = http_build_query([
+            'secret' => self::RECAPTCHA_SECRET_KEY,
+            'response' => $token,
+            'remoteip' => $_SERVER['REMOTE_ADDR'] ?? null
+        ]);
+
+        $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        $rawResponse = curl_exec($ch);
+        curl_close($ch);
+
+        if ($rawResponse === false || $rawResponse === null) {
+            throw new Exception('Errore durante la verifica reCAPTCHA');
+        }
+
+        $response = json_decode($rawResponse, true);
+        $isValid = is_array($response) && ($response['success'] ?? false) === true;
+        $score = (float)($response['score'] ?? 0);
+        $action = (string)($response['action'] ?? '');
+        if (!$isValid || $score < self::RECAPTCHA_MIN_SCORE || $action !== 'submit') {
+            throw new Exception('Verifica antispam non superata');
+        }
     }
 	
 	
