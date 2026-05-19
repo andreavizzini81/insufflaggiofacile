@@ -181,6 +181,28 @@
 {% include '/partials/map.twig' %}
 
 <script>
+const RECAPTCHA_SITE_KEY = '6LfMg_EsAAAAAB4QMoC8hbdCu6HtGxaNXG86Nvxs';
+
+function ensureRecaptchaLoaded() {
+	return new Promise((resolve, reject) => {
+		if (window.grecaptcha?.enterprise) return resolve();
+		const script = document.createElement('script');
+		script.src = `https://www.google.com/recaptcha/enterprise.js?render=${RECAPTCHA_SITE_KEY}`;
+		script.async = true;
+		script.defer = true;
+		script.onload = () => resolve();
+		script.onerror = () => reject(new Error('Impossibile caricare reCAPTCHA'));
+		document.head.appendChild(script);
+	});
+}
+
+function getRecaptchaToken(action = 'submit') {
+	return ensureRecaptchaLoaded().then(() => new Promise((resolve, reject) => {
+		window.grecaptcha.enterprise.ready(() => {
+			window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, { action }).then(resolve).catch(() => reject(new Error('Impossibile generare il token reCAPTCHA')));
+		});
+	}));
+}
 
  document.addEventListener('DOMContentLoaded', function() {
 
@@ -282,13 +304,17 @@
 		} else {
 			let data = (new FormSerializer(_frm)).serialize();
 			submitButton?.classList.add('invisible');
-			HttpRequest.post(`/api/richiedi-preventivo`, {...data, piattaforma: 'website' }, response => {
+			getRecaptchaToken('submit').then(token => {
+				HttpRequest.post(`/api/richiedi-preventivo`, {...data, piattaforma: 'website', 'g-recaptcha-response': token }, response => {
+					submitButton?.classList.remove('invisible');
+					if (response.status != 1) {
+						throw response.message ?? 'Errore generico';
+					}
+					window.location.href = `/ok`;
+				});
+			}).catch(error => {
 				submitButton?.classList.remove('invisible');
-				if (response.status != 1) {
-					throw response.message ?? 'Errore generico';
-				}
-				//gtag_report_conversion('/ok');
-				window.location.href = `/ok`;
+				alert(error?.message ?? 'Errore durante la verifica antispam. Riprova.');
 			});
 		}
 	});
