@@ -677,7 +677,7 @@
         /////////////////////////////////////////////////
         //PHP widgets - contact form, search, MailChimp//
         /////////////////////////////////////////////////
-
+        /*
         //contact form processing
         $('form.contact-form').on('submit', function( e ){
             e.preventDefault();
@@ -716,7 +716,7 @@
                     $($form).find('[type="submit"]').attr('disabled', false).blur().parent().append('<div class="contact-form-respond color-main2 mt-20">Mail cannot be sent. You need PHP server to send mail.</div>');
                 })
         });
-
+        */
 
         //search modal
         $(".search_modal_button").on('click', function(e){
