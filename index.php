@@ -1151,8 +1151,7 @@ $app->router->group('/api', function(&$group) {
 
     $group->post('\/richiedi-preventivo\/?')
         ->setController('FacebookLeadFormsGateway')
-        ->setAction('registerLeadRequest')
-        ->withMiddleware('GoogleRecaptchaMiddleware');
+        ->setAction('registerLeadRequest');
 
 });
 

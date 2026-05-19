@@ -162,7 +162,6 @@
 </section>
 {% endif %}
 
-<script src="https://www.google.com/recaptcha/api.js?render=6LfMg_EsAAAAAB4QMoC8hbdCu6HtGxaNXG86Nvxs"></script>
 <script>
 
  document.addEventListener('DOMContentLoaded', function() {
@@ -265,26 +264,12 @@
 		} else {
 			let data = (new FormSerializer(_frm)).serialize();
 			submitButton?.classList.add('invisible');
-
-			const siteKey = '6LfMg_EsAAAAAB4QMoC8hbdCu6HtGxaNXG86Nvxs';
-			if (!siteKey || typeof grecaptcha === 'undefined') {
+			HttpRequest.post(`/api/richiedi-preventivo`, {...data, piattaforma: 'website' }, response => {
 				submitButton?.classList.remove('invisible');
-				throw 'Servizio anti-spam non disponibile. Ricarica la pagina e riprova.';
-			}
-
-			grecaptcha.ready(() => {
-				grecaptcha.execute(siteKey, { action: 'richiedi_preventivo' }).then(token => {
-					HttpRequest.post(`/api/richiedi-preventivo`, {...data, piattaforma: 'website', token }, response => {
-				submitButton?.classList.remove('invisible');
-						if (response.status != 1) {
-							throw response.message ?? 'Errore generico';
-						}
-						window.location.href = `/ok`;
-					});
-				}).catch(() => {
-					submitButton?.classList.remove('invisible');
-					throw 'Verifica anti-spam fallita. Riprova tra qualche secondo.';
-				});
+				if (response.status != 1) {
+					throw response.message ?? 'Errore generico';
+				}
+				window.location.href = `/ok`;
 			});
 		}
 	});

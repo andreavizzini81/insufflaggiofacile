@@ -2,7 +2,7 @@
 
 class GoogleRecaptchaMiddleware extends BaseComponent implements MiddlewareInterface {
 
-    private const RECAPTCHA_PRIVATE_KEY = '6LfMg_EsAAAAAAcYLZdIZ4-6AKffl8-EzJwM5x7A';
+    private const RECAPTCHA_PRIVATE_KEY = '6Lcl1_8lAAAAAIp6OtKKbsTTBGtKkZFZl5bbZe_U';
 
     public function processRequest(Request &$request, Route &$route): Request {
 
