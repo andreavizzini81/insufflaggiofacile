@@ -56,8 +56,9 @@ namespace {
         putenv('ZAPIER_LEAD_TOKEN=' . $token);
         expect(controller([], $token)->registerIntegrationLeadRequest()['status'] === 1, 'Process environment fallback must work');
         $routes = file_get_contents(__DIR__ . '/../index.php');
-        expect((bool)preg_match("/facebook-lead-request[\\s\\S]*?setAction\\('registerIntegrationLeadRequest'\\)/", $routes), 'Integration route must use authenticated action');
+        expect((bool)preg_match("/zapier-lead-request[\\s\\S]*?setAction\\('registerIntegrationLeadRequest'\\)/", $routes), 'Dedicated integration route must use authenticated action');
         expect((bool)preg_match("/richiedi-preventivo[\\s\\S]*?setAction\\('registerLeadRequest'\\)/", substr($routes, strpos($routes, "group('/api'"))), 'Public API must retain reCAPTCHA action');
+        expect((bool)preg_match("/facebook-lead-request[\\s\\S]*?setAction\\('registerLeadRequest'\\)/", $routes), 'Legacy route must keep original public action');
         echo "PASS: integration guards, public reCAPTCHA boundary and route separation\n";
     } finally {
         $_ENV = $oldEnv;
