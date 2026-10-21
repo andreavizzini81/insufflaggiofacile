@@ -7,7 +7,6 @@ use PHPMailer\PHPMailer\Exception;
 class FacebookLeadFormsGatewayController extends RestController {
 
     private array  $requestData;
-    private const RECAPTCHA_SECRET_KEY = '6LfMg_EsAAAAAAcYLZdIZ4-6AKffl8-EzJwM5x7A';
     private const RECAPTCHA_MIN_SCORE = 0.5;
 
     public function __construct(Request &$request, App &$app) {
@@ -22,7 +21,29 @@ class FacebookLeadFormsGatewayController extends RestController {
 
         try {
             $this->verifyRecaptchaToken();
+        } catch (Exception $ex) {
+            return $this->returnErrorMessage($ex->getMessage(), 400);
+        }
 
+        return $this->processLeadRequest();
+    }
+
+    public function registerIntegrationLeadRequest() {
+        $expected = trim((string)($_ENV['ZAPIER_LEAD_TOKEN'] ?? getenv('ZAPIER_LEAD_TOKEN') ?: ''));
+        if (strlen($expected) < 32) {
+            return $this->returnErrorMessage('Integrazione contatti non configurata', 503);
+        }
+
+        $provided = $this->request->getBearerAuthorization();
+        if (!is_string($provided) || !hash_equals($expected, $provided)) {
+            return $this->returnErrorMessage('Autenticazione integrazione non valida', 401);
+        }
+
+        return $this->processLeadRequest();
+    }
+
+    protected function processLeadRequest() {
+        try {
             $dealData = $this->requestData;
 
             $cityInput = $this->getFirstAvailableValue($dealData, ['citta', 'comune_immobile', 'comune', 'city']);
@@ -208,8 +229,13 @@ class FacebookLeadFormsGatewayController extends RestController {
             throw new Exception('Verifica reCAPTCHA mancante');
         }
 
+        $secret = trim((string)($_ENV['RECAPTCHA_SECRET_KEY'] ?? getenv('RECAPTCHA_SECRET_KEY') ?: ''));
+        if ($secret === '') {
+            throw new Exception('Verifica antispam non configurata');
+        }
+
         $payload = http_build_query([
-            'secret' => self::RECAPTCHA_SECRET_KEY,
+            'secret' => $secret,
             'response' => $token,
             'remoteip' => $_SERVER['REMOTE_ADDR'] ?? null
         ]);
