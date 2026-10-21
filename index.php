@@ -1145,6 +1145,10 @@ $app->router->group('/api', function(&$group) {
         ->setController('FacebookLeadFormsGateway')
         ->setAction('registerLeadRequest');
 
+    $group->post('\/zapier-lead-request\/?')
+        ->setController('FacebookLeadFormsGateway')
+        ->setAction('registerIntegrationLeadRequest');
+
     $group->post('\/google-lead-request\/?')
         ->setController('GoogleLeadFormsGateway') 
         ->setAction('registerLeadRequest');
